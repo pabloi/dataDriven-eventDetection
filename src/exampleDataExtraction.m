@@ -1,8 +1,13 @@
 %% load some .mat file
 load ... %Fill this with the location of the .mat file
-    %Each file contains one variable called expData
+%Each file contains one variable called expData or procExpData
+%Each of those files contains ALL the data recorded for a SINGLE subject.
+%Within each of these there may be 
 
 %% Extract data for a single trial
+%Each trial contains a run of data capture (continuously recorded data).
+%Within each trial, walking conditions
+
 trial=5; % Let's assume we want the data for trial #5
 trialData=expData.data{trial}; %This gets all the data that was recorded for the given trial, it is an object of type labData
 if ~strcmp(trialData.metaData.type,'TM') %This field stores the information of whether a particular trial was in the treadmill (TM) or overground (OG)
