@@ -1,18 +1,24 @@
-function plotFCV(fc)
+function plotFCV(motion)
 
-n = size(fc, 1);
+[lfc, rfc, lt, rt, lh, rh] = motionToFeetCenter(motion);
+
+n = size(motion, 1);
 t = 1:n;
 
-ly = fc(:, 2);
-lz = fc(:, 3);
-ry = fc(:, 5);
-rz = fc(:, 6);
+lfcy = lfc(:, 2);
+lfcz = lfc(:, 3);
+rfcy = rfc(:, 2);
+rfcz = rfc(:, 3);
 
-lzv = [0;diff(lz)];
-rzv = [0;diff(rz)];
+lfczv = [0;diff(lfcz)];
+rfczv = [0;diff(rfcz)];
 
-plot(t, normalize1(ly), 'b-', ...
-     t, normalize1(lz), 'r-', ...
-     t, normalize1(lzv), 'm-');
+plot(t, normalize1(lfcy), 'b-' ...
+    ,t, normalize1(lfcz), 'r-' ...
+    ,t, normalize1(lfczv), 'm-' ...
+    ,t, normalize1(motion(:, 1+4*9)), 'c-' ...
+    );
+
+legend('FCy', 'FCz', 'FCzv', 'TOEz');
 
 end
