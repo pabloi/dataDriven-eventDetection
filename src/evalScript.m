@@ -74,15 +74,18 @@ display(loss)
 %
 % Compute per cycle metrics: tp fp tn fn
 %
+maxNEvents = 100;
 hn = 0.5*ones(1,2);
-metrics = zeros(3,nEventTypes,nSubjects,nTrials);
+metrics = zeros(4,nEventTypes,nSubjects,nTrials);
+errors = NaN(maxNEvents,nEventTypes,nSubjects,nTrials);
 for i = 1:nEventTypes
     for j = 1:nSubjects
         for k = 1:nTrials
             y = l((m==i)&(n==j)&(o==k));
-            y = [1 y' nSamples]';
+            yAugmented = [1 y' nSamples]';
             yhat = p((q==i)&(r==j)&(s==k));
-            yCycles = round(conv(y,hn,'valid'));
+            % yhatAugmented = padarray(yhat,length(y)-length(yhat));
+            yCycles = round(conv(yAugmented,hn,'valid'));
             for t = 1:length(yCycles)-1
                 nbhat = sum(output(yCycles(t):yCycles(t+1),i,j,k));
                 if nbhat > 0
@@ -94,6 +97,12 @@ for i = 1:nEventTypes
                     metrics(2,i,j,k) = metrics(2,i,j,k) + 0;
                     metrics(3,i,j,k) = metrics(3,i,j,k) + 1;
                 end
+
+                if (nbhat == 1) & (t <= length(yhat))
+                    errors(t,i,j,k) = y(t) - yhat(t);
+                else
+                    errors(t,i,j,k) = NaN;
+                end
             end
         end
     end
@@ -104,3 +113,5 @@ end
 
 display('Per subject/trial TP FP FN for LHS RTO RHS LTO')
 display(metrics)
+
+% TODO plot histogram of TE
