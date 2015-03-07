@@ -10,6 +10,8 @@ function [ trueErrors ] = computeTrueErrors( groundTruth, estimatedEvents )
         baseException = MException(msgID,msg);
         throw(baseException)
     end
+
+    % Get dimension
     [nSamples nEventTypes nSubjects nTrials] = size(groundTruth);
 
     % Get event indices

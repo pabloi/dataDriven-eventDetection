@@ -2,7 +2,11 @@
 % Eval script for ML project
 %
 clear
-clf
+
+% Plotting
+plotting = false; % plot figures yes/no
+saveplot = true; % save figures to file yes/no
+figpath = '../../figures/';
 
 % Load ground truth
 pathToGround = '../../data/dataArrays.mat';
@@ -20,31 +24,65 @@ output(:,3,:,:) = circshift(output(:,3,:,:), 2);
 output(:,4,:,:) = circshift(output(:,4,:,:), 3);
 output(find(output(:,1,1,1),1),1,1,1) = 0;
 
-% Plot True Errors
+% ------------------------------------------------------------------------------
+
+% Compute True Errors
 trueErrors = computeTrueErrors(roundedEventArray, output);
 [nEventTypes nSubjects nTrials] = size(trueErrors);
 
-figure('visible','off')
-% figure(1)
+% ------------------------------------------------------------------------------
+
+% Plot true errors per event type
+if plotting
+    figure(1)
+else
+    figure('visible','off')
+end
 for i = 1:nEventTypes
     subplot(2,2,i)
-    hist(cat(1, trueErrors{i,:,:}))
-    title(['Event type #',int2str(i)])
-    xlabel('True Error (frames)')
+    TE = cat(1, trueErrors{i,:,:});
+    missing = any(isnan(TE));
+    maxval = max(abs(TE));
+    hist(TE,[-(maxval+1):maxval+1]);
+    title(['Event Type ',int2str(i)])
+    xlabel([...
+        'True Error (frames) (n=',...
+        int2str(length(TE)),...
+        ', na=',...
+        int2str(missing),...
+        ')'...
+        ])
     ylabel('Frequency')
 end
-saveas(gcf, '../figures/trueErrorsPerEventType', 'png')
+if saveplot
+    saveas(gcf, strcat(figpath,'trueErrorsPerEventType'), 'png')
+end
 
-figure('visible','off')
-% figure(2)
+% Plot true errors per event type and subject
+if plotting
+    figure(2)
+else
+    figure('visible','off')
+end
 for i = 1:nEventTypes
     for j = 1:nSubjects
-        subplot(nSubjects,nEventTypes,4*(i-1)+j)
-        hist(cat(1, trueErrors{i,j,:}))
-        % title(strcat(['Subject #',int2str(j)],['Event type #',int2str(i)]))
-        title(['Subject #',int2str(j),' Event type #',int2str(i)])
-        xlabel('True Error (frames)')
+        % subplot(nSubjects,nEventTypes,nSubjects*(i-1)+j)
+        subplot(nSubjects,nEventTypes,nEventTypes*(j-1)+i)
+        TE = cat(1, trueErrors{i,j,:});
+        missing = any(isnan(TE));
+        maxval = max(abs(TE));
+        hist(TE,[-(maxval+1):maxval+1]);
+        title(['Subject ',int2str(j),' Event Type ',int2str(i)])
+        xlabel([...
+            'True Error (frames) (n=',...
+            int2str(length(TE)),...
+            ', na=',...
+            int2str(missing),...
+            ')'...
+            ])
         ylabel('Frequency')
     end
 end
-saveas(gcf, '../figures/trueErrorsPerEventTypeAndSubject', 'png')
+if saveplot
+    saveas(gcf, strcat(figpath,'trueErrorsPerEventTypeAndSubject'), 'png')
+end
