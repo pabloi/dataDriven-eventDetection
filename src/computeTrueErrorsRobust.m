@@ -39,14 +39,15 @@ function [ trueErrors metrics ] = ...
                     if nbhat == 1
                         metrics(1,i,j,k) = metrics(1,i,j,k) + 1;
                         e = find(yhatWindow) - (halfWindow + 1);
+                        errors = [errors; e];
                     elseif nbhat == 0
                         metrics(3,i,j,k) = metrics(3,i,j,k) + 1;
                     else
                         metrics(1,i,j,k) = metrics(1,i,j,k) + 1;
                         metrics(2,i,j,k) = metrics(2,i,j,k) + (nbhat - 1);
-                        e = min(find(yhatWindow) - (halfWindow + 1));
+                        % e = min(find(yhatWindow) - (halfWindow + 1));
+                        % errors = [errors; e];
                     end
-                    errors = [errors; e];
                 end
                 metrics(4,i,j,k) = ...
                     nEstimatedEvents - nEvents - sum(metrics(2,i,j,k));
