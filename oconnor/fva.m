@@ -30,7 +30,6 @@ rfcypnt = find(rfcypn);
 
 t0 = period1(lfcy);
 window_TO = floor(t0/8);
-thres_TO = 0.35;
 
 LTO = false(n, 1);
 for i = lfcyppt.'
@@ -48,32 +47,37 @@ for i = rfcyppt.'
 end
 
 window_HS = floor(t0/8);
+thres_HS = 0.35;
 
 lhz_max = max(lhz);
 lhz_min = min(lhz);
 rhz_max = max(rhz);
 rhz_min = min(rhz);
-lhz_thres = (1-thres_TO)*lhz_min + thres_TO*lhz_max;
-rhz_thres = (1-thres_TO)*rhz_min + thres_TO*rhz_max;
+lhz_thres = (1-thres_HS)*lhz_min + thres_HS*lhz_max;
+rhz_thres = (1-thres_HS)*rhz_min + thres_HS*rhz_max;
 
-lfczv(lhz > lhz_thres) = inf;
-rfczv(rhz > rhz_thres) = inf;
+lfczv(lhz > lhz_thres) = NaN;
+rfczv(rhz > rhz_thres) = NaN;
 
 LHS = false(n, 1);
 for i = lfcypnt.'
     lo = max(i - window_HS, 1);
     hi = min(i + window_HS, n);
-    pk = find(peak1(-lfczv(lo:hi)));
-    [~, j] = min(abs(pk));
-    LHS(pk(j)+lo-1) = true;
+    [~, j] = max(lfczv(lo:i));
+    lo = lo + j - 1;
+    [~, j] = min(lfczv(lo:hi));
+    j = j + lo - 1;
+    LHS(j) = true;
 end
 RHS = false(n, 1);
 for i = rfcypnt.'
     lo = max(i - window_HS, 1);
     hi = min(i + window_HS, n);
-    pk = find(peak1(-rfczv(lo:hi)));
-    [~, j] = min(abs(pk));
-    RHS(pk(j)+lo-1) = true;
+    [~, j] = max(rfczv(lo:i));
+    lo = lo + j - 1;
+    [~, j] = min(rfczv(lo:hi));
+    j = j + lo - 1;
+    RHS(j) = true;
 end
 
 
