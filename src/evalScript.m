@@ -9,25 +9,28 @@ saveplot = true; % save figures to file yes/no
 figpath = '../../figures/';
 
 % Load ground truth
+% pathToGround = '../../data/dataArrays_upSampled.mat';
 pathToGround = '../../data/dataArrays.mat';
 load(pathToGround);
+% gold = eventArray;
+gold = roundedEventArray;
 
 % Load  output
-% pathToOutput = '';
-% load(pathToOutput);
-
-% TODO this is a workaround to test evalScript
-output= roundedEventArray;
-output(:,1,:,:) = circshift(output(:,1,:,:), 0);
-output(:,2,:,:) = circshift(output(:,2,:,:), 1);
-output(:,3,:,:) = circshift(output(:,3,:,:), 2);
-output(:,4,:,:) = circshift(output(:,4,:,:), 3);
-output(find(output(:,1,1,1),1),1,1,1) = 0;
+% pathToOutput = '../../data/fva_20150309_0956.mat';
+pathToOutput = '../../data/fva_rounded_20150309_1259.mat';
+load(pathToOutput);
+% output = eventArrayFVA;
+output = roundedEventArrayFVA;
 
 % ------------------------------------------------------------------------------
 
+% Define window size for false positives/negatives
+windowSize = 21;
+halfWindow = floor(windowSize/2);
+
 % Compute True Errors
-trueErrors = computeTrueErrors(roundedEventArray, output);
+% trueErrors = computeTrueErrorsMask(gold, output); % compute TE using xcor
+[trueErrors, metrics] = computeTrueErrorsRobust(gold, output, windowSize);
 [nEventTypes nSubjects nTrials] = size(trueErrors);
 
 % ------------------------------------------------------------------------------
@@ -41,19 +44,20 @@ end
 for i = 1:nEventTypes
     subplot(2,2,i)
     TE = cat(1, trueErrors{i,:,:});
-    if any(isnan(TE))
-        missing = 'yes';
-    else
-        missing = 'no';
-    end
     maxval = max(abs(TE));
-    hist(TE,[-(maxval+1):maxval+1]);
-    title(['Event Type ',int2str(i)])
+    % hist(TE,[-(maxval+1):maxval+1]);
+    hist(TE,[-halfWindow:halfWindow]);
+    title([
+        'Event Type ',...
+        int2str(i),...
+        ' (window = ',...
+        int2str(windowSize),...
+        ' frames)'...
+        ])
     xlabel([...
         'True Error (frames) (n=',...
         int2str(length(TE)),...
         ', na=',...
-        missing,...
         ')'...
         ])
     ylabel('Frequency')
@@ -73,19 +77,22 @@ for i = 1:nEventTypes
         % subplot(nSubjects,nEventTypes,nSubjects*(i-1)+j)
         subplot(nSubjects,nEventTypes,nEventTypes*(j-1)+i)
         TE = cat(1, trueErrors{i,j,:});
-        if any(isnan(TE))
-            missing = 'yes';
-        else
-            missing = 'no';
-        end
         maxval = max(abs(TE));
-        hist(TE,[-(maxval+1):maxval+1]);
-        title(['Subject ',int2str(j),' Event Type ',int2str(i)])
+        % hist(TE,[-(maxval+1):maxval+1]);
+        hist(TE,[-halfWindow:halfWindow]);
+        title([
+            'Subject ',...
+            int2str(j),...
+            ' Event Type ',...
+            int2str(i)...
+            ' (window = ',...
+            int2str(windowSize),...
+            ' frames)'...
+            ])
         xlabel([...
             'True Error (frames) (n=',...
             int2str(length(TE)),...
             ', na=',...
-            missing,...
             ')'...
             ])
         ylabel('Frequency')
@@ -106,19 +113,20 @@ end
 for i = 1:nEventTypes
     subplot(2,2,i)
     AE = abs(cat(1, trueErrors{i,:,:}));
-    if any(isnan(TE))
-        missing = 'yes';
-    else
-        missing = 'no';
-    end
     maxval = max(AE);
-    hist(AE,[0:maxval+1]);
-    title(['Event Type ',int2str(i)])
+    % hist(AE,[0:maxval+1]);
+    hist(AE,[0:halfWindow]);
+    title([
+        'Event Type ',...
+        int2str(i),...
+        ' (window = ',...
+        int2str(windowSize),...
+        ' frames)'...
+        ])
     xlabel([...
         'Absolute Error (frames) (n=',...
         int2str(length(AE)),...
         ', na=',...
-        missing,...
         ')'...
         ])
     ylabel('Frequency')
@@ -138,19 +146,22 @@ for i = 1:nEventTypes
         % subplot(nSubjects,nEventTypes,nSubjects*(i-1)+j)
         subplot(nSubjects,nEventTypes,nEventTypes*(j-1)+i)
         AE = abs(cat(1, trueErrors{i,j,:}));
-        if any(isnan(TE))
-            missing = 'yes';
-        else
-            missing = 'no';
-        end
         maxval = max(AE);
-        hist(AE,[0:maxval+1]);
-        title(['Subject ',int2str(j),' Event Type ',int2str(i)])
+        % hist(AE,[0:maxval+1]);
+        hist(AE,[0:halfWindow]);
+        title([
+            'Subject ',...
+            int2str(j),...
+            ' Event Type ',...
+            int2str(i),...
+            ' (window = ',...
+            int2str(windowSize),...
+            ' frames)'...
+            ])
         xlabel([...
             'Absolute Error (frames) (n=',...
             int2str(length(AE)),...
             ', na=',...
-            missing,...
             ')'...
             ])
         ylabel('Frequency')
@@ -174,7 +185,12 @@ for i = 1:nEventTypes
     groupsize = [groupsize i*ones(1,length(cat(1, trueErrors{i,:,:})))];
 end
 boxplot(TE,groupsize)
-title('True Error per Event Type')
+title([
+    'True Error per Event Type',...
+    ' (window = ',...
+    int2str(windowSize),...
+    ' frames)'...
+    ])
 xlabel('Event Type')
 ylabel('True Error (frames)')
 if saveplot
@@ -195,7 +211,13 @@ for i = 1:nEventTypes
         groupsize = [groupsize k*ones(1,length(cat(1, trueErrors{i,k,:})))];
     end
     boxplot(TE,groupsize)
-    title(['Event Type ',int2str(i)])
+    title([
+        'Event Type ',...
+        int2str(i),...
+        ' (window = ',...
+        int2str(windowSize),...
+        ' frames)'...
+        ])
     xlabel('Subject')
     ylabel('True Error (frames)')
 end
@@ -217,13 +239,20 @@ for i = 1:nSubjects
         groupsize = [groupsize k*ones(1,length(cat(1, trueErrors{k,i,:})))];
     end
     boxplot(TE,groupsize)
-    title(['Subject ',int2str(i)])
+    title([
+        'Subject ',...
+        int2str(i),...
+        ' (window = ',...
+        int2str(windowSize),...
+        ' frames)'...
+        ])
     xlabel('Event Type')
     ylabel('True Error (frames)')
 end
 if saveplot
     saveas(gcf, strcat(figpath,'trueErrorsPerSubjectBoxplot'), 'png')
 end
+
 % Boxplot true errors per event type and subject
 if plotting
     figure(8)
@@ -235,18 +264,22 @@ for i = 1:nEventTypes
         % subplot(nSubjects,nEventTypes,nSubjects*(i-1)+j)
         subplot(nSubjects,nEventTypes,nEventTypes*(j-1)+i)
         TE = cat(1, trueErrors{i,j,:});
-        if any(isnan(TE))
-            missing = 'yes';
-        else
-            missing = 'no';
-        end
         boxplot(TE)
-        title(['Subject ',int2str(j),' Event Type ',int2str(i)])
+        title([
+            'Subject ',...
+            int2str(j),...
+            ' Event Type ',....
+            int2str(i),...
+            ' (window = ',...
+            int2str(windowSize),...
+            ' frames)'...
+            ])
         ylabel('TE (frames)')
     end
 end
 if saveplot
-    saveas(gcf, strcat(figpath,'trueErrorsPerEventTypeAndSubjectBoxplot'), 'png')
+    saveas(gcf, strcat(figpath,'trueErrorsPerEventTypeAndSubjectBoxplot'), ...
+    'png')
 end
 
 % ------------------------------------------------------------------------------
