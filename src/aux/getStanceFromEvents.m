@@ -1,4 +1,9 @@
-function [stanceL,stanceR] = getStanceFromEvents(LHS,RHS,LTO,RTO)
+function [stanceL,stanceR] = getStanceFromEvents(eventArray,eventLabels)
+
+LHS=eventArray(:,strcmp('LHS',eventLabels));
+RHS=eventArray(:,strcmp('RHS',eventLabels));
+LTO=eventArray(:,strcmp('LTO',eventLabels));
+RTO=eventArray(:,strcmp('RTO',eventLabels));
 
 auxL=1*LHS-1*LTO;
 stanceL=cumsum(auxL);
