@@ -1,0 +1,15 @@
+mo1 = squeeze(motionArray(:, :, 1, 1));
+mo2 = squeeze(motionArray(:, :, 2, 2));
+mo3 = squeeze(motionArray(:, :, 3, 3));
+ev1 = squeeze(roundedEventArray(:, :, 1, 1));
+ev2 = squeeze(roundedEventArray(:, :, 2, 2));
+ev3 = squeeze(roundedEventArray(:, :, 3, 3));
+[l1, r1] = getStanceFromEvents(ev1, eventsToBeUsed);
+[l2, r2] = getStanceFromEvents(ev2, eventsToBeUsed);
+[l3, r3] = getStanceFromEvents(ev3, eventsToBeUsed);
+l1 = l1*2-1;
+r1 = r1*2-1;
+l2 = l2*2-1;
+r2 = r2*2-1;
+r3 = r3*2-1;
+l3 = l3*2-1;
