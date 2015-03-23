@@ -67,6 +67,7 @@ for i = 1:8
     net.layers{i}.netInputFcn = L{i, 2};
     net.layers{i}.transferFcn = L{i, 3};
     net.layers{i}.size = 1;
+    net.layers{i}.initFcn = 'initnw';
 end
 
 % nn = closeloop(nn);
