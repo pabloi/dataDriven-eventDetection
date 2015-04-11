@@ -4,7 +4,6 @@ require 'torch'
 require 'nn'
 require 'nngraph'
 require 'optim'
-
 require 'hdf5'
 
 local LSTM = require 'LSTM'             -- LSTM timestep and utilities
@@ -12,25 +11,24 @@ require 'Embedding'                     -- class name is Embedding (not namespac
 local model_utils=require 'model_utils'
 
 
--- cmd = torch.CmdLine()
--- cmd:text()
--- cmd:text('Training a simple character-level LSTM language model')
--- cmd:text()
--- cmd:text('Options')
+cmd = torch.CmdLine()
+cmd:text('Options')
 -- cmd:option('-vocabfile','vocabfile.t7','filename of the string->int table')
 -- cmd:option('-datafile','datafile.t7','filename of the serialized torch ByteTensor to load')
--- cmd:option('-batch_size',16,'number of sequences to train on in parallel')
+cmd:option('-batch_size',1,'number of sequences to train on in parallel')
 -- cmd:option('-seq_length',16,'number of timesteps to unroll to')
--- cmd:option('-rnn_size',256,'size of LSTM internal state')
+cmd:option('-rnn_size',1,'size of LSTM internal state')
 -- cmd:option('-max_epochs',1,'number of full passes through the training data')
 -- cmd:option('-savefile','model_autosave','filename to autosave the model (protos) to, appended with the,param,string.t7')
 -- cmd:option('-save_every',100,'save every 100 steps, overwriting the existing file')
 -- cmd:option('-print_every',10,'how many steps/minibatches between printing out the loss')
 -- cmd:option('-seed',123,'torch manual random number generator seed')
--- cmd:text()
---
--- -- parse input params
--- opt = cmd:parse(arg)
+
+-- TODO workaround
+cmd:option('-input_size',54,'size of input vector')
+
+-- parse input params
+opt = cmd:parse(arg)
 
 -- preparation stuff:
 -- torch.manualSeed(opt.seed)
@@ -41,6 +39,9 @@ local model_utils=require 'model_utils'
 -- local loader = CharLMMinibatchLoader.create( -- TODO: local
 --         opt.datafile, opt.vocabfile, opt.batch_size, opt.seq_length)
 -- local vocab_size = loader.vocab_size  -- the number of distinct characters
+
+-- TODO workaround
+local vocab_size = 1
 
 -- Load data
 -- data is a table of tables of tensors with subject => trial => X or y.
@@ -56,16 +57,16 @@ y11 = data['1']['1']['y']
 -- define model prototypes for ONE timestep, then clone them
 --
 protos = {} -- TODO: local
-protos.embed = Embedding(vocab_size, opt.rnn_size)
+-- protos.embed = Embedding(vocab_size, opt.rnn_size)
 -- lstm timestep's input: {x, prev_c, prev_h}, output: {next_c, next_h}
 protos.lstm = LSTM.lstm(opt)
 protos.softmax = nn.Sequential():add(nn.Linear(opt.rnn_size, vocab_size)):add(nn.LogSoftMax())
 protos.criterion = nn.ClassNLLCriterion()
 
--- -- put the above things into one flattened parameters tensor
--- local params, grad_params = model_utils.combine_all_parameters(protos.embed, protos.lstm, protos.softmax)
--- params:uniform(-0.08, 0.08)
---
+-- put the above things into one flattened parameters tensor
+local params, grad_params = model_utils.combine_all_parameters(protos.embed, protos.lstm, protos.softmax)
+params:uniform(-0.08, 0.08)
+
 -- -- make a bunch of clones, AFTER flattening, as that reallocates memory
 -- clones = {} -- TODO: local
 -- for name,proto in pairs(protos) do
@@ -73,14 +74,14 @@ protos.criterion = nn.ClassNLLCriterion()
 --     clones[name] = model_utils.clone_many_times(proto, opt.seq_length, not proto.parameters)
 -- end
 --
--- -- LSTM initial state (zero initially, but final state gets sent to initial state when we do BPTT)
--- local initstate_c = torch.zeros(opt.batch_size, opt.rnn_size)
--- local initstate_h = initstate_c:clone()
---
--- -- LSTM final state's backward message (dloss/dfinalstate) is 0, since it doesn't influence predictions
--- local dfinalstate_c = initstate_c:clone()
--- local dfinalstate_h = initstate_c:clone()
---
+-- LSTM initial state (zero initially, but final state gets sent to initial state when we do BPTT)
+local initstate_c = torch.zeros(opt.batch_size, opt.rnn_size)
+local initstate_h = initstate_c:clone()
+
+-- LSTM final state's backward message (dloss/dfinalstate) is 0, since it doesn't influence predictions
+local dfinalstate_c = initstate_c:clone()
+local dfinalstate_h = initstate_c:clone()
+
 -- -- do fwd/bwd and return loss, grad_params
 -- function feval(x)
 --     if x ~= params then
