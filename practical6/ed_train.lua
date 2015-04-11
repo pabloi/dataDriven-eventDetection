@@ -43,8 +43,11 @@ local model_utils=require 'model_utils'
 -- local vocab_size = loader.vocab_size  -- the number of distinct characters
 
 -- Load data
+-- data is a table of tables of tensors with subject => trial => X or y.
+-- To access the nth subject, mth trial, marker data use: data['n']['m']['X']
 print('loading data files...')
 local myFile = hdf5.open('data.h5')
+local data = myFile:all()
 
 -- define model prototypes for ONE timestep, then clone them
 --
