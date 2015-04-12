@@ -47,8 +47,10 @@ print('loading data files...')
 local myFile = hdf5.open('data.h5')
 local data = myFile:all()
 -- TODO Use this to debug
-X11 = data['1']['1']['X'][{{1,opt.seq_length}, {}}]
-y11 = data['1']['1']['y'][{{1,opt.seq_length}, {}}]
+X11 = data['1']['1']['X']
+y11 = data['1']['1']['y']
+-- X11 = data['1']['1']['X'][{{1,opt.seq_length}, {}}]
+-- y11 = data['1']['1']['y'][{{1,opt.seq_length}, {}}]
 print('X11:size()' ..X11:size())
 print('y11:size()' ..y11:size())
 local vocab_size = 4
