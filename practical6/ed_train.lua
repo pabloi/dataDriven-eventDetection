@@ -53,7 +53,7 @@ X11 = data['1']['1']['X'][{{1,opt.seq_length}, {}}]
 y11 = data['1']['1']['y'][{{1,opt.seq_length}, {}}]
 print('X11:size()=(' ..X11:size(1) ..',' ..X11:size(2) ..')')
 print('y11:size()=(' ..y11:size(1) ..',' ..y11:size(2) ..')')
-local vocab_size = 4
+local vocab_size = 5 -- 5 possible classes: no event, LHS, RHS, LTO, RTO
 local loader = {}
 loader.nbatches = 1
 
@@ -99,6 +99,18 @@ function feval(x)
     -- local y = y11
     local x = X11:t()
     local y = y11:t()
+	aux = torch.zeros(opt.seq_length);
+	for t=1,opt.seq_length do -- very inefficient way to assign class labels instead of what we have now.
+		for j=1,4 do
+			if y[j][t]==1 then
+				aux[t]=j;
+			end
+		end
+		if aux[t]==0 then
+			aux[t]=5;
+		end
+	end
+
     print('x:size()=(' ..x:size(1) ..',' ..x:size(2) ..')')
     print('y:size()=(' ..y:size(1) ..',' ..y:size(2) ..')')
 
@@ -127,7 +139,8 @@ function feval(x)
         print('predictions[t][1]=' ..predictions[t][1])
         print('y[{{}, t}][1]=' ..y[{{}, t}][1])
 
-        loss = loss + clones.criterion[t]:forward(predictions[t], y[{{}, t}])
+        loss = loss + clones.criterion[t]:forward(predictions[t], aux[t])
+		--loss = loss + clones.criterion[t]:forward(predictions[t], y[{{}, t}])
     end
     loss = loss / opt.seq_length
 
@@ -138,7 +151,7 @@ function feval(x)
     local dlstm_h = {}                                  -- output values of LSTM
     for t=opt.seq_length,1,-1 do
         -- backprop through loss, and softmax/linear
-        local doutput_t = clones.criterion[t]:backward(predictions[t], y[{{}, t}])
+        local doutput_t = clones.criterion[t]:backward(predictions[t], aux[t])
         dlstm_h[t] = clones.softmax[t]:backward(lstm_h[t], doutput_t)
 
         -- backprop through LSTM timestep
