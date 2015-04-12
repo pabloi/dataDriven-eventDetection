@@ -76,7 +76,7 @@ params:uniform(-0.08, 0.08)
 -- end
 --
 -- LSTM initial state (zero initially, but final state gets sent to initial state when we do BPTT)
-local initstate_c = torch.zeros(opt.batch_size, opt.rnn_size)
+local initstate_c = torch.zeros(opt.batch_size, opt.rnn_size) -- initialize to zeros matrix
 local initstate_h = initstate_c:clone()
 
 -- LSTM final state's backward message (dloss/dfinalstate) is 0, since it doesn't influence predictions
