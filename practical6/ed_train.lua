@@ -18,8 +18,8 @@ cmd:text('Options')
 cmd:option('-vocabfile','vocabfile.t7','filename of the string->int table')
 cmd:option('-datafile','datafile.t7','filename of the serialized torch ByteTensor to load')
 cmd:option('-batch_size',1,'number of sequences to train on in parallel')
-cmd:option('-seq_length',1000,'number of timesteps to unroll to')
-cmd:option('-rnn_size',56,'size of LSTM internal state')
+cmd:option('-seq_length',10000,'number of timesteps to unroll to')
+cmd:option('-rnn_size',54,'size of LSTM internal state')
 cmd:option('-max_epochs',1,'number of full passes through the training data')
 cmd:option('-savefile','model_autosave','filename to autosave the model (protos) to, appended with the,param,string.t7')
 cmd:option('-save_every',100,'save every 100 steps, overwriting the existing file')
@@ -49,6 +49,7 @@ local data = myFile:all()
 -- TODO Use this to debug
 X11 = data['1']['1']['X']
 y11 = data['1']['1']['y']
+local vocab_size = 4
 
 -- define model prototypes for ONE timestep, then clone them
 --
@@ -84,11 +85,13 @@ function feval(x)
         params:copy(x)
     end
     grad_params:zero()
-    
+
     ------------------ get minibatch -------------------
     -- local x, y = loader:next_batch()
     local x = X11
     local y = y11
+    -- local x = X11:t()
+    -- local y = y11:t()
 
     ------------------- forward pass -------------------
     local embeddings = {}            -- input embeddings
@@ -98,7 +101,8 @@ function feval(x)
     local loss = 0
 
     for t=1,opt.seq_length do
-        embeddings[t] = clones.embed[t]:forward(x[{{}, t}])
+        -- embeddings[t] = clones.embed[t]:forward(x[{{}, t}])
+        embeddings[t] = x[{{}, t}]:copy()
 
         -- we're feeding the *correct* things in here, alternatively
         -- we could sample from the previous timestep and embed that, but that's
@@ -127,7 +131,7 @@ function feval(x)
         ))
 
         -- backprop through embeddings
-        clones.embed[t]:backward(x[{{}, t}], dembeddings[t])
+        -- clones.embed[t]:backward(x[{{}, t}], dembeddings[t])
     end
 
     ------------------------ misc ----------------------
@@ -156,5 +160,3 @@ for i = 1, iterations do
         print(string.format("iteration %4d, loss = %6.8f, gradnorm = %6.4e", i, loss[1], grad_params:norm()))
     end
 end
-
-
