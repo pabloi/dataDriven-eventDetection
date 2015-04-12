@@ -10,8 +10,7 @@ function LSTM.lstm(opt)
 
     function new_input_sum()--
         -- transforms input
-        -- local i2h            = nn.Linear(opt.rnn_size, opt.rnn_size)(x)
-        local i2h            = nn.Linear(opt.input_size, opt.rnn_size)(x) --Linear transformation of the input (i2h=Mi*x+bi). Weights are stored internally (?) 
+        local i2h            = nn.Linear(opt.rnn_size, opt.rnn_size)(x) --Linear transformation of the input (i2h=Mi*x+bi). Weights are stored internally (?) 
         -- transforms previous timestep's output
         local h2h            = nn.Linear(opt.rnn_size, opt.rnn_size)(prev_h) --Linear transform, h2h=Mh*x + bh
         return nn.CAddTable()({i2h, h2h}) -- new_input = i2h + h2h;
