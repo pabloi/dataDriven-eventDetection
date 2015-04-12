@@ -50,6 +50,8 @@ local data = myFile:all()
 X11 = data['1']['1']['X'][{{1,opt.seq_length}, {}}]
 y11 = data['1']['1']['y'][{{1,opt.seq_length}, {}}]
 local vocab_size = 4
+local loader = {}
+loader.nbatches = 1
 
 -- define model prototypes for ONE timestep, then clone them
 --
