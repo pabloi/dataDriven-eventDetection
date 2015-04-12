@@ -18,7 +18,7 @@ cmd:text('Options')
 cmd:option('-vocabfile','vocabfile.t7','filename of the string->int table')
 cmd:option('-datafile','datafile.t7','filename of the serialized torch ByteTensor to load')
 cmd:option('-batch_size',1,'number of sequences to train on in parallel')
-cmd:option('-seq_length',10000,'number of timesteps to unroll to')
+cmd:option('-seq_length',1000,'number of timesteps to unroll to')
 cmd:option('-rnn_size',54,'size of LSTM internal state')
 cmd:option('-max_epochs',1,'number of full passes through the training data')
 cmd:option('-savefile','model_autosave','filename to autosave the model (protos) to, appended with the,param,string.t7')
@@ -47,8 +47,8 @@ print('loading data files...')
 local myFile = hdf5.open('data.h5')
 local data = myFile:all()
 -- TODO Use this to debug
-X11 = data['1']['1']['X']
-y11 = data['1']['1']['y']
+X11 = data['1']['1']['X'][{{1:opt.seq_length}, {}}]
+y11 = data['1']['1']['y'][{{1:opt.seq_length}, {}}]
 local vocab_size = 4
 
 -- define model prototypes for ONE timestep, then clone them
