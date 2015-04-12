@@ -2,7 +2,9 @@ require 'torch'
 require 'nn'
 require 'nngraph'
 require 'optim'
-local CharLMMinibatchLoader = require 'data.CharLMMinibatchLoader'
+require 'hdf5'
+
+-- local CharLMMinibatchLoader = require 'data.CharLMMinibatchLoader'
 local LSTM = require 'LSTM'             -- LSTM timestep and utilities
 require 'Embedding'                     -- class name is Embedding (not namespaced)
 local model_utils=require 'model_utils'
@@ -84,7 +86,9 @@ function feval(x)
     grad_params:zero()
     
     ------------------ get minibatch -------------------
-    local x, y = loader:next_batch()
+    -- local x, y = loader:next_batch()
+    local x = X11
+    local y = y11
 
     ------------------- forward pass -------------------
     local embeddings = {}            -- input embeddings
