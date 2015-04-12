@@ -99,8 +99,8 @@ function feval(x)
     -- local y = y11
     local x = X11:t()
     local y = y11:t()
-    print('x:size()' ..x:size())
-    print('y:size()' ..y:size())
+    print('x:size()' ..x:size(1) ..',' ..x:size(2))
+    print('y:size()' ..y:size(1) ..',' ..y:size(2))
 
     ------------------- forward pass -------------------
     local embeddings = {}            -- input embeddings
