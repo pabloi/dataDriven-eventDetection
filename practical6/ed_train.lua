@@ -121,6 +121,7 @@ function feval(x)
         predictions[t] = clones.softmax[t]:forward(lstm_h[t])
         print('predictions[t]:type()=' ..predictions[t]:type())
         print('predictions[t]:dim()=' ..predictions[t]:dim())
+        print('predictions[t]:size()=' ..predictions[t]:size(1))
 
         loss = loss + clones.criterion[t]:forward(predictions[t], y[{{}, t}])
     end
