@@ -51,8 +51,8 @@ X11 = data['1']['1']['X']
 y11 = data['1']['1']['y']
 -- X11 = data['1']['1']['X'][{{1,opt.seq_length}, {}}]
 -- y11 = data['1']['1']['y'][{{1,opt.seq_length}, {}}]
-print('X11:size()' ..X11:size())
-print('y11:size()' ..y11:size())
+print('X11:size()' ..X11:size(1) ..X11:size(2))
+print('y11:size()' ..y11:size(1) ..y11:size(2))
 local vocab_size = 4
 local loader = {}
 loader.nbatches = 1
