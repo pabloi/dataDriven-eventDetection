@@ -61,7 +61,8 @@ protos.softmax = nn.Sequential():add(nn.Linear(opt.rnn_size, vocab_size)):add(nn
 protos.criterion = nn.ClassNLLCriterion()
 
 -- put the above things into one flattened parameters tensor
-local params, grad_params = model_utils.combine_all_parameters(protos.embed, protos.lstm, protos.softmax)
+-- local params, grad_params = model_utils.combine_all_parameters(protos.embed, protos.lstm, protos.softmax)
+local params, grad_params = model_utils.combine_all_parameters(protos.lstm, protos.softmax)
 params:uniform(-0.08, 0.08)
 
 -- make a bunch of clones, AFTER flattening, as that reallocates memory
