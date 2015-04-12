@@ -51,8 +51,8 @@ local data = myFile:all()
 -- y11 = data['1']['1']['y']
 X11 = data['1']['1']['X'][{{1,opt.seq_length}, {}}]
 y11 = data['1']['1']['y'][{{1,opt.seq_length}, {}}]
-print('X11:size()=' ..X11:size(1) ..',' ..X11:size(2))
-print('y11:size()=' ..y11:size(1) ..',' ..y11:size(2))
+print('X11:size()=(' ..X11:size(1) ..',' ..X11:size(2) ..')')
+print('y11:size()=(' ..y11:size(1) ..',' ..y11:size(2) ..')')
 local vocab_size = 4
 local loader = {}
 loader.nbatches = 1
@@ -99,8 +99,8 @@ function feval(x)
     -- local y = y11
     local x = X11:t()
     local y = y11:t()
-    print('x:size()=' ..x:size(1) ..',' ..x:size(2))
-    print('y:size()=' ..y:size(1) ..',' ..y:size(2))
+    print('x:size()=(' ..x:size(1) ..',' ..x:size(2) ..')')
+    print('y:size()=(' ..y:size(1) ..',' ..y:size(2) ..')')
 
     ------------------- forward pass -------------------
     local embeddings = {}            -- input embeddings
