@@ -124,6 +124,9 @@ function feval(x)
         print('predictions[t]:size(1)=' ..predictions[t]:size(1))
         print('y[{{}, t}]:size(1)=' ..y[{{}, t}]:size(1))
 
+        print('predictions[t]=' ..predictions[t])
+        print('y[{{}, t}]=' ..y[{{}, t}])
+
         loss = loss + clones.criterion[t]:forward(y[{{}, t}], predictions[t])
         -- loss = loss + clones.criterion[t]:forward(predictions[t], y[{{}, t}])
     end
