@@ -91,10 +91,12 @@ function feval(x)
 
     ------------------ get minibatch -------------------
     -- local x, y = loader:next_batch()
-    local x = X11
-    local y = y11
-    -- local x = X11:t()
-    -- local y = y11:t()
+    -- local x = X11
+    -- local y = y11
+    local x = X11:t()
+    local y = y11:t()
+    print('x:size()' ..x:size())
+    print('y:size()' ..y:size())
 
     ------------------- forward pass -------------------
     local embeddings = {}            -- input embeddings
