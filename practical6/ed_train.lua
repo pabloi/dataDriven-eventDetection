@@ -4,7 +4,8 @@ require 'nngraph'
 require 'optim'
 require 'hdf5'
 
--- local CharLMMinibatchLoader = require 'data.CharLMMinibatchLoader'
+-- local BatchLoader = require 'data.BatchLoader'
+local BatchLoader = require 'data.BatchLoader'
 local LSTM = require 'LSTM'             -- LSTM timestep and utilities
 require 'Embedding'                     -- class name is Embedding (not namespaced)
 local model_utils=require 'model_utils'
@@ -15,8 +16,8 @@ cmd:text()
 cmd:text('Training a simple character-level LSTM language model')
 cmd:text()
 cmd:text('Options')
-cmd:option('-vocabfile','vocabfile.t7','filename of the string->int table')
-cmd:option('-datafile','datafile.t7','filename of the serialized torch ByteTensor to load')
+-- cmd:option('-vocabfile','vocabfile.t7','filename of the string->int table')
+cmd:option('-datafile','data.h5','filename of hdf5 data file')
 cmd:option('-batch_size',1,'number of sequences to train on in parallel')
 cmd:option('-seq_length',1000,'number of timesteps to unroll to')
 cmd:option('-rnn_size',54,'size of LSTM internal state')
@@ -36,8 +37,8 @@ opt.savefile = cmd:string(opt.savefile, opt,
     {save_every=true, print_every=true, savefile=true, vocabfile=true, datafile=true})
     .. '.t7'
 
--- local loader = CharLMMinibatchLoader.create( -- TODO: local
---         opt.datafile, opt.vocabfile, opt.batch_size, opt.seq_length)
+local loader = BatchLoader.create( -- TODO: local
+        opt.datafile, opt.batch_size, opt.seq_length)
 -- local vocab_size = loader.vocab_size  -- the number of distinct characters
 
 -- Load data
@@ -94,6 +95,7 @@ function feval(x)
     grad_params:zero()
 
     ------------------ get minibatch -------------------
+    -- TODO adapt
     -- local x, y = loader:next_batch()
     -- local x = X11
     -- local y = y11
