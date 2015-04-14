@@ -30,7 +30,8 @@ function BatchLoader.create(data_file, batch_size, seq_length)
         for trial, samples in pairs(trials) do
             local xData = samples['X']
             local yData = samples['y']
-            -- cut off the end so that it divides evenly
+
+            -- truncate data to multiple of batch_size * seq_length
             local len = xData:size(1)
             if len % (batch_size * seq_length) ~= 0 then
                 xData = xData:sub(1, batch_size * seq_length
@@ -51,30 +52,6 @@ function BatchLoader.create(data_file, batch_size, seq_length)
             self.nbatches = self.nbatches + new_nbatches
         end
     end
-
-    -- local pathToData = '/' .. subject .. '/' .. trial
-    -- local data = myFile:read(pathToData):all()
-    -- local xData = data['X']
-    -- local yData = data['y']
-
-    -- cut off the end so that it divides evenly
-    -- local len = data:size(1)
-    -- if len % (batch_size * seq_length) ~= 0 then
-    --     xData = xData:sub(1, batch_size * seq_length
-    --                 * math.floor(len / (batch_size * seq_length)))
-    --     yData = yData:sub(1, batch_size * seq_length
-    --                 * math.floor(len / (batch_size * seq_length)))
-    -- end
-
-    -- self.batches is a table of tensors
-    -- self.batch_size = batch_size
-    -- self.seq_length = seq_length
-
-    -- self.x_batches = xData:view(batch_size, -1):split(seq_length, 2)
-    -- self.x_batches = xData:split(batch_size*seq_length, 1)
-    -- self.nbatches = #self.x_batches
-    -- self.y_batches = ydata:view(batch_size, -1):split(seq_length, 2)
-    -- self.y_batches = yData:split(batch_size*seq_length, 1)
     assert(#self.x_batches == #self.y_batches)
 
     self.current_batch = 0

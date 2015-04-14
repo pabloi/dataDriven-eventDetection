@@ -80,10 +80,8 @@ function feval(x)
 
     ------------------ get minibatch -------------------
     local x, y = loader:next_batch()
-    -- local x = X11
-    -- local y = y11
-    print('x:size()=(' ..x:size(1) ..',' ..x:size(2) ..')')
-    print('y:size()=(' ..y:size(1) ..',' ..y:size(2) ..')')
+    -- print('x:size()=(' ..x:size(1) ..',' ..x:size(2) ..')')
+    -- print('y:size()=(' ..y:size(1) ..',' ..y:size(2) ..')')
 
 
     -- TODO rewrite
@@ -117,12 +115,12 @@ function feval(x)
 
         predictions[t] = clones.softmax[t]:forward(lstm_h[t])
 
-        print('predictions[t]:type()=' ..predictions[t]:type())
-        print('predictions[t]:dim()=' ..predictions[t]:dim())
-        print('predictions[t]:size(1)=' ..predictions[t]:size(1))
-        print('y[{{}, t}]:size(1)=' ..y[{{}, t}]:size(1))
-        print('predictions[t][1]=' ..predictions[t][1])
-        print('y[{{}, t}][1]=' ..y[{{}, t}][1])
+        -- print('predictions[t]:type()=' ..predictions[t]:type())
+        -- print('predictions[t]:dim()=' ..predictions[t]:dim())
+        -- print('predictions[t]:size(1)=' ..predictions[t]:size(1))
+        -- print('y[{{}, t}]:size(1)=' ..y[{{}, t}]:size(1))
+        -- print('predictions[t][1]=' ..predictions[t][1])
+        -- print('y[{{}, t}][1]=' ..y[{{}, t}][1])
 
         loss = loss + clones.criterion[t]:forward(predictions[t], aux[t])
 		--loss = loss + clones.criterion[t]:forward(predictions[t], y[{{}, t}])
