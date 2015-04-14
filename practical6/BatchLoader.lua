@@ -22,6 +22,7 @@ function BatchLoader.create(data_file, batch_size, seq_length)
     self.seq_length = seq_length
 
     self.x_batches = {}
+    self.y_batches = {}
     self.nbatches = 0
 
     -- ipairs does not work because the indices are strings ('1') and not integers
