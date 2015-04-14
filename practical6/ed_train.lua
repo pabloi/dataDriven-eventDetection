@@ -26,7 +26,7 @@ require 'optim'
 require 'hdf5'
 
 -- function to transfer data to gpu
-local function transfer_data(x)
+function transfer_data(x)
   return x:cuda()
 end
 
