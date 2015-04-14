@@ -114,7 +114,6 @@ function feval(x)
     ------------------ get minibatch -------------------
     local x, y = loader:next_batch()
     x = transfer_data(x)
-    y = transfer_data(y)
     print('Load batch #' .. current_batch)
     current_batch = current_batch + 1
     -- print('x:size()=(' ..x:size(1) ..',' ..x:size(2) ..')')
@@ -133,6 +132,7 @@ function feval(x)
 			aux[t]=5;
 		end
 	end
+	aux = transfer_data(aux)
 
     ------------------- forward pass -------------------
     local embeddings = {}            -- input embeddings
