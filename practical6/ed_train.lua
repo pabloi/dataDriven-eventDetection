@@ -18,11 +18,11 @@ cmd:text('Options')
 cmd:option('-vocabfile','vocabfile.t7','filename of the string->int table')
 cmd:option('-datafile','datafile.t7','filename of the serialized torch ByteTensor to load')
 cmd:option('-batch_size',1,'number of sequences to train on in parallel')
-cmd:option('-seq_length',1000,'number of timesteps to unroll to')
+cmd:option('-seq_length',100,'number of timesteps to unroll to')
 cmd:option('-rnn_size',54,'size of LSTM internal state')
-cmd:option('-max_epochs',1,'number of full passes through the training data')
+cmd:option('-max_epochs',500,'number of full passes through the training data')
 cmd:option('-savefile','model_autosave','filename to autosave the model (protos) to, appended with the,param,string.t7')
-cmd:option('-save_every',100,'save every 100 steps, overwriting the existing file')
+cmd:option('-save_every',100,'save every 100 steps, overwriting the existing file') -- This needs to be at least larger than max_epochs * nBatches so that it saves at least once.
 cmd:option('-print_every',10,'how many steps/minibatches between printing out the loss')
 cmd:option('-seed',123,'torch manual random number generator seed')
 cmd:text()
@@ -64,7 +64,13 @@ protos = {} -- TODO: local
 -- lstm timestep's input: {x, prev_c, prev_h}, output: {next_c, next_h}
 protos.lstm = LSTM.lstm(opt)
 protos.softmax = nn.Sequential():add(nn.Linear(opt.rnn_size, vocab_size)):add(nn.LogSoftMax())
-protos.criterion = nn.ClassNLLCriterion()
+local weights=torch.Tensor(5);
+weights[1]=96/100;
+weights[2]=96/100;
+weights[3]=96/100;
+weights[4]=96/100;
+weights[5]=1/100;
+protos.criterion = nn.ClassNLLCriterion(weights)
 
 -- put the above things into one flattened parameters tensor
 -- local params, grad_params = model_utils.combine_all_parameters(protos.embed, protos.lstm, protos.softmax)
@@ -137,7 +143,11 @@ function feval(x)
         print('predictions[t]:size(1)=' ..predictions[t]:size(1))
         print('y[{{}, t}]:size(1)=' ..y[{{}, t}]:size(1))
         print('predictions[t][1]=' ..predictions[t][1])
-        print('y[{{}, t}][1]=' ..y[{{}, t}][1])
+		print('predictions[t][2]=' ..predictions[t][2])
+		print('predictions[t][3]=' ..predictions[t][3])
+		print('predictions[t][4]=' ..predictions[t][4])
+		print('predictions[t][5]=' ..predictions[t][5])
+        print('label[t]=' ..aux[t])
 
         loss = loss + clones.criterion[t]:forward(predictions[t], aux[t])
 		--loss = loss + clones.criterion[t]:forward(predictions[t], y[{{}, t}])
