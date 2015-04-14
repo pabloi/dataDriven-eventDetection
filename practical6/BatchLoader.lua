@@ -38,9 +38,9 @@ function BatchLoader.create(data_file, batch_size, seq_length)
                             * math.floor(len / (batch_size * seq_length)))
             end
 
-            new_x_batches = xData:split(batch_size*seq_length, 1)
-            new_y_batches = yData:split(batch_size*seq_length, 1)
-            new_nbatches = #new_x_batches
+            local new_x_batches = xData:split(batch_size*seq_length, 1)
+            local new_y_batches = yData:split(batch_size*seq_length, 1)
+            local new_nbatches = #new_x_batches
             for k, v in ipairs(new_x_batches) do
                 self.x_batches[#self.x_batches + 1] = v
             end
