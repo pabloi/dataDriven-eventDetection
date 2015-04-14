@@ -1,8 +1,34 @@
+#!/usr/bin/env lua
+
 require 'torch'
-require 'nn'
+-- require 'nn'
+local ok,cunn = pcall(require, 'fbcunn')
+if not ok then
+    ok,cunn = pcall(require,'cunn')
+    if ok then
+        print("warning: fbcunn not found. Falling back to cunn") 
+        LookupTable = nn.LookupTable
+    else
+        print("Could not find cunn or fbcunn. Either is required")
+        os.exit()
+    end
+else
+    deviceParams = cutorch.getDeviceProperties(1)
+    cudaComputeCapability = deviceParams.major + deviceParams.minor/10
+    if cudaComputeCapability >= 3.5 then
+        LookupTable = nn.LookupTableGPU
+    else
+        LookupTable = nn.LookupTable
+    end
+end
 require 'nngraph'
 require 'optim'
 require 'hdf5'
+
+-- function to transfer data to gpu
+local function transfer_data(x)
+  return x:cuda()
+end
 
 -- local BatchLoader = require 'data.BatchLoader'
 local BatchLoader = require 'BatchLoader'
@@ -47,15 +73,15 @@ local vocab_size = 5 -- 5 possible classes: no event, LHS, RHS, LTO, RTO
 protos = {} -- TODO: local
 -- protos.embed = Embedding(vocab_size, opt.rnn_size)
 -- lstm timestep's input: {x, prev_c, prev_h}, output: {next_c, next_h}
-protos.lstm = LSTM.lstm(opt)
-protos.softmax = nn.Sequential():add(nn.Linear(opt.rnn_size, vocab_size)):add(nn.LogSoftMax())
+protos.lstm = transfer_data(LSTM.lstm(opt))
+protos.softmax = transfer_data(nn.Sequential():add(nn.Linear(opt.rnn_size, vocab_size)):add(nn.LogSoftMax()))
 local weights=torch.Tensor(5);
 weights[1]=96/100;
 weights[2]=96/100;
 weights[3]=96/100;
 weights[4]=96/100;
 weights[5]=1/100;
-protos.criterion = nn.ClassNLLCriterion(weights)
+protos.criterion = transfer_data(nn.ClassNLLCriterion(weights))
 
 -- put the above things into one flattened parameters tensor
 -- local params, grad_params = model_utils.combine_all_parameters(protos.embed, protos.lstm, protos.softmax)
@@ -70,7 +96,7 @@ for name,proto in pairs(protos) do
 end
 
 -- LSTM initial state (zero initially, but final state gets sent to initial state when we do BPTT)
-local initstate_c = torch.zeros(opt.batch_size, opt.rnn_size) -- initialize to zeros matrix
+local initstate_c = transfer_data(torch.zeros(opt.batch_size, opt.rnn_size)) -- initialize to zeros matrix
 local initstate_h = initstate_c:clone()
 
 -- LSTM final state's backward message (dloss/dfinalstate) is 0, since it doesn't influence predictions
