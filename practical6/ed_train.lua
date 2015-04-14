@@ -88,6 +88,7 @@ function feval(x)
     ------------------ get minibatch -------------------
     local x, y = loader:next_batch()
     print('Load batch #' .. current_batch)
+    current_batch = current_batch + 1
     -- print('x:size()=(' ..x:size(1) ..',' ..x:size(2) ..')')
     -- print('y:size()=(' ..y:size(1) ..',' ..y:size(2) ..')')
 
