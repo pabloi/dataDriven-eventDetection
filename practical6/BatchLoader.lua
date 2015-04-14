@@ -30,7 +30,7 @@ function BatchLoader.create(data_file, batch_size, seq_length)
             local xData = samples['X']
             local yData = samples['y']
             -- cut off the end so that it divides evenly
-            local len = data:size(1)
+            local len = xData:size(1)
             if len % (batch_size * seq_length) ~= 0 then
                 xData = xData:sub(1, batch_size * seq_length
                             * math.floor(len / (batch_size * seq_length)))
