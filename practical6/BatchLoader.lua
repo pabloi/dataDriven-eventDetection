@@ -27,8 +27,8 @@ function BatchLoader.create(data_file, batch_size, seq_length)
     -- ipairs does not work because the indices are strings ('1') and not integers
     for subjects, trials in pairs(data) do
         for trial, samples in pairs(trials) do
-            local xData = sample['X']
-            local yData = sample['y']
+            local xData = samples['X']
+            local yData = samples['y']
             -- cut off the end so that it divides evenly
             local len = data:size(1)
             if len % (batch_size * seq_length) ~= 0 then
