@@ -77,6 +77,7 @@ local initstate_h = initstate_c:clone()
 local dfinalstate_c = initstate_c:clone()
 local dfinalstate_h = initstate_c:clone()
 
+local current_batch = 1
 -- do fwd/bwd and return loss, grad_params
 function feval(x)
     if x ~= params then
@@ -86,6 +87,7 @@ function feval(x)
 
     ------------------ get minibatch -------------------
     local x, y = loader:next_batch()
+    print('Load batch #' .. current_batch)
     -- print('x:size()=(' ..x:size(1) ..',' ..x:size(2) ..')')
     -- print('y:size()=(' ..y:size(1) ..',' ..y:size(2) ..')')
 
