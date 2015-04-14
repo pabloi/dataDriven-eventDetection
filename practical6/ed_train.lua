@@ -37,26 +37,10 @@ opt.savefile = cmd:string(opt.savefile, opt,
     {save_every=true, print_every=true, savefile=true, vocabfile=true, datafile=true})
     .. '.t7'
 
-local loader = BatchLoader.create( -- TODO: local
-        opt.datafile, opt.batch_size, opt.seq_length)
+local loader = BatchLoader.create(opt.datafile, opt.batch_size, opt.seq_length)
 -- local vocab_size = loader.vocab_size  -- the number of distinct characters
 
--- Load data
--- data is a table of tables of tensors with subject => trial => X or y.
--- To access the nth subject, mth trial, marker data use: data['n']['m']['X']
-print('loading data files...')
-local myFile = hdf5.open('data.h5')
-local data = myFile:all()
--- TODO Use this to debug
--- X11 = data['1']['1']['X']
--- y11 = data['1']['1']['y']
-X11 = data['1']['1']['X'][{{1,opt.seq_length}, {}}]
-y11 = data['1']['1']['y'][{{1,opt.seq_length}, {}}]
-print('X11:size()=(' ..X11:size(1) ..',' ..X11:size(2) ..')')
-print('y11:size()=(' ..y11:size(1) ..',' ..y11:size(2) ..')')
 local vocab_size = 5 -- 5 possible classes: no event, LHS, RHS, LTO, RTO
-local loader = {}
-loader.nbatches = 1
 
 -- define model prototypes for ONE timestep, then clone them
 --
@@ -95,12 +79,14 @@ function feval(x)
     grad_params:zero()
 
     ------------------ get minibatch -------------------
-    -- TODO adapt
-    -- local x, y = loader:next_batch()
+    local x, y = loader:next_batch()
     -- local x = X11
     -- local y = y11
-    local x = X11:t()
-    local y = y11:t()
+    print('x:size()=(' ..x:size(1) ..',' ..x:size(2) ..')')
+    print('y:size()=(' ..y:size(1) ..',' ..y:size(2) ..')')
+
+
+    -- TODO rewrite
 	aux = torch.zeros(opt.seq_length);
 	for t=1,opt.seq_length do -- very inefficient way to assign class labels instead of what we have now.
 		for j=1,4 do
@@ -112,9 +98,6 @@ function feval(x)
 			aux[t]=5;
 		end
 	end
-
-    print('x:size()=(' ..x:size(1) ..',' ..x:size(2) ..')')
-    print('y:size()=(' ..y:size(1) ..',' ..y:size(2) ..')')
 
     ------------------- forward pass -------------------
     local embeddings = {}            -- input embeddings
