@@ -68,11 +68,11 @@ end
 
 %% Save super-array
 save ../data/dataArrays_upSampled_preProc.mat motionArray eventArray Time markersToBeUsed eventsToBeUsed subs
-gi
+
 %% Just for check: visualize marker data averaged across subjects & trials
 figure
 aa=reshape(mean(mean(motionArray,4),3),100001,18,3);
 hold on
 for i=1:18
-    plot3(aa(:,i,1),aa(:,i,2),aa(:,i,3))
+    plot3(aa(:,i,1),aa(:,i,2),aa(:,i,3),'.')
 end
