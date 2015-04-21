@@ -16,7 +16,8 @@ mo_ts = squeeze(mat2cell(mop, F, R, ones(1, T))).';
 
 % shift range of stance-swing into $\pm 1$ and pad with delay
 function y = prep(x)
-    y = x*2 - 1;
+    % y = x*2 - 1;
+    y = x;
     if delay > 0
         y = [ones(1, delay)*y(1) y(1:end-delay).'];
     else

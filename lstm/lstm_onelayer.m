@@ -2,7 +2,7 @@ function net = lstm_onelayer(n, n_out)
 % constructs uninitialized RNN with:
 %   * One input timeseries `x` (arbitrary dimension)
 %   * One meta-layer of `n` LSTM cells (close-loop feedback)
-%   * One output layer of linear neurons
+%   * One output layer
 %   * One output timeseries `y` (dimension `n_out`)
 
 net = network;
