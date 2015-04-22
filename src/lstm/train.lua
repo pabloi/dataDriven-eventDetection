@@ -18,13 +18,13 @@ cmd:text('Training a simple character-level LSTM language model')
 cmd:text()
 cmd:text('Options')
 -- cmd:option('-vocabfile','vocabfile.t7','filename of the string->int table')
-cmd:option('-datafile','../../data/set1_1.h5','filename of hdf5 data file')
+cmd:option('-datafile','set1_1.h5','filename of hdf5 data file')
 cmd:option('-batch_size',1,'number of sequences to train on in parallel')
 cmd:option('-seq_length',100,'number of timesteps to unroll to')
 cmd:option('-rnn_size',54,'size of LSTM internal state')
 cmd:option('-max_epochs',1000,'number of full passes through the training data')
-cmd:option('-savefile','model_autosave','filename to autosave the model (protos) to, appended with the,param,string.t7')
-cmd:option('-save_every',1000,'save every 100 steps, overwriting the existing file') -- This needs to be at least larger than max_epochs * nBatches so that it saves at least once.
+--cmd:option('-savefile','model_autosave','filename to autosave the model (protos) to, appended with the,param,string.t7') - savefile can no longer be provided, using same names as datafile appending at end
+cmd:option('-save_every',500,'save every 500 steps, overwriting the existing file') -- This needs to be at least larger than max_epochs * nBatches so that it saves at least once.
 cmd:option('-print_every',100,'how many steps/minibatches between printing out the loss')
 cmd:option('-seed',123,'torch manual random number generator seed')
 cmd:text()
@@ -34,11 +34,11 @@ opt = cmd:parse(arg)
 
 -- preparation stuff:
 torch.manualSeed(opt.seed)
-opt.savefile = cmd:string(opt.savefile, opt,
+opt.savefile = cmd:string(opt.datafile, opt,
     {save_every=true, print_every=true, savefile=true, vocabfile=true, datafile=true})
-    .. '.t7'
+    
 
-local loader = BatchLoader.create(opt.datafile, opt.batch_size, opt.seq_length)
+local loader = BatchLoader.create('../../data/' .. opt.datafile, opt.batch_size, opt.seq_length)
 -- local vocab_size = loader.vocab_size  -- the number of distinct characters
 
 local vocab_size = 3
@@ -171,7 +171,7 @@ for i = 1, iterations do -- one iteration is going through just 1 chunk of seque
     losses[#losses + 1] = loss[1]
 
     if i % opt.save_every == 0 then
-        torch.save(opt.savefile, protos)
+        torch.save(opt.savefile .. i .. 'train.t7', protos)
     end
     if i % opt.print_every == 0 then
         print(string.format("iteration %4d, loss = %6.8f, gradnorm = %6.4e", i, loss[1], grad_params:norm()))
