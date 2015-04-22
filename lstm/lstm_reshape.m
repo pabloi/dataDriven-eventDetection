@@ -14,19 +14,23 @@ mor = reshape(mo, T, F, R);
 mop = permute(mor, [2 3 1]);
 mo_ts = squeeze(mat2cell(mop, F, R, ones(1, T))).';
 
-% pre-process events into stance-swing ($\pm 1$)
-% FIXME: right leg is discarded
-ev2 = zeros(1, R, T);
-for i = 1:R
-    [l, ~] = getStanceFromEvents(ev(:, :, i), evLabels);
-    l = l*2 - 1;
+% shift range of stance-swing into $\pm 1$ and pad with delay
+function y = prep(x)
+    % y = x*2 - 1;
+    y = x;
     if delay > 0
-        l = [ones(1, delay)*l(1) l(1:end-delay).'];
+        y = [ones(1, delay)*y(1) y(1:end-delay).'];
     else
-        l = l.';
+        y = y.';
     end
-    ev2(1, i, :) = l;
 end
-ev_ts = squeeze(mat2cell(ev2, 1, R, ones(1, T))).';
+
+ev2 = zeros(2, R, T);
+for i = 1:R
+    [l, r] = getStanceFromEvents(ev(:, :, i), evLabels);
+    ev2(1, i, :) = prep(l);
+    ev2(2, i, :) = prep(r);
+end
+ev_ts = squeeze(mat2cell(ev2, 2, R, ones(1, T))).';
 
 end
