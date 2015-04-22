@@ -30,7 +30,7 @@ opt.savefile = cmd:string(opt.savefile, opt,
     {save_every=true, print_every=true, savefile=true, vocabfile=true, datafile=true})
     .. '.t7'
 
-local vocab_size = 4 -- 4 possible classes: double swing (impossible), single Stance L, single stance R, double stance
+local vocab_size = 3 -- 3 possible classes: class 0 is double swing (should never happen), single Stance L, single stance R, double stance
 
 
 protos = torch.load(opt.model)

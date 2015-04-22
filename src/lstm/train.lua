@@ -20,12 +20,12 @@ cmd:text('Options')
 -- cmd:option('-vocabfile','vocabfile.t7','filename of the string->int table')
 cmd:option('-datafile','../../data/set1_1.h5','filename of hdf5 data file')
 cmd:option('-batch_size',1,'number of sequences to train on in parallel')
-cmd:option('-seq_length',1000,'number of timesteps to unroll to')
+cmd:option('-seq_length',100,'number of timesteps to unroll to')
 cmd:option('-rnn_size',54,'size of LSTM internal state')
-cmd:option('-max_epochs',50,'number of full passes through the training data')
+cmd:option('-max_epochs',1000,'number of full passes through the training data')
 cmd:option('-savefile','model_autosave','filename to autosave the model (protos) to, appended with the,param,string.t7')
-cmd:option('-save_every',100,'save every 100 steps, overwriting the existing file') -- This needs to be at least larger than max_epochs * nBatches so that it saves at least once.
-cmd:option('-print_every',10,'how many steps/minibatches between printing out the loss')
+cmd:option('-save_every',1000,'save every 100 steps, overwriting the existing file') -- This needs to be at least larger than max_epochs * nBatches so that it saves at least once.
+cmd:option('-print_every',100,'how many steps/minibatches between printing out the loss')
 cmd:option('-seed',123,'torch manual random number generator seed')
 cmd:text()
 
@@ -41,7 +41,7 @@ opt.savefile = cmd:string(opt.savefile, opt,
 local loader = BatchLoader.create(opt.datafile, opt.batch_size, opt.seq_length)
 -- local vocab_size = loader.vocab_size  -- the number of distinct characters
 
-local vocab_size = 4
+local vocab_size = 3
 
 -- define model prototypes for ONE timestep, then clone them
 --
@@ -164,7 +164,7 @@ end
 
 -- optimization stuff
 losses = {} -- TODO: local
-local optim_state = {learningRate = 1e-1}
+local optim_state = {learningRate = 1e-3}
 local iterations = opt.max_epochs * loader.nbatches
 for i = 1, iterations do -- one iteration is going through just 1 chunk of sequence, of length seq_length. If we have 74 sequences of 50secs each, with seq_length=100 it takes 74*50 =~4000 iterations to go through all the data once 
     local _, loss = optim.adagrad(feval, params, optim_state)
