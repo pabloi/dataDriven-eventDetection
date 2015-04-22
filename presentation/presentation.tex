@@ -1,0 +1,157 @@
+\documentclass{beamer}
+
+\mode<presentation>
+{
+  \usetheme{default}
+  \usecolortheme{beaver}
+  \setbeamercovered{transparent}
+  \setbeamertemplate{caption}[numbered]
+}
+
+\usepackage{siunitx}
+
+\usepackage{booktabs}
+\newcommand{\ra}[1]{\renewcommand{\arraystretch}{#1}}
+\usepackage{float}
+% \usepackage{subfloat}
+% \usepackage{subfig}
+% \usepackage[labelsep=none,labelformat=empty]{caption}
+% \renewcommand{\tablename}{}
+
+% \usepackage{tikz}
+% \usepackage{pgfplots}
+% \pgfplotsset{compat=1.9}
+% \tikzstyle{block} = [draw, align=center, rectangle, 
+%                     minimum height=2em, minimum width=2em]
+% % \tikzstyle{sum} = [draw, circle, node distance=1cm]
+% \tikzstyle{input} = [coordinate]
+% \tikzstyle{output} = [coordinate]
+% \tikzstyle{pinstyle} = [pin edge={to-, thin, black}]
+%
+% \tikzstyle{register} = [draw, align=center, rectangle, minimum height=2em, minimum width=2em]
+% \tikzstyle{sum} = [draw, circle, inner sep=1.0pt]
+% \tikzstyle{terminal} = [draw, circle, inner sep=1.2pt]
+
+\title
+{
+    Gait Event Detection Using an LSTM Network
+}
+
+\subtitle
+{
+    10-701
+    % Introduction to Machine Learning
+    Project Presentation
+}
+
+\author
+{
+    Pablo Iturralde\\
+    Yin Zhong\\
+    Jakob Bauer
+    % Pablo A. Iturralde,
+    % Yin Zhong,
+    % Jakob Bauer
+}
+
+\date
+{
+    April 22, 2015
+}
+
+% ==============================================================================
+
+\begin{document}
+
+\begin{frame}
+  \titlepage
+\end{frame}
+
+\begin{frame}{Introduction}
+  % \tableofcontents
+    \begin{itemize}
+        \item
+        Gait events
+        \item
+        Why is this important?
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Data}
+    \begin{itemize}
+        \item
+            Time series data
+        \item
+            54 features 
+            (18 motion capture markers $\times$ 3 dimensions)
+        \item
+            \num{240000} samples 
+            (8 subjects $\times$ 3 trials $\times$ \num{10000} samples)
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Baseline Methods}
+    \begin{itemize}
+        \item
+            Signal processing approach [O'Connor et al., 2007]
+            \begin{itemize}
+                \item
+                    Heuristic based on speed of heel and toe markers
+                \item
+                    No learning
+                \item
+                    Sensitive to threshold value
+            \end{itemize}
+        \item
+            Feed-forward Neural Network [Miller, 2009]
+            \begin{itemize}
+                \item
+                    Sliding window centered around the desired marker
+                \item
+                    Requires heavy preprocessing (dimensionality reduction,
+                    variable window size based on foot speed)
+            \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Our Approach: LSTM}
+    \begin{itemize}
+        \item
+            LSTM = Recurrent Neural Network + ``memory''
+        \item
+            Motivation:
+            \begin{itemize}
+            \item
+                Detect long-range dependencies
+            \item
+                No windowing required
+            \end{itemize}
+        \item
+            Network architecture
+            \begin{itemize}
+                \item TODO
+            \end{itemize}
+        \item
+            Implementation
+            \begin{itemize}
+                \item
+                    Torch/Lua
+                \item
+                    LSTM cell by
+                    de Freitas (Oxford University, Google Deepmind)
+                \item
+                    Amazon EC2 GPU instance (g2.2xlarge)
+            \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Results}
+\end{frame}
+
+\begin{frame}{Q\&A}
+    \Large
+    \centering
+    Thank you for your attention!
+\end{frame}
+
+\end{document}
