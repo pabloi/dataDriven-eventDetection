@@ -11,21 +11,14 @@ require 'Embedding'                     -- class name is Embedding (not namespac
 local model_utils=require 'model_utils'
 
 
-cmd = torch.CmdLine()
 cmd:text()
-cmd:text('Training a simple character-level LSTM language model')
+cmd:text('Test a simple character-level LSTM language model')
 cmd:text()
 cmd:text('Options')
--- cmd:option('-vocabfile','vocabfile.t7','filename of the string->int table')
-cmd:option('-datafile','data.h5','filename of hdf5 data file')
-cmd:option('-batch_size',1,'number of sequences to train on in parallel')
-cmd:option('-seq_length',100,'number of timesteps to unroll to')
-cmd:option('-rnn_size',54,'size of LSTM internal state')
-cmd:option('-max_epochs',500,'number of full passes through the training data')
-cmd:option('-savefile','model_autosave','filename to autosave the model (protos) to, appended with the,param,string.t7')
-cmd:option('-save_every',100,'save every 100 steps, overwriting the existing file') -- This needs to be at least larger than max_epochs * nBatches so that it saves at least once.
-cmd:option('-print_every',10,'how many steps/minibatches between printing out the loss')
-cmd:option('-seed',123,'torch manual random number generator seed')
+cmd:option('-model','model_autosave.t7','contains just the protos table, and nothing else')
+cmd:option('-seed',123,'random number generator\'s seed')
+cmd:option('-sample',false,'false to use max at each timestep, true to sample at each timestep')
+cmd:option('-length',200,'number of characters to sample')
 cmd:text()
 
 -- parse input params
@@ -92,5 +85,6 @@ local initstate_h = initstate_c:clone()
         print('label[t]=' ..aux[t])
 
         loss = loss + protos.criterion:forward(predictions[t], aux[t])
+		out[t]=predictions[t]:max();
     end
     loss = loss / opt.seq_length

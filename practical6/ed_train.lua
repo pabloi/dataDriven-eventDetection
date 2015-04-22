@@ -87,7 +87,7 @@ function feval(x)
 
     ------------------ get minibatch -------------------
     local x, y = loader:next_batch()
-    print('Load batch #' .. current_batch)
+    --print('Load batch #' .. current_batch)
     current_batch = current_batch + 1
     -- print('x:size()=(' ..x:size(1) ..',' ..x:size(2) ..')')
     -- print('y:size()=(' ..y:size(1) ..',' ..y:size(2) ..')')
@@ -124,21 +124,23 @@ function feval(x)
 
         predictions[t] = clones.softmax[t]:forward(lstm_h[t])
 
-        print('predictions[t]:type()=' ..predictions[t]:type())
-        print('predictions[t]:dim()=' ..predictions[t]:dim())
-        print('predictions[t]:size(1)=' ..predictions[t]:size(1))
-        print('y[{{}, t}]:size(1)=' ..y[{{}, t}]:size(1))
-        print('predictions[t][1]=' ..predictions[t][1])
-		print('predictions[t][2]=' ..predictions[t][2])
-		print('predictions[t][3]=' ..predictions[t][3])
-		print('predictions[t][4]=' ..predictions[t][4])
-		print('predictions[t][5]=' ..predictions[t][5])
-        print('label[t]=' ..aux[t])
+        --print('predictions[t]:type()=' ..predictions[t]:type())
+        --print('predictions[t]:dim()=' ..predictions[t]:dim())
+        --print('predictions[t]:size(1)=' ..predictions[t]:size(1))
+        --print('y[{{}, t}]:size(1)=' ..y[{{}, t}]:size(1))
+        --print('predictions[t][1]=' ..predictions[t][1])
+		--print('predictions[t][2]=' ..predictions[t][2])
+		--print('predictions[t][3]=' ..predictions[t][3])
+		--print('predictions[t][4]=' ..predictions[t][4])
+		--print('predictions[t][5]=' ..predictions[t][5])
+        --print('label[t]=' ..aux[t])
 
         loss = loss + clones.criterion[t]:forward(predictions[t], aux[t])
 		--loss = loss + clones.criterion[t]:forward(predictions[t], y[{{}, t}])
+
     end
     loss = loss / opt.seq_length
+		--print('loss=' ..loss)
 
     ------------------ backward pass -------------------
     -- complete reverse order of the above
