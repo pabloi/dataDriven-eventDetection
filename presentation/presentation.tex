@@ -71,9 +71,11 @@
   % \tableofcontents
     \begin{itemize}
         \item
-        Gait events
+            Goal: detect gait events (heel strike, toe off) 
+            in motion capture data
         \item
-        Why is this important?
+            Necessary to measure changes in gait that arise from training,
+            disease or aging
     \end{itemize}
 \end{frame}
 
@@ -87,6 +89,8 @@
         \item
             \num{240000} samples 
             (8 subjects $\times$ 3 trials $\times$ \num{10000} samples)
+        \item
+            Groundtruth from force plates
     \end{itemize}
 \end{frame}
 
@@ -117,7 +121,7 @@
 \begin{frame}{Our Approach: LSTM}
     \begin{itemize}
         \item
-            LSTM = Recurrent Neural Network + ``memory''
+            LSTM = Recurrent Neural Network with memory cells
         \item
             Motivation:
             \begin{itemize}
@@ -140,7 +144,7 @@
                     LSTM cell by
                     de Freitas (Oxford University, Google Deepmind)
                 \item
-                    Amazon EC2 GPU instance (g2.2xlarge)
+                    AWS EC2 GPU instance (g2.2xlarge)
             \end{itemize}
     \end{itemize}
 \end{frame}
