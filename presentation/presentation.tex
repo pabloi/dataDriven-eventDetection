@@ -8,29 +8,17 @@
   \setbeamertemplate{caption}[numbered]
 }
 
-\usepackage{siunitx}
-
 \usepackage{booktabs}
-\newcommand{\ra}[1]{\renewcommand{\arraystretch}{#1}}
 \usepackage{float}
-% \usepackage{subfloat}
-% \usepackage{subfig}
+\usepackage{siunitx}
+\usepackage{subfloat}
+\usepackage{subfig}
 % \usepackage[labelsep=none,labelformat=empty]{caption}
-% \renewcommand{\tablename}{}
+\usepackage{caption}
+% \usepackage{neuralnetwork}
 
-% \usepackage{tikz}
-% \usepackage{pgfplots}
-% \pgfplotsset{compat=1.9}
-% \tikzstyle{block} = [draw, align=center, rectangle, 
-%                     minimum height=2em, minimum width=2em]
-% % \tikzstyle{sum} = [draw, circle, node distance=1cm]
-% \tikzstyle{input} = [coordinate]
-% \tikzstyle{output} = [coordinate]
-% \tikzstyle{pinstyle} = [pin edge={to-, thin, black}]
-%
-% \tikzstyle{register} = [draw, align=center, rectangle, minimum height=2em, minimum width=2em]
-% \tikzstyle{sum} = [draw, circle, inner sep=1.0pt]
-% \tikzstyle{terminal} = [draw, circle, inner sep=1.2pt]
+\renewcommand{\tablename}{}
+\newcommand{\ra}[1]{\renewcommand{\arraystretch}{#1}}
 
 \title
 {
@@ -68,25 +56,41 @@
 \end{frame}
 
 \begin{frame}{Introduction}
-  % \tableofcontents
     \begin{itemize}
         \item
-        Gait events
+            Goal: accurately detect gait events (heel strike, toe off) 
+            in video-based motion capture data of human walking gait
         \item
-        Why is this important?
+            Necessary to analysis of changes in gait that arise from training,
+            disease, aging, etc.
     \end{itemize}
+    \begin{figure}
+    \begin{center}
+        \includegraphics[width=0.5\textwidth]{figures/gait_events.jpg}
+        \caption{Gait events [Rueterbories et al., 2010]}
+        \label{fig:gait_events}
+    \end{center}
+    \end{figure}
 \end{frame}
 
 \begin{frame}{Data}
     \begin{itemize}
-        \item
-            Time series data
-        \item
-            54 features 
-            (18 motion capture markers $\times$ 3 dimensions)
-        \item
-            \num{240000} samples 
-            (8 subjects $\times$ 3 trials $\times$ \num{10000} samples)
+        \item All data are time series
+        \item \textbf{Input:} 3D locus of 18 motion capture markers (54*N reals)
+        \item \textbf{Output:}
+        \begin{itemize}
+            \item Raw: Event takes place $\Rightarrow$ 1; else $\Rightarrow$ 0 (4*N bools)
+            \item Equivalent: Leg in stance phase $\Rightarrow$ 1; else $\Rightarrow$ 0 (2*N bools)
+        \end{itemize}
+        \item Training dataset:
+        \begin{itemize}
+            \item Sample rate: \SI{100}{\Hz}
+            \item
+                \num{240000} samples
+                (8 subjects $\times$ 3 trials $\times$ \num{10000} samples)
+            \item
+                Ground truth from force plates on treadmills (very accurate)
+        \end{itemize}
     \end{itemize}
 \end{frame}
 
@@ -95,21 +99,33 @@
         \item
             Signal processing approach [O'Connor et al., 2007]
             \begin{itemize}
-                \item
-                    Heuristic based on speed of heel and toe markers
-                \item
-                    No learning
-                \item
-                    Sensitive to threshold value
+                \item Heuristic based on position and speed of heel and toe markers
+                \item \textbf{Pros:}
+                \begin{itemize}
+                    \item No training is needed
+                    \item Good accuracy when input data is clean
+                \end{itemize}
+                \item \textbf{Cons:}
+                \begin{itemize}
+                    \item Sensitive to noise in input; resulting in gross mis-predictions
+                    \item Need to manually specify sensitive thresholds
+                    \item Heavy pre-filtering helps reduce noise but reduces accuracy
+                \end{itemize}
             \end{itemize}
         \item
             Feed-forward Neural Network [Miller, 2009]
             \begin{itemize}
                 \item
                     Sliding window centered around the desired marker
-                \item
-                    Requires heavy preprocessing (dimensionality reduction,
-                    variable window size based on foot speed)
+                \item \textbf{Pros:}
+                \begin{itemize}
+                    \item TODO %TODO
+                \end{itemize}
+                \item \textbf{Cons:}
+                \begin{itemize}
+                    \item Heavy preprocessing (dimensionality reduction, windowing, etc.); requires manual picking of parameters
+                    \item TODO %TODO
+                \end{itemize}
             \end{itemize}
     \end{itemize}
 \end{frame}
@@ -117,22 +133,27 @@
 \begin{frame}{Our Approach: LSTM}
     \begin{itemize}
         \item
-            LSTM = Recurrent Neural Network + ``memory''
-        \item
             Motivation:
             \begin{itemize}
             \item
-                Detect long-range dependencies
+                Avoid manual picking of sensitive parameters (window size, threshold, filter cutoff, etc.)
             \item
-                No windowing required
+                Human walking can be modeled as a dynamic system; RNN (Recurrent Neural Network) learns dynamic systems
+            \item
+                Any gait cycle may depend on ones preceding it
             \end{itemize}
         \item
-            Network architecture
+            LSTM cell: RNN building block for variable time-dependence
+        \item
+            Network architecture:
             \begin{itemize}
-                \item TODO
+                \item Inputs (54 reals)
+                \item $n$ LSTM cells ($n$ reals in $[-1, +1]$)
+                \item Output layer (softmax/sigmoid)
+                \item Outputs ($2$ reals in $[0, 1]$)
             \end{itemize}
         \item
-            Implementation
+            Implementation:
             \begin{itemize}
                 \item
                     Torch/Lua
@@ -140,7 +161,7 @@
                     LSTM cell by
                     de Freitas (Oxford University, Google Deepmind)
                 \item
-                    Amazon EC2 GPU instance (g2.2xlarge)
+                    AWS EC2 GPU instance (g2.2xlarge)
             \end{itemize}
     \end{itemize}
 \end{frame}

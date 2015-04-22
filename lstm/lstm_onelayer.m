@@ -2,14 +2,17 @@ function net = lstm_onelayer(n, n_out)
 % constructs uninitialized RNN with:
 %   * One input timeseries `x` (arbitrary dimension)
 %   * One meta-layer of `n` LSTM cells (close-loop feedback)
-%   * One output layer of linear neurons
+%   * One output layer
 %   * One output timeseries `y` (dimension `n_out`)
 
 net = network;
 net.name = 'LSTM one-layer';
 
-% default training parameters
-net.trainFcn = 'trainlm';
+net.performFcn = 'crossentropy';
+net.performParam.regularization = 0.1;
+
+net.trainFcn = 'trainscg';
+
 net.divideFcn = 'divideblock';
 net.divideMode = 'value';
 net.divideParam.trainRatio = 70/100;
@@ -66,8 +69,11 @@ end
 % output layer setup
 net.layers{N}.name = 'out';
 net.layers{N}.netInputFcn = 'netsum';
-net.layers{N}.transferFcn = 'purelin';
+% net.layers{N}.transferFcn = 'purelin';
+% net.layers{N}.transferFcn = 'hardlims';
+net.layers{N}.transferFcn = 'logsig';
 net.layers{N}.size = n_out;
 net.layers{N}.initFcn = 'initnw';
+net.biasConnect(N) = 1;
 
 end
