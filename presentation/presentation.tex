@@ -8,29 +8,16 @@
   \setbeamertemplate{caption}[numbered]
 }
 
-\usepackage{siunitx}
-
 \usepackage{booktabs}
-\newcommand{\ra}[1]{\renewcommand{\arraystretch}{#1}}
 \usepackage{float}
-% \usepackage{subfloat}
-% \usepackage{subfig}
+\usepackage{siunitx}
+\usepackage{subfloat}
+\usepackage{subfig}
 % \usepackage[labelsep=none,labelformat=empty]{caption}
-% \renewcommand{\tablename}{}
+\usepackage{caption}
 
-% \usepackage{tikz}
-% \usepackage{pgfplots}
-% \pgfplotsset{compat=1.9}
-% \tikzstyle{block} = [draw, align=center, rectangle, 
-%                     minimum height=2em, minimum width=2em]
-% % \tikzstyle{sum} = [draw, circle, node distance=1cm]
-% \tikzstyle{input} = [coordinate]
-% \tikzstyle{output} = [coordinate]
-% \tikzstyle{pinstyle} = [pin edge={to-, thin, black}]
-%
-% \tikzstyle{register} = [draw, align=center, rectangle, minimum height=2em, minimum width=2em]
-% \tikzstyle{sum} = [draw, circle, inner sep=1.0pt]
-% \tikzstyle{terminal} = [draw, circle, inner sep=1.2pt]
+\renewcommand{\tablename}{}
+\newcommand{\ra}[1]{\renewcommand{\arraystretch}{#1}}
 
 \title
 {
@@ -68,7 +55,6 @@
 \end{frame}
 
 \begin{frame}{Introduction}
-  % \tableofcontents
     \begin{itemize}
         \item
             Goal: detect gait events (heel strike, toe off) 
@@ -77,6 +63,13 @@
             Necessary to measure changes in gait that arise from training,
             disease or aging
     \end{itemize}
+    \begin{figure}
+    \begin{center}
+        \includegraphics[width=0.5\textwidth]{figures/gait_events.jpg}
+        \caption{Gait events [Rueterbories et al., 2010]}
+    % \label{fig:barplot}
+    \end{center}
+    \end{figure}
 \end{frame}
 
 \begin{frame}{Data}
