@@ -5,22 +5,33 @@ RHS=eventArray(:,strcmp('RHS',eventLabels));
 LTO=eventArray(:,strcmp('LTO',eventLabels));
 RTO=eventArray(:,strcmp('RTO',eventLabels));
 
-auxL=1*LHS-1*LTO;
-stanceL=cumsum(auxL);
-if find(LTO,1,'first')<find(LHS,1,'first') %First event is a TO, so we were in stance to begin with
-    stanceL=stanceL+1;
+
+%% Left-leg:
+stanceL=oneStance(LHS,LTO);
+
+%% Right-leg
+stanceR=oneStance(RHS,RTO);
+
+
 end
 
-auxR=1*RHS-1*RTO;
-stanceR=cumsum(auxR);
-if find(RTO,1,'first')<find(RHS,1,'first') %First event is a TO, so we were in stance to begin with
-    stanceR=stanceR+1;
+function stance=oneStance(HS,TO)
+aux=1*HS-1*TO;
+stance=cumsum(aux);
+if find(HS,1,'first')>find(TO,1,'first') %TO happens first, we start in stance
+    stance=stance+1;
 end
 
-if any(stanceR ~=1 & stanceR ~=0) || any(stanceL ~=1 & stanceL ~=0)
-   error('Unexpected event order.') 
+for i=1:length(stance)
+    if stance(i)>1
+        stance(i:end)=stance(i:end)-1;
+        warning('Non consistent events detected. Fixing.')
+    end
+    if stance(i)<0
+        stance(i:end)=stance(i:end)+1;
+        warning('Non consistent events detected. Fixing.')
+    end
 end
-
 
 end
 
