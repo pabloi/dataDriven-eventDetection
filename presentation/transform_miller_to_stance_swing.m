@@ -9,5 +9,5 @@ out_events = outputEventArray;
 % TODO workaround (Ts is a dummy)
 Ts = 1; 
 
-[deviationL, mistakeL, d_listL] = ss_metric(Ts, goldL, outL);
-[deviationR, mistakeR, d_listR] = ss_metric(Ts, goldR, outR);
+[deviationL, mistakeL, d_listL] = ss_metric(goldL, outL);
+[deviationR, mistakeR, d_listR] = ss_metric(goldR, outR);
