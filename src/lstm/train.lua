@@ -112,6 +112,8 @@ end -- Assuming the y variable loaded is a 2xT tensor, with its first row being 
         -- we're feeding the *correct* things in here, alternatively
         -- we could sample from the previous timestep and embed that, but that's
         -- more commonly done for LSTM encoder-decoder models
+        --print('embeddings[t]:dim()=' ..embeddings[t]:dim())
+        print('embeddings[t]:size(1)=' ..embeddings[t]:size(1))
         lstm_c[t], lstm_h[t] = unpack(clones.lstm[t]:forward{embeddings[t], lstm_c[t-1], lstm_h[t-1]})
 
         predictions[t] = clones.softmax[t]:forward(lstm_h[t])

@@ -75,7 +75,7 @@ for counter=1:length(motionData)
 end
 
 %% Save super-array
-save ../data/dataArrays_master.mat motionArray* eventArray stanceArray Time markersToBeUsed eventsToBeUsed subs names
+save ../data/dataArrays_master.mat motionArray* eventArray stanceArray Time markersToBeUsed eventsToBeUsed subs names actualMarkers
 
 %% Just for check: visualize marker data averaged across subjects & trials
 % figure('Name','Rotated data')

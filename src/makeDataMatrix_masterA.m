@@ -1,7 +1,7 @@
 subs={'20','21','23','35','36','37','40','41','0003','0008','P0001','P0002','P0003','P0004','P0005','P0006','P0007','P0008','P0009','P0010','P0011','P0012','P0013','P0014','P0015','P0016'}; %Ignoring subject 34 because for some reason the TM base trial is not found
 diary('./makeDataMatrixMaster_loading.log')
 %Initialize
-clear motionData motionTime metaData gaitEvents gaitTime
+clear motionData* motionTime metaDatas gaitEvents gaitTime actualMarkers metaData
 markersToBeUsed={'TOE';'ANK';'HEE';'KNE';'KNEE';'HIP';'TIB';'SHANK';'THI';'PSI';'PSIS';'ASI';'ASIS'};
 markersToBeUsed=[strcat('R',markersToBeUsed);strcat('L',markersToBeUsed)];
 markersToBeUsed=[strcat(markersToBeUsed,'x');strcat(markersToBeUsed,'y');strcat(markersToBeUsed,'z')];
@@ -40,7 +40,7 @@ for sub=1:length(subs)
            %Save data
            [motionDataUnrotated{counter},motionTime{counter},actualMarkers{counter}]=markerData.getDataAsVector(markersToBeUsed);
            motionData{counter} = rotatedMarkerData.getDataAsVector(markersToBeUsed);
-           metaData{counter}=procExpData.data{j}.metaData;
+           %metaData{counter}=procExpData.data{j}.metaData;
            gaitEvents{counter}= procExpData.data{j}.gaitEvents.getDataAsVector(eventsToBeUsed);
            gaitTime{counter}=procExpData.data{j}.gaitEvents.Time;        
            metaDatas{counter}.sub=subs{sub};
@@ -56,7 +56,7 @@ for sub=1:length(subs)
 end
     
 %% Save the cell array data
-save ../data/allData_master.mat motionData* motionTime metaData gaitEvents gaitTime markersToBeUsed eventsToBeUsed subs actualMarkers metaDatas
+save ../data/allData_master.mat motionData* motionTime gaitEvents gaitTime eventsToBeUsed subs actualMarkers metaDatas
 
 %%
 diary off

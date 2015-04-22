@@ -1,4 +1,6 @@
 function [inputData,outputData,T] = millerSetup(features,outputs,fs)
+%This function does the embedding to train the  Miller NN as a static NN
+%(parses data into time-windows)
 
 %% parse timeseries into sequences of 200ms, with the label being the one from the mid-sample
 %Random pick M time-samples (per subject & trial) that have at least 200ms preceding and 200ms
