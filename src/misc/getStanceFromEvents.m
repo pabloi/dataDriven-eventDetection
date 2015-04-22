@@ -17,6 +17,9 @@ if find(RTO,1,'first')<find(RHS,1,'first') %First event is a TO, so we were in s
     stanceR=stanceR+1;
 end
 
+if any(stanceR ~=1 & stanceR ~=0) || any(stanceL ~=1 & stanceL ~=0)
+   error('Unexpected event order.') 
+end
 
 
 end
