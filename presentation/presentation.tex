@@ -17,7 +17,7 @@
 \usepackage{caption}
 % \usepackage{neuralnetwork}
 
-\renewcommand{\tablename}{}
+% \renewcommand{\tablename}{}
 \newcommand{\ra}[1]{\renewcommand{\arraystretch}{#1}}
 
 \title
@@ -167,6 +167,33 @@
 \end{frame}
 
 \begin{frame}{Results}
+    \begin{table}[H]
+        \begin{center}
+        \ra{1.2}
+        % \footnotesize
+        % \caption{Overview}
+        \begin{tabular}{@{} lrrr @{}}
+        \toprule
+        % \multicolumn{4}{c}{\textbf{Random source}, $n=247$} \\
+        {} & mean & std & mistake \\
+        \midrule
+        O'Connor  &     XXXXXXX &    XXXXXXX &    XXXXXXX \\
+        Miller    &     XXXXXXX &    XXXXXXX &    XXXXXXX \\
+        LSTM      &     XXXXXXX &    XXXXXXX &    XXXXXXX \\
+        \bottomrule
+        \end{tabular}
+        \end{center}
+    \end{table}
+\end{frame}
+
+\begin{frame}{Results}
+    \begin{figure}
+    \begin{center}
+        \includegraphics[width=0.75\textwidth]{figures/hist_miller.eps}
+        \caption{Histogram Miller}
+        \label{fig:hist_miller}
+    \end{center}
+    \end{figure}
 \end{frame}
 
 \begin{frame}{Q\&A}
