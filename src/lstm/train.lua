@@ -3,6 +3,7 @@ require 'nn'
 require 'nngraph'
 require 'optim'
 require 'hdf5'
+--require 'BatchLoader'
 
 -- local BatchLoader = require 'data.BatchLoader'
 local BatchLoader = require 'BatchLoader'
@@ -17,11 +18,11 @@ cmd:text('Training a simple character-level LSTM language model')
 cmd:text()
 cmd:text('Options')
 -- cmd:option('-vocabfile','vocabfile.t7','filename of the string->int table')
-cmd:option('-datafile','data.h5','filename of hdf5 data file')
+cmd:option('-datafile','../../data/set1_1.h5','filename of hdf5 data file')
 cmd:option('-batch_size',1,'number of sequences to train on in parallel')
-cmd:option('-seq_length',100,'number of timesteps to unroll to')
+cmd:option('-seq_length',1000,'number of timesteps to unroll to')
 cmd:option('-rnn_size',54,'size of LSTM internal state')
-cmd:option('-max_epochs',500,'number of full passes through the training data')
+cmd:option('-max_epochs',50,'number of full passes through the training data')
 cmd:option('-savefile','model_autosave','filename to autosave the model (protos) to, appended with the,param,string.t7')
 cmd:option('-save_every',100,'save every 100 steps, overwriting the existing file') -- This needs to be at least larger than max_epochs * nBatches so that it saves at least once.
 cmd:option('-print_every',10,'how many steps/minibatches between printing out the loss')
@@ -40,7 +41,7 @@ opt.savefile = cmd:string(opt.savefile, opt,
 local loader = BatchLoader.create(opt.datafile, opt.batch_size, opt.seq_length)
 -- local vocab_size = loader.vocab_size  -- the number of distinct characters
 
-local vocab_size = 5 -- 5 possible classes: no event, LHS, RHS, LTO, RTO
+local vocab_size = 4
 
 -- define model prototypes for ONE timestep, then clone them
 --
@@ -50,11 +51,9 @@ protos = {} -- TODO: local
 protos.lstm = LSTM.lstm(opt)
 protos.softmax = nn.Sequential():add(nn.Linear(opt.rnn_size, vocab_size)):add(nn.LogSoftMax())
 local weights=torch.Tensor(5);
-weights[1]=96/100;
-weights[2]=96/100;
-weights[3]=96/100;
-weights[4]=96/100;
-weights[5]=1/100;
+weights[1]=0.4;
+weights[2]=0.4;
+weights[3]=0.2;
 protos.criterion = nn.ClassNLLCriterion(weights)
 
 -- put the above things into one flattened parameters tensor
@@ -93,18 +92,11 @@ function feval(x)
     -- print('y:size()=(' ..y:size(1) ..',' ..y:size(2) ..')')
 
 
-    -- TODO rewrite
+    -- assigning labels
 	aux = torch.zeros(opt.seq_length);
-	for t=1,opt.seq_length do -- very inefficient way to assign class labels instead of what we have now.
-		for j=1,4 do
-			if y[j][t]==1 then
-				aux[t]=j;
-			end
-		end
-		if aux[t]==0 then
-			aux[t]=5;
-		end
-	end
+for t=1,opt.seq_length do
+	aux[t]= y[1][t] + 2*y[2][t];
+end -- Assuming the y variable loaded is a 2xT tensor, with its first row being stanceL and second stanceR. Assigns label=1 to stanceL, label=2 to stanceR, label=3 to double stance, label=0 to both feet off the air (impossible!).
 
     ------------------- forward pass -------------------
     local embeddings = {}            -- input embeddings
@@ -131,16 +123,13 @@ function feval(x)
         --print('predictions[t][1]=' ..predictions[t][1])
 		--print('predictions[t][2]=' ..predictions[t][2])
 		--print('predictions[t][3]=' ..predictions[t][3])
-		--print('predictions[t][4]=' ..predictions[t][4])
-		--print('predictions[t][5]=' ..predictions[t][5])
         --print('label[t]=' ..aux[t])
 
         loss = loss + clones.criterion[t]:forward(predictions[t], aux[t])
+		--print('loss=' ..loss)
 		--loss = loss + clones.criterion[t]:forward(predictions[t], y[{{}, t}])
-
     end
     loss = loss / opt.seq_length
-		--print('loss=' ..loss)
 
     ------------------ backward pass -------------------
     -- complete reverse order of the above
@@ -177,7 +166,7 @@ end
 losses = {} -- TODO: local
 local optim_state = {learningRate = 1e-1}
 local iterations = opt.max_epochs * loader.nbatches
-for i = 1, iterations do
+for i = 1, iterations do -- one iteration is going through just 1 chunk of sequence, of length seq_length. If we have 74 sequences of 50secs each, with seq_length=100 it takes 74*50 =~4000 iterations to go through all the data once 
     local _, loss = optim.adagrad(feval, params, optim_state)
     losses[#losses + 1] = loss[1]
 

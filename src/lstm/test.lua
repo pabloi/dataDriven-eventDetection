@@ -15,7 +15,7 @@ cmd:text()
 cmd:text('Test a simple character-level LSTM language model')
 cmd:text()
 cmd:text('Options')
-cmd:option('-model','model_autosave.t7','contains just the protos table, and nothing else')
+cmd:option('-model','results.t7','contains just the protos table, and nothing else')
 cmd:option('-seed',123,'random number generator\'s seed')
 cmd:option('-sample',false,'false to use max at each timestep, true to sample at each timestep')
 cmd:option('-length',200,'number of characters to sample')
@@ -30,7 +30,7 @@ opt.savefile = cmd:string(opt.savefile, opt,
     {save_every=true, print_every=true, savefile=true, vocabfile=true, datafile=true})
     .. '.t7'
 
-local vocab_size = 5 -- 5 possible classes: no event, LHS, RHS, LTO, RTO
+local vocab_size = 4 -- 4 possible classes: double swing (impossible), single Stance L, single stance R, double stance
 
 
 protos = torch.load(opt.model)
@@ -42,19 +42,6 @@ local initstate_h = initstate_c:clone()
 
 -- do fwd
 
-    -- TODO rewrite
-	aux = torch.zeros(opt.seq_length);
-	for t=1,opt.seq_length do -- very inefficient way to assign class labels instead of what we have now.
-		for j=1,4 do
-			if y[j][t]==1 then
-				aux[t]=j;
-			end
-		end
-		if aux[t]==0 then
-			aux[t]=5;
-		end
-	end
-
     ------------------- forward pass -------------------
     local embeddings = {}            -- input embeddings
     local lstm_c = {[0]=initstate_c} -- internal cell states of LSTM
@@ -64,7 +51,7 @@ local initstate_h = initstate_c:clone()
 
     for t=1,opt.seq_length do
         -- embeddings[t] = clones.embed[t]:forward(x[{{}, t}])
-        embeddings[t] = x[{{}, t}]
+        embeddings[t] = x[{{}, t}] -- assuming x is N x T tensor, with N being the marker data dimension (54) and T the time dimension
 
         -- we're feeding the *correct* things in here, alternatively
         -- we could sample from the previous timestep and embed that, but that's
@@ -72,19 +59,7 @@ local initstate_h = initstate_c:clone()
         lstm_c[t], lstm_h[t] = unpack(protos.lstm:forward{embeddings[t], lstm_c[t-1], lstm_h[t-1]})
 
         predictions[t] = protos.softmax:forward(lstm_h[t])
-
-        print('predictions[t]:type()=' ..predictions[t]:type())
-        print('predictions[t]:dim()=' ..predictions[t]:dim())
-        print('predictions[t]:size(1)=' ..predictions[t]:size(1))
-        print('y[{{}, t}]:size(1)=' ..y[{{}, t}]:size(1))
-        print('predictions[t][1]=' ..predictions[t][1])
-		print('predictions[t][2]=' ..predictions[t][2])
-		print('predictions[t][3]=' ..predictions[t][3])
-		print('predictions[t][4]=' ..predictions[t][4])
-		print('predictions[t][5]=' ..predictions[t][5])
-        print('label[t]=' ..aux[t])
-
-        loss = loss + protos.criterion:forward(predictions[t], aux[t])
 		out[t]=predictions[t]:max();
     end
-    loss = loss / opt.seq_length
+    loss = loss / opt.seq_length;
+	torch.save(opt.savefile, out)
