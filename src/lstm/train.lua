@@ -20,11 +20,11 @@ cmd:text('Options')
 -- cmd:option('-vocabfile','vocabfile.t7','filename of the string->int table')
 cmd:option('-datafile','set1_1','filename of hdf5 data file')
 cmd:option('-batch_size',1,'number of sequences to train on in parallel')
-cmd:option('-seq_length',100,'number of timesteps to unroll to')
-cmd:option('-rnn_size',10,'size of LSTM internal state')
+cmd:option('-seq_length',500,'number of timesteps to unroll to')
+cmd:option('-rnn_size',50,'size of LSTM internal state')
 cmd:option('-max_epochs',1000,'number of full passes through the training data')
 --cmd:option('-savefile','model_autosave','filename to autosave the model (protos) to, appended with the,param,string.t7') - savefile can no longer be provided, using same names as datafile appending at end
-cmd:option('-save_every',500,'save every 500 steps, overwriting the existing file') -- This needs to be at least larger than max_epochs * nBatches so that it saves at least once.
+cmd:option('-save_every',1000,'save every 500 steps, overwriting the existing file') -- This needs to be at least larger than max_epochs * nBatches so that it saves at least once.
 cmd:option('-print_every',100,'how many steps/minibatches between printing out the loss')
 cmd:option('-seed',123,'torch manual random number generator seed')
 cmd:text()
@@ -168,14 +168,14 @@ end
 
 -- optimization stuff
 losses = {} -- TODO: local
-local optim_state = {learningRate = 1e-3}
+local optim_state = {learningRate = 1e-2}
 local iterations = opt.max_epochs * loader.nbatches
 for i = 1, iterations do -- one iteration is going through just 1 chunk of sequence, of length seq_length. If we have 74 sequences of 50secs each, with seq_length=100 it takes 74*50 =~4000 iterations to go through all the data once 
     local _, loss = optim.adagrad(feval, params, optim_state)
     losses[#losses + 1] = loss[1]
 
     if i % opt.save_every == 0 then
-        torch.save( './trainedModels/' .. opt.savefile .. i .. 'train.t7', protos)
+        torch.save( './trainedModels/train_' .. opt.savefile .. '_N' .. opt.rnn_size .. '_R' .. optim_state['learningRate'] .. '_S' .. opt.seq_length .. '_iter' .. i .. '.t7', protos)
     end
     if i % opt.print_every == 0 then
         print(string.format("iteration %4d, loss = %6.8f, gradnorm = %6.4e", i, loss[1], grad_params:norm()))
