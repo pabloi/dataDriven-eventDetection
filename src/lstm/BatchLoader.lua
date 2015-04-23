@@ -56,7 +56,7 @@ function BatchLoader.create(data_file, batch_size, seq_length)
 
     self.current_batch = 0
     self.evaluated_batches = 0  -- number of times next_batch() called
-
+	self.input_size = self.x_batches[1]:size(2); 
     print('data load done.')
     collectgarbage()
     return self

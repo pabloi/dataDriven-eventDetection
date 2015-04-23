@@ -18,10 +18,10 @@ cmd:text('Training a simple character-level LSTM language model')
 cmd:text()
 cmd:text('Options')
 -- cmd:option('-vocabfile','vocabfile.t7','filename of the string->int table')
-cmd:option('-datafile','set1_1.h5','filename of hdf5 data file')
+cmd:option('-datafile','set1_1','filename of hdf5 data file')
 cmd:option('-batch_size',1,'number of sequences to train on in parallel')
 cmd:option('-seq_length',100,'number of timesteps to unroll to')
-cmd:option('-rnn_size',54,'size of LSTM internal state')
+cmd:option('-rnn_size',10,'size of LSTM internal state')
 cmd:option('-max_epochs',1000,'number of full passes through the training data')
 --cmd:option('-savefile','model_autosave','filename to autosave the model (protos) to, appended with the,param,string.t7') - savefile can no longer be provided, using same names as datafile appending at end
 cmd:option('-save_every',500,'save every 500 steps, overwriting the existing file') -- This needs to be at least larger than max_epochs * nBatches so that it saves at least once.
@@ -38,8 +38,10 @@ opt.savefile = cmd:string(opt.datafile, opt,
     {save_every=true, print_every=true, savefile=true, vocabfile=true, datafile=true})
     
 
-local loader = BatchLoader.create('../../data/' .. opt.datafile, opt.batch_size, opt.seq_length)
--- local vocab_size = loader.vocab_size  -- the number of distinct characters
+local loader = BatchLoader.create('../../data/' .. opt.datafile .. '.h5', opt.batch_size, opt.seq_length)
+-- local vocab_size = loader.vocab_size  -- the number of distinct classes
+opt.input_size=loader.input_size;
+--print('input_size '.. opt.input_size)
 
 local vocab_size = 3
 
@@ -50,7 +52,7 @@ protos = {} -- TODO: local
 -- lstm timestep's input: {x, prev_c, prev_h}, output: {next_c, next_h}
 protos.lstm = LSTM.lstm(opt)
 protos.softmax = nn.Sequential():add(nn.Linear(opt.rnn_size, vocab_size)):add(nn.LogSoftMax())
-local weights=torch.Tensor(5);
+local weights=torch.Tensor(3);
 weights[1]=0.4;
 weights[2]=0.4;
 weights[3]=0.2;
@@ -113,7 +115,7 @@ end -- Assuming the y variable loaded is a 2xT tensor, with its first row being 
         -- we could sample from the previous timestep and embed that, but that's
         -- more commonly done for LSTM encoder-decoder models
         --print('embeddings[t]:dim()=' ..embeddings[t]:dim())
-        print('embeddings[t]:size(1)=' ..embeddings[t]:size(1))
+        --print('embeddings[t]:size(1)=' ..embeddings[t]:size(1))
         lstm_c[t], lstm_h[t] = unpack(clones.lstm[t]:forward{embeddings[t], lstm_c[t-1], lstm_h[t-1]})
 
         predictions[t] = clones.softmax[t]:forward(lstm_h[t])
@@ -173,7 +175,7 @@ for i = 1, iterations do -- one iteration is going through just 1 chunk of seque
     losses[#losses + 1] = loss[1]
 
     if i % opt.save_every == 0 then
-        torch.save(opt.savefile .. i .. 'train.t7', protos)
+        torch.save( './trainedModels/' .. opt.savefile .. i .. 'train.t7', protos)
     end
     if i % opt.print_every == 0 then
         print(string.format("iteration %4d, loss = %6.8f, gradnorm = %6.4e", i, loss[1], grad_params:norm()))
