@@ -111,9 +111,13 @@
 
 \begin{frame}{Implementation}
     \begin{itemize}
-        \item Torch/Lua
-        \item LSTM cell by de Freitas (Oxford University, Google Deepmind)
-        \item AWS EC2 GPU instance (g2.2xlarge)
+        \item Torch/Lua on AWS EC2 GPU instance (g2.2xlarge)
+        \item Use LSTM code example by de Freitas (Oxford/Google)
+        \begin{itemize}
+            \item Adapt to our input/output
+            \item Does not converge out of the box
+            \item Tweaks: Learning rate, mini-batch, regularization, etc.
+        \end{itemize}
     \end{itemize}
 \end{frame}
 
