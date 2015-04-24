@@ -3,7 +3,6 @@ require 'torch'
 require 'nn'
 require 'nngraph'
 require 'optim'
-require 'hdf5'
 require 'mattorch'
 
 local LSTM = require 'LSTM'             -- LSTM timestep and utilities
@@ -19,7 +18,7 @@ cmd:option('-model','results','contains just the protos table, and nothing else'
 cmd:option('-seed',123,'random number generator\'s seed')
 cmd:option('-sample',false,'false to use max at each timestep, true to sample at each timestep')
 cmd:option('-length',200,'number of characters to sample')
-cmd:option('-datafile','set1_2.h5','filename of hdf5 data file')
+cmd:option('-datafile','set1_2','filename of hdf5 data file')
 cmd:option('-rnn_size',54,'size of LSTM internal state') -- This should be read from the loaded model
 cmd:option('-batch_size',1,'number of sequences to train on in parallel') --Is this necessary?
 cmd:text()
@@ -33,7 +32,7 @@ torch.manualSeed(opt.seed)
 local vocab_size = 3 -- 3 possible classes: class 0 is double swing (should never happen), single Stance L, single stance R, double stance
 
 
-protos = torch.load(opt.model .. '.t7')
+protos = torch.load('./trainedModels/' .. opt.model .. '.t7')
 
 
 -- load the testing data:
@@ -42,14 +41,8 @@ xData=loaded['X']; -- data from all trials
 yData=loaded['y'];
 xData=xData:transpose(1,3); -- for some reason mattorch returns the dimensions in the inverse order
 yData=yData:transpose(1,3);
-    --local myFile = hdf5.open('../../data/' .. opt.datafile)
-    --local data = myFile:all()
 aux=torch.zeros(xData:size(1),xData:size(3),vocab_size); --need to initialize with the proper size: T x nSubs x nTrials
 out=torch.zeros(xData:size(1),2,xData:size(3));
-        print('xData:dim()=' .. xData:dim())
-        print('xData:size(3)=' .. xData:size(3))
-print('xData:size(2)=' .. xData:size(2))
-print('xData:size(1)=' .. xData:size(1))
 for i=1,xData:size(3) do
 
 	partialData=xData:select(3,i); --Extracting slice (subtensor) along dimension 3, just index i 
@@ -98,5 +91,5 @@ for i=1,xData:size(3) do
 	print(string.format('Finished trial %4d, loss is %6.8f',i,loss))
 end
 	--torch.save(opt.datafile .. '_' .. opt.model .. 'res.t7', out) -- temporary. Eventually we want to convert out to stance information and save it in .h5 too.
-list = {predictedY = aux};
-mattorch.save('../../data/lstmResults/lstm' .. opt.datafile .. '_' .. opt.model .. '.mat',list)
+list = {p = aux:transpose(1,3)};
+mattorch.save('../../data/lstmResults/lstm_Test' .. opt.datafile .. '_Train' .. opt.model .. '.mat',list)
