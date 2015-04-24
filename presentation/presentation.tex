@@ -125,7 +125,7 @@
     \begin{table}[H]
         \begin{center}
         \ra{1.2}
-        \footnotesize
+        % \footnotesize
         \begin{tabular}{@{} l c cc c cc @{}}
         \toprule
         && \multicolumn{2}{c}{deviation} && \multicolumn{2}{c}{mistake} \\
@@ -163,12 +163,36 @@
     \end{table}
 \end{frame}
 
+% \begin{frame}{Results}
+%     \begin{figure}
+%     \begin{center}
+%         \includegraphics[width=0.75\textwidth]{figures/hist_miller_testset1_1.eps}
+%         \caption{Histogram Miller}
+%         \label{fig:hist_miller}
+%     \end{center}
+%     \end{figure}
+% \end{frame}
+
 \begin{frame}{Results}
-    \begin{figure}
+    \begin{figure}[H]
     \begin{center}
-        \includegraphics[width=0.75\textwidth]{figures/hist_miller.eps}
-        \caption{Histogram Miller}
-        \label{fig:hist_miller}
+        \subfloat[]
+        {
+            \includegraphics[width=0.5\textwidth]
+            {figures/hist_miller_testset1_1.eps}
+            \label{fig:hist_miller}
+        }
+        \subfloat[]
+        {
+            \includegraphics[width=0.5\textwidth]
+            {figures/hist_lstm_testset1_1.eps}
+            \label{fig:hist_lstm}
+        }
+        \caption
+        {
+            Histogram of deviation for Feed-forward NN (a) and LSTM (b).
+        }
+        % \label{fig:9_5_e}
     \end{center}
     \end{figure}
 \end{frame}
