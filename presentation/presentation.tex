@@ -64,7 +64,7 @@
         \begin{center}
         \includegraphics[height=.6\textheight]{figures/treadmill.png} \\
         \tiny from \url{http://biodesign.seas.harvard.edu/soft-exosuits}
-        
+
         \small \textbf{Goal:}  Accurately detect gait events (heel strike, toe off) in video-based motion capture data of human walking gait
         \end{center}
     \end{figure}
@@ -125,18 +125,40 @@
     \begin{table}[H]
         \begin{center}
         \ra{1.2}
-        % \footnotesize
-        % \caption{Overview}
-        \begin{tabular}{@{} lrrr @{}}
+        \footnotesize
+        \begin{tabular}{@{} l c cc c cc @{}}
         \toprule
-        % \multicolumn{4}{c}{\textbf{Random source}, $n=247$} \\
-        {} & mean & std & mistake \\
+        && \multicolumn{2}{c}{deviation} && \multicolumn{2}{c}{mistake} \\
+        \cmidrule{3-4} \cmidrule{6-7}
+        {} && mean & std && mean & std \\
         \midrule
-        O'Connor  &     XXXXXXX &    XXXXXXX &    XXXXXXX \\
-        Miller    &     XXXXXXX &    XXXXXXX &    XXXXXXX \\
-        LSTM      &     XXXXXXX &    XXXXXXX &    XXXXXXX \\
+        Foot velocity   &&   XXXXXXX &   XXXXXXX &&   XXXXXXX &    XXXXXXX \\
+        Feed-forward NN &&   XXXXXXX &   XXXXXXX &&   XXXXXXX &    XXXXXXX \\
+        LSTM            &&   XXXXXXX &   XXXXXXX &&   XXXXXXX &    XXXXXXX \\
         \bottomrule
         \end{tabular}
+        \caption
+        {
+            Comparison of results for
+            \(
+                N
+                =
+                30
+            \)
+            subjects,
+            \(
+                T
+                =
+                \SI
+                {
+                    2.5
+                }
+                {
+                    \second
+                }
+                .
+            \)
+        }
         \end{center}
     \end{table}
 \end{frame}
