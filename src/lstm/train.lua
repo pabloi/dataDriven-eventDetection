@@ -175,7 +175,7 @@ for i = 1, iterations do -- one iteration is going through just 1 chunk of seque
     losses[#losses + 1] = loss[1]
 
     if i % opt.save_every == 0 then
-        torch.save( './trainedModels/train_' .. opt.savefile .. '_N' .. opt.rnn_size .. '_R' .. optim_state['learningRate'] .. '_S' .. opt.seq_length .. '_iter' .. i .. '.t7', protos)
+        torch.save( string.format('./trainedModels/trainGPU_' .. opt.savefile .. '_N%2d_R%1.1e_D%1.1e_S%3d_Iter%4d.t7', opt.rnn_size, optim_state['learningRate'], optim_state['learningRateDecay'], opt.seq_length, i) , protos)
     end
     if i % opt.print_every == 0 then
         print(string.format("iteration %4d, loss = %6.8f, gradnorm = %6.4e", i, loss[1], grad_params:norm()))
