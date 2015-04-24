@@ -20,7 +20,7 @@ cmd:text('Options')
 -- cmd:option('-vocabfile','vocabfile.t7','filename of the string->int table')
 cmd:option('-datafile','set1_1','filename of hdf5 data file')
 cmd:option('-batch_size',1,'number of sequences to train on in parallel')
-cmd:option('-seq_length',500,'number of timesteps to unroll to')
+cmd:option('-seq_length',100,'number of timesteps to unroll to')
 cmd:option('-rnn_size',50,'size of LSTM internal state')
 cmd:option('-max_epochs',1000,'number of full passes through the training data')
 --cmd:option('-savefile','model_autosave','filename to autosave the model (protos) to, appended with the,param,string.t7') - savefile can no longer be provided, using same names as datafile appending at end
@@ -168,7 +168,7 @@ end
 
 -- optimization stuff
 losses = {} -- TODO: local
-local optim_state = {learningRate = 1e-2}
+local optim_state = {learningRate = 1e-3, learningRateDecay = 1e-4} -- For no decay set learningRateDecay=0, decay is implemented as inversely proportional to number of function evals.
 local iterations = opt.max_epochs * loader.nbatches
 for i = 1, iterations do -- one iteration is going through just 1 chunk of sequence, of length seq_length. If we have 74 sequences of 50secs each, with seq_length=100 it takes 74*50 =~4000 iterations to go through all the data once 
     local _, loss = optim.adagrad(feval, params, optim_state)

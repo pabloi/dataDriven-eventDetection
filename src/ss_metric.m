@@ -6,7 +6,7 @@ function [deviation, mistake, details] = ss_metric(ref, out, p)
 % mistake : scalar indicator of severity of gross mistakes in prediction
 %   higher number => more mistakes
 
-if nargin < 4
+if nargin < 3
     p = struct ...
         ( 'width', 0.20 ... width of window as percentage of distance to closest event
         , 'bounce', 2 ... penalty factor for multiple transitions within a window

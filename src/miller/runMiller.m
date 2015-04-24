@@ -4,14 +4,14 @@ function runMiller(trainFilename,testFilename)
 %testFilename='set1_2'; %Data to load and name to use for saving
 %% Load
 load(['../../data/' trainFilename '.mat']); 
-X1=X;
-y1=y;
+Xtrain=X;
+ytrain=y;
 load(['../../data/' testFilename '.mat']); 
-X2=X;
-y2=y;
-
+Xtest=X;
+ytest=y;
+clear X y
 %% Miller run
-[predictedYtest,predictedYtrain]=mainMiller(X1,y1,X2,markerLabels,.5); %Using .5 as threshold, and X1,y1 as training set, testing over X2
+[predictedYtest,predictedYtrain]=mainMiller(Xtrain,ytrain,Xtrain,markerLabels,.5); %Using .5 as threshold, and X1,y1 as training set, testing over X2
 
 %% Save
 save(['../../data/millerResults/miller_Test' testFilename '_Train' trainFilename '.mat']);
