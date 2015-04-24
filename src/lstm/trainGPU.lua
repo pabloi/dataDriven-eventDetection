@@ -119,6 +119,7 @@ end -- Assuming the y variable loaded is a 2xT tensor, with its first row being 
     local lstm_h = {[0]=initstate_h} -- output values of LSTM
     local predictions = {}           -- softmax outputs
     local loss = 0
+	--loss =transfer_data(loss)
 
     for t=1,opt.seq_length do
         -- embeddings[t] = clones.embed[t]:forward(x[{{}, t}])
@@ -181,14 +182,14 @@ end
 
 -- optimization stuff
 losses = {} -- TODO: local
-local optim_state = {learningRate = 1e-3, learningRateDecay = 1e-4} -- For no decay set learningRateDecay=0, decay is implemented as inversely proportional to number of function evals.
+local optim_state = {learningRate = 1e-2, learningRateDecay = 1e-5} -- For no decay set learningRateDecay=0, decay is implemented as inversely proportional to number of function evals.
 local iterations = opt.max_epochs * loader.nbatches
-for i = 1, iterations do -- one iteration is going through just 1 chunk of sequence, of length seq_length. If we have 74 sequences of 50secs each, with seq_length=100 it takes 74*50 =~4000 iterations to go through all the data once 
+for i = 1, iterations do -- one iteration is going through just 1 chunk of sequence, of length seq_length. If we have 30 sequences of 25secs each, with seq_length=100 it takes 25*30 =~7500 iterations to go through all the data once 
     local _, loss = optim.adagrad(feval, params, optim_state)
     losses[#losses + 1] = loss[1]
 
     if i % opt.save_every == 0 then
-        torch.save( './trainedModels/train_' .. opt.savefile .. '_N' .. opt.rnn_size .. '_R' .. optim_state['learningRate'] .. '_S' .. opt.seq_length .. '_iter' .. i .. '.t7', protos)
+        torch.save( string.format('./trainedModels/trainGPU_' .. opt.savefile .. '_N%2d_R%1.1e_D%1.1e_S%3d_Iter%4d.t7', opt.rnn_size, optim_state['learningRate'], optim_state['learningRateDecay'], opt.seq_length, i) , protos)
     end
     if i % opt.print_every == 0 then
         print(string.format("iteration %4d, loss = %6.8f, gradnorm = %6.4e", i, loss[1], grad_params:norm()))
