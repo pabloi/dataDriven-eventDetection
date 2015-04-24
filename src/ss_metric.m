@@ -80,7 +80,7 @@ for i = 1:N
         w = max(w - cooldown, 0);
     end
 end
-mistake = sum(mistake_weighted.^p.gamma);
+mistake = sum((mistake_weighted.^p.gamma).*mistake_raw);
 
 details = struct ...
     ( 'mistake_raw', mistake_raw ...
