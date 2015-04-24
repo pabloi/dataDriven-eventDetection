@@ -18,8 +18,8 @@
 % \usepackage{neuralnetwork}
 \usepackage{tikz}
 
-\tikzstyle{process} = [rectangle, draw,
-    text width=3em, text centered, rounded corners = 3pt, minimum height=2em]
+%\tikzstyle{process} = [rectangle, draw,
+%    text width=3em, text centered, rounded corners = 3pt, minimum height=2em]
 
 % \renewcommand{\tablename}{}
 \newcommand{\ra}[1]{\renewcommand{\arraystretch}{#1}}
@@ -60,67 +60,43 @@
 \end{frame}
 
 \begin{frame}{Introduction}
+    \begin{figure}[H]
+        \begin{center}
+        \includegraphics[height=.6\textheight]{figures/treadmill.png} \\
+        \tiny from \url{http://biodesign.seas.harvard.edu/soft-exosuits}
+        
+        \small \textbf{Goal:}  Accurately detect gait events (heel strike, toe off) in video-based motion capture data of human walking gait
+        \end{center}
+    \end{figure}
+\end{frame}
+
+\begin{frame}{Introduction}
     \begin{itemize}
-        \item \textbf{Goal:}
-            Accurately detect gait events (heel strike, toe off) in video-based motion capture data of human walking gait
         \item \textbf{Problem:} Sequence labeling
         \begin{itemize}
             \item Input: 3D locus of 18 motion capture markers (54*N reals)
-            \item Output:
-            \begin{itemize}
-                \item Raw: Event takes place $\Rightarrow$ 1; else $\Rightarrow$ 0 (4*N bools)
-                \item Equivalent: Leg in stance phase $\Rightarrow$ 1; else $\Rightarrow$ 0 (2*N bools)
-            \end{itemize}
+            \item Output: \{Left, Right\} $\times$ \{Heel Strike, Toe Off\} (4*N bools)
         \end{itemize}
         \item \textbf{Dataset:}
         \begin{itemize}
             \item 8 subjects $\times$ 3 trials $\times$ \num{10000} samples @ \SI{100}{\Hz}
             \item Ground truth from force plates on treadmills
         \end{itemize}
-        \item \textbf{Baselines:}
-        \begin{itemize}
-            \item Signal processing approach [O'Connor et al., 2007]
-            \begin{itemize}
-                \item Heuristics working on position and velocity of heel and toe markers
-                \item Sensitive to input noise and manually chosen thresholds
-            \end{itemize}
-            \item Feed-forward Neural Network [Miller, 2009]
-            \begin{itemize}
-                \item Sliding window centered around the desired marker
-                \item Need to pick many parameters for preprocessing (dimensionality reduction, windowing, etc.)
-            \end{itemize}
-        \end{itemize}
     \end{itemize}
 \end{frame}
 
 \begin{frame}{Our Approach}
     \begin{itemize}
-        \item \textbf{Motivation:}
+        \item Objectives:
         \begin{itemize}
-            \item Avoid manual picking of sensitive parameters (window size, threshold, filter cutoff, etc.)
-            \item Human walking can be modeled as a dynamic system; RNN (Recurrent Neural Network) learns dynamic systems
-            \item Any gait cycle may depend on ones preceding it
+            \item Empirical feature-engineering should be minimal
+            \item Number of manually-picked parameters (window size, threshold, filter cutoff, etc.) should be minimal
+            \item Dependence of one gait cycle on those preceding it should be exploited
         \end{itemize}
-        \item LSTM cell: RNN building block that models variable time-dependence
-        \item Network architecture:
-        \begin{tikzpicture}[node distance = 10mm, auto]
-            % Place nodes
-            \node (Input)
-            \node [block, right of=Input] (Prep) {}
-            % Draw edges
-            \path [line] (Input) -| \node {Marker $(x, y, z)$ \\ (54*N reals)} (Prep)
-        \end{tikzpicture}
+        \item Proposed solution: LSTM-based RNN
         \begin{itemize}
-            \item Inputs (54 reals)
-            \item $n$ LSTM cells ($n$ reals in $[-1, +1]$)
-            \item Output layer (softmax/sigmoid)
-            \item Outputs ($2$ reals in $[0, 1]$)
-        \end{itemize}
-        \item Implementation:
-        \begin{itemize}
-            \item Torch/Lua
-            \item LSTM cell by de Freitas (Oxford University, Google Deepmind)
-            \item AWS EC2 GPU instance (g2.2xlarge)
+            \item Recognition of quasi-periodic patterns even in presense of input noise
+            \item Robust and precise learning of rhythmic timing
         \end{itemize}
     \end{itemize}
 \end{frame}
@@ -128,10 +104,17 @@
 \begin{frame}{Network architecture}
     \begin{figure}[H]
         \begin{center}
-        \includegraphics[height=.7\textheight]{figures/lstm2.png} \\
-        \tiny from \url{http://stackoverflow.com/q/17454402/1163213}
+        \includegraphics[height=.77\textheight]{figures/network.eps} \\
         \end{center}
     \end{figure}
+\end{frame}
+
+\begin{frame}{Implementation}
+    \begin{itemize}
+        \item Torch/Lua
+        \item LSTM cell by de Freitas (Oxford University, Google Deepmind)
+        \item AWS EC2 GPU instance (g2.2xlarge)
+    \end{itemize}
 \end{frame}
 
 \begin{frame}{Results}
@@ -180,13 +163,5 @@
     \end{figure}
 \end{frame}
 
-\begin{frame}{Lab setup (not our lab but similar)}
-    \begin{figure}[H]
-        \begin{center}
-        \includegraphics[height=.7\textheight]{figures/treadmill.png} \\
-        \tiny from \url{http://biodesign.seas.harvard.edu/soft-exosuits}
-        \end{center}
-    \end{figure}
-\end{frame}
 
 \end{document}
