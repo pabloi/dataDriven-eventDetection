@@ -95,7 +95,7 @@
         \end{itemize}
         \item Proposed solution: LSTM-based RNN
         \begin{itemize}
-            \item Recognition of quasi-periodic patterns even in presense of input noise
+            \item Recognition of periodic patterns even in presence of input noise
             \item Robust and precise learning of rhythmic timing
         \end{itemize}
     \end{itemize}
@@ -112,11 +112,17 @@
 \begin{frame}{Implementation}
     \begin{itemize}
         \item Torch/Lua on AWS EC2 GPU instance (g2.2xlarge)
-        \item Use LSTM code example by de Freitas (Oxford/Google)
+        \item Start with LSTM code example by de Freitas
         \begin{itemize}
-            \item Adapt to our input/output
-            \item Does not converge out of the box
+            \item Adapt to our problem setup
+            \item Problem: Does not converge out of the box
             \item Tweaks: Learning rate, mini-batch, regularization, etc.
+        \end{itemize}
+        \item Further work:
+        \begin{itemize}
+            \item Train on GPU (currently only runs on CPU cores)
+            \item Explore other network architectures
+            \item Improve time invariance
         \end{itemize}
     \end{itemize}
 \end{frame}
