@@ -87,16 +87,17 @@
 
 \begin{frame}{Our Approach}
     \begin{itemize}
-        \item Objectives:
-        \begin{itemize}
-            \item Empirical feature-engineering should be minimal
+        \item Objectives (by order of priority):
+        \begin{enumerate}
+            \item Gross mis-predictions should be avoided even with the presence of input noise
             \item Number of manually-picked parameters (window size, threshold, filter cutoff, etc.) should be minimal
-            \item Dependence of one gait cycle on those preceding it should be exploited
-        \end{itemize}
+            \item Empirical feature-engineering should be minimal
+            \item Algorithm should generalize to all (healthy) subjects regardless of training set used
+        \end{enumerate}
         \item Proposed solution: LSTM-based RNN
         \begin{itemize}
-            \item Recognition of periodic patterns even in presence of input noise
-            \item Robust and precise learning of rhythmic timing
+            \item Robust recognition of periodic patterns and precise timing
+            \item Can possibly exploit inter-gait-cycle dependence
         \end{itemize}
     \end{itemize}
 \end{frame}
@@ -111,18 +112,18 @@
 
 \begin{frame}{Implementation}
     \begin{itemize}
-        \item Torch/Lua on AWS EC2 GPU instance (g2.2xlarge)
+        \item Torch/Lua on 1 AWS EC2 GPU instance (g2.2xlarge)
         \item Start with LSTM code example by de Freitas
         \begin{itemize}
-            \item Adapt to our problem setup
-            \item Problem: Does not converge out of the box
+            \item Heavily modified to adapt to our problem setup
+            \item Problem: Does not converge fast enough out of the box
             \item Tweaks: Learning rate, mini-batch, regularization, etc.
         \end{itemize}
         \item Further work:
         \begin{itemize}
-            \item Train on GPU (currently only runs on CPU cores)
-            \item Explore other network architectures
-            \item Improve time invariance
+            \item Explore alternative network configurations
+            \item Improve time/space invariance
+            \item Generalize to unhealthy subjects and/or over-ground trials
         \end{itemize}
     \end{itemize}
 \end{frame}
