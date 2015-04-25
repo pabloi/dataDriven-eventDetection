@@ -64,7 +64,7 @@
         \begin{center}
         \includegraphics[height=.6\textheight]{figures/treadmill.png} \\
         \tiny from \url{http://biodesign.seas.harvard.edu/soft-exosuits}
-        
+
         \small \textbf{Goal:}  Accurately detect gait events (heel strike, toe off) in video-based motion capture data of human walking gait
         \end{center}
     \end{figure}
@@ -132,27 +132,73 @@
         \begin{center}
         \ra{1.2}
         % \footnotesize
-        % \caption{Overview}
-        \begin{tabular}{@{} lrrr @{}}
+        \begin{tabular}{@{} l c cc c cc @{}}
         \toprule
-        % \multicolumn{4}{c}{\textbf{Random source}, $n=247$} \\
-        {} & mean & std & mistake \\
+        && \multicolumn{2}{c}{deviation} && \multicolumn{2}{c}{mistake} \\
+        \cmidrule{3-4} \cmidrule{6-7}
+        {} && mean & std && mean & std \\
         \midrule
-        O'Connor  &     XXXXXXX &    XXXXXXX &    XXXXXXX \\
-        Miller    &     XXXXXXX &    XXXXXXX &    XXXXXXX \\
-        LSTM      &     XXXXXXX &    XXXXXXX &    XXXXXXX \\
+        Foot velocity   &&   4.84 & 3.74	&& 2260.2 &  560.4 \\
+        Feed-forward NN &&   0.85 & 1.48	&&  211.1 &  204.5 \\
+        LSTM            &&   2.35 & 3.87	&&  306.6 &  360.5 \\
         \bottomrule
         \end{tabular}
+        \caption
+        {
+            Comparison of results for
+            \(
+                N
+                =
+                30
+                ,
+            \)
+            \(
+                T
+                =
+                \SI
+                {
+                    2.5
+                }
+                {
+                    \second
+                }
+                .
+            \)
+        }
         \end{center}
     \end{table}
 \end{frame}
 
+% \begin{frame}{Results}
+%     \begin{figure}
+%     \begin{center}
+%         \includegraphics[width=0.75\textwidth]{figures/hist_miller_testset1_1.eps}
+%         \caption{Histogram Miller}
+%         \label{fig:hist_miller}
+%     \end{center}
+%     \end{figure}
+% \end{frame}
+
 \begin{frame}{Results}
-    \begin{figure}
+    \begin{figure}[H]
     \begin{center}
-        \includegraphics[width=0.75\textwidth]{figures/hist_miller.eps}
-        \caption{Histogram Miller}
-        \label{fig:hist_miller}
+        \subfloat[]
+        {
+            \includegraphics[width=0.5\textwidth]
+            {figures/hist_miller_testset1_1.eps}
+            \label{fig:hist_miller}
+        }
+        \subfloat[]
+        {
+            \includegraphics[width=0.5\textwidth]
+            {figures/hist_lstm_testset1_1.eps}
+            \label{fig:hist_lstm}
+        }
+        \caption
+        {
+            Histogram of deviation for Feed-forward NN (a) and LSTM (b).
+        }
+        % \label{fig:9_5_e}
     \end{center}
     \end{figure}
 \end{frame}

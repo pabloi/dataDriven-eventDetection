@@ -1,4 +1,6 @@
-function [predictedY] = interpretLSTMoutput(p)
+function interpretLSTMoutput(filename)
+
+load(filename)
 
 [~,mlclass]=max(p,[],3);
 
@@ -8,6 +10,8 @@ stanceR= mlclass>1;
 predictedY(:,:,1)=stanceL;
 predictedY(:,:,2)=stanceR;
 predictedY=permute(predictedY,[1,3,2]);
+
+save(filename,p,predictedY)
 
 end
 

@@ -1,9 +1,21 @@
 require 'torch'
-require 'nn'
+require 'cutorch'
+print(  cutorch.getDeviceProperties(cutorch.getDevice()) )
+require 'cunn'
+    deviceParams = cutorch.getDeviceProperties(1)
+    cudaComputeCapability = deviceParams.major + deviceParams.minor/10
+    if cudaComputeCapability >= 3.5 then
+        LookupTable = nn.LookupTableGPU
+    else
+        LookupTable = nn.LookupTable
+    end
 require 'nngraph'
 require 'optim'
 require 'hdf5'
---require 'BatchLoader'
+-- function to transfer data to gpu
+function transfer_data(x)
+  return x:cuda()
+end
 
 -- local BatchLoader = require 'data.BatchLoader'
 local BatchLoader = require 'BatchLoader'
@@ -50,13 +62,13 @@ local vocab_size = 3
 protos = {} -- TODO: local
 -- protos.embed = Embedding(vocab_size, opt.rnn_size)
 -- lstm timestep's input: {x, prev_c, prev_h}, output: {next_c, next_h}
-protos.lstm = LSTM.lstm(opt)
-protos.softmax = nn.Sequential():add(nn.Linear(opt.rnn_size, vocab_size)):add(nn.LogSoftMax())
+protos.lstm = transfer_data(LSTM.lstm(opt))
+protos.softmax = transfer_data(nn.Sequential():add(nn.Linear(opt.rnn_size, vocab_size)):add(nn.LogSoftMax()))
 local weights=torch.Tensor(3);
 weights[1]=0.4;
 weights[2]=0.4;
 weights[3]=0.2;
-protos.criterion = nn.ClassNLLCriterion(weights)
+protos.criterion = transfer_data(nn.ClassNLLCriterion(weights))
 
 -- put the above things into one flattened parameters tensor
 -- local params, grad_params = model_utils.combine_all_parameters(protos.embed, protos.lstm, protos.softmax)
@@ -71,7 +83,7 @@ for name,proto in pairs(protos) do
 end
 
 -- LSTM initial state (zero initially, but final state gets sent to initial state when we do BPTT)
-local initstate_c = torch.zeros(opt.batch_size, opt.rnn_size) -- initialize to zeros matrix
+local initstate_c = transfer_data(torch.zeros(opt.batch_size, opt.rnn_size)) -- initialize to zeros matrix
 local initstate_h = initstate_c:clone()
 
 -- LSTM final state's backward message (dloss/dfinalstate) is 0, since it doesn't influence predictions
@@ -88,6 +100,7 @@ function feval(x)
 
     ------------------ get minibatch -------------------
     local x, y = loader:next_batch()
+	x = transfer_data(x)
     --print('Load batch #' .. current_batch)
     current_batch = current_batch + 1
     -- print('x:size()=(' ..x:size(1) ..',' ..x:size(2) ..')')
@@ -106,6 +119,7 @@ end -- Assuming the y variable loaded is a 2xT tensor, with its first row being 
     local lstm_h = {[0]=initstate_h} -- output values of LSTM
     local predictions = {}           -- softmax outputs
     local loss = 0
+	--loss =transfer_data(loss)
 
     for t=1,opt.seq_length do
         -- embeddings[t] = clones.embed[t]:forward(x[{{}, t}])
@@ -168,9 +182,9 @@ end
 
 -- optimization stuff
 losses = {} -- TODO: local
-local optim_state = {learningRate = 1e-3, learningRateDecay = 1e-4} -- For no decay set learningRateDecay=0, decay is implemented as inversely proportional to number of function evals.
+local optim_state = {learningRate = 1e-2, learningRateDecay = 1e-5} -- For no decay set learningRateDecay=0, decay is implemented as inversely proportional to number of function evals.
 local iterations = opt.max_epochs * loader.nbatches
-for i = 1, iterations do -- one iteration is going through just 1 chunk of sequence, of length seq_length. If we have 74 sequences of 50secs each, with seq_length=100 it takes 74*50 =~4000 iterations to go through all the data once 
+for i = 1, iterations do -- one iteration is going through just 1 chunk of sequence, of length seq_length. If we have 30 sequences of 25secs each, with seq_length=100 it takes 25*30 =~7500 iterations to go through all the data once 
     local _, loss = optim.adagrad(feval, params, optim_state)
     losses[#losses + 1] = loss[1]
 
