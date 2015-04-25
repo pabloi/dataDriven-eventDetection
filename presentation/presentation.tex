@@ -176,13 +176,13 @@
 \begin{frame}{Results}
     \begin{figure}[H]
     \begin{center}
-        \subfloat[]
+        \subfloat[Feed-forward NN]
         {
             \includegraphics[width=0.5\textwidth]
             {figures/hist_miller_testset1_1.eps}
             \label{fig:hist_miller}
         }
-        \subfloat[]
+        \subfloat[LSTM]
         {
             \includegraphics[width=0.5\textwidth]
             {figures/hist_lstm_testset1_1.eps}
@@ -190,7 +190,24 @@
         }
         \caption
         {
-            Histogram of deviation for Feed-forward NN (a) and LSTM (b).
+            Absolute deviations,
+            \(
+                N
+                =
+                30
+                ,
+                \,
+                T
+                =
+                \SI
+                {
+                    2.5
+                }
+                {
+                    \second
+                }
+                .
+            \)
         }
         % \label{fig:9_5_e}
     \end{center}
