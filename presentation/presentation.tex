@@ -87,12 +87,11 @@
 
 \begin{frame}{Our Approach}
     \begin{itemize}
-        \item Objectives (by order of priority):
+        \item Objectives:
         \begin{enumerate}
             \item Gross mis-predictions should be avoided even with the presence of input noise
-            \item Number of manually-picked parameters (window size, threshold, filter cutoff, etc.) should be minimal and insensitive
-            \item Empirical feature-engineering should be minimal
-            \item Algorithm should generalize to all (healthy) subjects regardless of training set used
+            \item Number of manually-picked parameters (window size, threshold, filter cutoff, etc.) should be minimal
+            \item Algorithm that generalizes to healthy and pathological subjects, treadmill and over-ground walking
         \end{enumerate}
         \item Proposed solution: LSTM-based RNN
         \begin{itemize}
@@ -115,9 +114,9 @@
         \item Torch/Lua on 1 AWS EC2 GPU instance (g2.2xlarge)
         \item Start with LSTM code example by de Freitas
         \begin{itemize}
-            \item Heavily modified to adapt to our problem setup
-            \item Problem: Does not converge fast enough out of the box
-            \item Tweaks: Learning rate, mini-batch, regularization, etc.
+            \item Adapted to our problem setup
+            \item Parameter tweaking to achieve convergence
+            \item Improved results through adaptive gradients, mini-batch, regularization.
         \end{itemize}
         \item N-fold cross-validation to evaluate performance
         \item Further work:
