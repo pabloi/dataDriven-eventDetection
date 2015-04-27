@@ -133,15 +133,19 @@
         \begin{center}
         \ra{1.2}
         % \footnotesize
-        \begin{tabular}{@{} l c cc @{}}
+        \begin{tabular}{@{} l c cc c cc@{}}
         \toprule
-        && \multicolumn{2}{c}{deviation (frames)} \\%&& \multicolumn{2}{c}{mistake} \\
-        \cmidrule{3-4} %\cmidrule{6-7}
-        {} && mean & std \\%&& mean & std \\
+        && 
+        \multicolumn{2}{c}{true deviation} 
+        && 
+        \multicolumn{2}{c}{absolute deviation} 
+        \\
+        \cmidrule{3-4} \cmidrule{6-7}
+        {} && mean & std && mean & std \\
         \midrule
-        Foot velocity   &&   4.84 & 3.74 \\%	&& 2260.2 &  560.4 \\
-        Feed-forward NN &&   0.85 & 1.48 \\%	&&  211.1 &  204.5 \\
-        LSTM            &&   2.35 & 3.87 \\%	&&  306.6 &  360.5 \\
+        Foot velocity   &&   4.16  &  3.74  &&  4.84  &  2.80 \\
+        Feed-forward NN &&   0.07  &  1.48  &&  0.85  &  1.21 \\
+        LSTM            &&   0.10  &  3.87  &&  2.35  &  3.08 \\
         \bottomrule
         \end{tabular}
         \caption
@@ -165,6 +169,7 @@
                 }
                 .
             \)
+            . Measured in frames ($T_s=0.01s$).
         }
         \end{center}
     \end{table}
