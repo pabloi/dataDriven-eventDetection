@@ -26,7 +26,7 @@
 
 \title
 {
-    Gait Event Detection Using an LSTM Network
+    Sequence Labeling for Gait Analysis using LSTM
 }
 
 \subtitle
@@ -90,7 +90,7 @@
         \item Objectives (by order of priority):
         \begin{enumerate}
             \item Gross mis-predictions should be avoided even with the presence of input noise
-            \item Number of manually-picked parameters (window size, threshold, filter cutoff, etc.) should be minimal
+            \item Number of manually-picked parameters (window size, threshold, filter cutoff, etc.) should be minimal and insensitive
             \item Empirical feature-engineering should be minimal
             \item Algorithm should generalize to all (healthy) subjects regardless of training set used
         \end{enumerate}
@@ -119,11 +119,7 @@
             \item Problem: Does not converge fast enough out of the box
             \item Tweaks: Learning rate, mini-batch, regularization, etc.
         \end{itemize}
-        \item Evaluation of algorithm performance:
-        \begin{itemize}
-            \item Correctly predicted events: $t_{\mathrm{true}} - t_{\mathrm{pred}}$
-            \item Gross mis-prediction: total time of mispredicted state
-        \end{itemize}
+        \item Evaluate algorithm performance on separate testing datasets
         \item Further work:
         \begin{itemize}
             \item Explore alternative network configurations
