@@ -96,8 +96,8 @@
         \end{enumerate}
         \item Proposed solution: LSTM-based RNN
         \begin{itemize}
-            \item Robust recognition of periodic patterns and precise timing
-            \item Can possibly exploit inter-gait-cycle dependence
+            \item Shown to work with timeseries data in sequence labeling and prediction tasks
+            \item Can possibly learn and exploit temporal correlations of data
         \end{itemize}
     \end{itemize}
 \end{frame}
@@ -119,12 +119,12 @@
             \item Problem: Does not converge fast enough out of the box
             \item Tweaks: Learning rate, mini-batch, regularization, etc.
         \end{itemize}
-        \item Evaluate algorithm performance on separate testing datasets
+        \item N-fold cross-validation to evaluate performance
         \item Further work:
         \begin{itemize}
             \item Explore alternative network configurations
-            \item Improve time/space invariance
-            \item Generalize to unhealthy subjects and/or over-ground trials
+            \item Assess time/space invariance
+            \item Generalize to stroke subjects and over-ground trials
         \end{itemize}
     \end{itemize}
 \end{frame}
@@ -134,15 +134,15 @@
         \begin{center}
         \ra{1.2}
         % \footnotesize
-        \begin{tabular}{@{} l c cc c cc @{}}
+        \begin{tabular}{@{} l c cc @{}}
         \toprule
-        && \multicolumn{2}{c}{deviation} && \multicolumn{2}{c}{mistake} \\
-        \cmidrule{3-4} \cmidrule{6-7}
-        {} && mean & std && mean & std \\
+        && \multicolumn{2}{c}{deviation (frames)} \\%&& \multicolumn{2}{c}{mistake} \\
+        \cmidrule{3-4} %\cmidrule{6-7}
+        {} && mean & std \\%&& mean & std \\
         \midrule
-        Foot velocity   &&   4.84 & 3.74	&& 2260.2 &  560.4 \\
-        Feed-forward NN &&   0.85 & 1.48	&&  211.1 &  204.5 \\
-        LSTM            &&   2.35 & 3.87	&&  306.6 &  360.5 \\
+        Foot velocity   &&   4.84 & 3.74 \\%	&& 2260.2 &  560.4 \\
+        Feed-forward NN &&   0.85 & 1.48 \\%	&&  211.1 &  204.5 \\
+        LSTM            &&   2.35 & 3.87 \\%	&&  306.6 &  360.5 \\
         \bottomrule
         \end{tabular}
         \caption
@@ -159,7 +159,7 @@
                 =
                 \SI
                 {
-                    2.5
+                    25
                 }
                 {
                     \second
@@ -209,7 +209,7 @@
                 =
                 \SI
                 {
-                    2.5
+                    25
                 }
                 {
                     \second

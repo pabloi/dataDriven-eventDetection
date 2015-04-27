@@ -182,7 +182,7 @@ end
 
 -- optimization stuff
 losses = {} -- TODO: local
-local optim_state = {learningRate = 1e-2, learningRateDecay = 1e-5} -- For no decay set learningRateDecay=0, decay is implemented as inversely proportional to number of function evals.
+local optim_state = {learningRate = 1e-2, learningRateDecay = 1e-4} -- For no decay set learningRateDecay=0, decay is implemented as inversely proportional to number of function evals.
 local iterations = opt.max_epochs * loader.nbatches
 for i = 1, iterations do -- one iteration is going through just 1 chunk of sequence, of length seq_length. If we have 30 sequences of 25secs each, with seq_length=100 it takes 25*30 =~7500 iterations to go through all the data once 
     local _, loss = optim.adagrad(feval, params, optim_state)
