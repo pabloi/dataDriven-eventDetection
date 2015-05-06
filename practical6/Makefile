@@ -10,6 +10,10 @@ hdf5:
 nngraph:
 	luarocks install nngraph
 
+.PHONY: mattorch
+mattorch:
+	luarocks install mattorch
+
 .PHONY: eventdetection
 eventdetection:
 	git clone https://github.com/pabloi/dataDriven-eventDetection
