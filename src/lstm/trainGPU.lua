@@ -12,6 +12,7 @@ require 'cunn'
 require 'nngraph'
 require 'optim'
 require 'hdf5'
+require 'mattorch'
 -- function to transfer data to gpu
 function transfer_data(x)
   return x:cuda()
@@ -32,13 +33,15 @@ cmd:text('Options')
 -- cmd:option('-vocabfile','vocabfile.t7','filename of the string->int table')
 cmd:option('-datafile','set1_1','filename of hdf5 data file')
 cmd:option('-batch_size',1,'number of sequences to train on in parallel')
-cmd:option('-seq_length',100,'number of timesteps to unroll to')
-cmd:option('-rnn_size',50,'size of LSTM internal state')
-cmd:option('-max_epochs',1000,'number of full passes through the training data')
---cmd:option('-savefile','model_autosave','filename to autosave the model (protos) to, appended with the,param,string.t7') - savefile can no longer be provided, using same names as datafile appending at end
-cmd:option('-save_every',1000,'save every 500 steps, overwriting the existing file') -- This needs to be at least larger than max_epochs * nBatches so that it saves at least once.
-cmd:option('-print_every',100,'how many steps/minibatches between printing out the loss')
+cmd:option('-seq_length',500,'number of timesteps to unroll to')
+cmd:option('-rnn_size',100,'size of LSTM internal state')
+cmd:option('-max_epochs',100,'number of full passes through the training data')
+cmd:option('-savefile','model_autosave','filename to autosave the model (protos) to, appended with the epoch in whixh it was saved.t7')
+cmd:option('-save_every',1,'save every epoch') -- Changed to describe # of saving points as a function of epochs (instead of iterations)
+cmd:option('-print_every',1,'how many steps/minibatches between printing out the loss')
 cmd:option('-seed',123,'torch manual random number generator seed')
+cmd:option('-lr',1e-2,'learning rate')
+cmd:option('-lrd',1e-3,'learning rate decay for adagrad, in epochs: e.g .1 means it takes 10 epochs for the learning rate to decay to half its initial value, 20 epochs MORE to reach 1/4, 40 epochs MORE to 1/8 and so on')
 cmd:text()
 
 -- parse input params
@@ -46,13 +49,14 @@ opt = cmd:parse(arg)
 
 -- preparation stuff:
 torch.manualSeed(opt.seed)
-opt.savefile = cmd:string(opt.datafile, opt,
-    {save_every=true, print_every=true, savefile=true, vocabfile=true, datafile=true})
+--opt.savefile = cmd:string(opt.savefile, opt, {save_every=true, print_every=true, savefile=true, vocabfile=true, datafile=true})
     
 
 local loader = BatchLoader.create('../../data/' .. opt.datafile .. '.h5', opt.batch_size, opt.seq_length)
 -- local vocab_size = loader.vocab_size  -- the number of distinct classes
 opt.input_size=loader.input_size;
+opt.nbatches=loader.nbatches;
+
 --print('input_size '.. opt.input_size)
 
 local vocab_size = 3
@@ -65,9 +69,9 @@ protos = {} -- TODO: local
 protos.lstm = transfer_data(LSTM.lstm(opt))
 protos.softmax = transfer_data(nn.Sequential():add(nn.Linear(opt.rnn_size, vocab_size)):add(nn.LogSoftMax()))
 local weights=torch.Tensor(3);
-weights[1]=0.4;
-weights[2]=0.4;
-weights[3]=0.2;
+weights[1]=0.34;
+weights[2]=0.34;
+weights[3]=0.32;
 protos.criterion = transfer_data(nn.ClassNLLCriterion(weights))
 
 -- put the above things into one flattened parameters tensor
@@ -175,23 +179,35 @@ end -- Assuming the y variable loaded is a 2xT tensor, with its first row being 
     initstate_h:copy(lstm_h[#lstm_h])
 
     -- clip gradient element-wise
-    grad_params:clamp(-5, 5)
+    grad_params:clamp(-20, 20)
 
     return loss, grad_params
 end
 
 -- optimization stuff
-losses = {} -- TODO: local
-local optim_state = {learningRate = 1e-2, learningRateDecay = 1e-4} -- For no decay set learningRateDecay=0, decay is implemented as inversely proportional to number of function evals.
-local iterations = opt.max_epochs * loader.nbatches
-for i = 1, iterations do -- one iteration is going through just 1 chunk of sequence, of length seq_length. If we have 30 sequences of 25secs each, with seq_length=100 it takes 25*30 =~7500 iterations to go through all the data once 
-    local _, loss = optim.adagrad(feval, params, optim_state)
-    losses[#losses + 1] = loss[1]
 
-    if i % opt.save_every == 0 then
-        torch.save( string.format('./trainedModels/trainGPU_' .. opt.savefile .. '_N%2d_R%1.1e_D%1.1e_S%3d_Iter%4d.t7', opt.rnn_size, optim_state['learningRate'], optim_state['learningRateDecay'], opt.seq_length, i) , protos)
+torch.save( string.format(opt.savefile .. '_Params.t7', epoch) , opt)
+local optim_state = {learningRate = opt.lr, learningRateDecay = (opt.lrd/loader.nbatches)} -- For no decay set learningRateDecay=0, decay is implemented as inversely proportional to number of epoch evals in this way.
+local iterations = opt.max_epochs * loader.nbatches --loader.nbatches is the size of each epoch in iterations
+losses =torch.zeros(iterations); -- TODO: local
+for i = 1, iterations do -- one iteration is going through just 1 chunk of sequence, of length seq_length. If we have 30 sequences of 25secs each, with seq_length=100 (1s) it takes 25*30 =750 iterations to go through all the data once 
+	local epoch = i/loader.nbatches -- not an integer usually
+    local _, loss = optim.adagrad(feval, params, optim_state)
+    losses[i] = loss[1]
+
+    if i % (opt.save_every*loader.nbatches) == 0 then 
+        torch.save( string.format( opt.savefile .. '_Epoch%4d.t7', epoch) , protos)
+		torch.save( string.format( opt.savefile .. '_Loss.t7', epoch) , opt)
     end
-    if i % opt.print_every == 0 then
-        print(string.format("iteration %4d, loss = %6.8f, gradnorm = %6.4e", i, loss[1], grad_params:norm()))
+    if i % (opt.print_every*loader.nbatches) == 0 then
+        print(string.format("epoch %4d, loss = %6.8f, gradnorm = %6.4e", epoch, loss[1], grad_params:norm()))
     end
+	if i == 1 then -- forcing initial print & save
+        print(string.format("epoch %4d, loss = %6.8f, gradnorm = %6.4e", epoch, loss[1], grad_params:norm()))
+		torch.save( string.format( opt.savefile .. '_Epoch%4d.t7', epoch) , protos)
+    end
+	if i==iterations then -- final save: get losses into matlab which is the easy thing to do
+		opt.loss=losses
+		mattorch.save( opt.savefile .. '_Results.mat',losses)
+	end
 end
