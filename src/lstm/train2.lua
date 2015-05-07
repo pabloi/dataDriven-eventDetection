@@ -59,17 +59,17 @@ opt.output_size = output_size
 local net = {}
 local criterion = nil
 
-net.lstm = LSTM.lstm(opt)
+net.lstm = GPU(LSTM.lstm(opt))
 if not opt.no_label_output then
     -- merged {stanceL, stanceR, stanceLR} label classification
     local weights = torch.Tensor{0.34, 0.34, 0.32}
-    net.output = nn.Sequential():add(nn.Linear(opt.rnn_size, 3)):add(nn.LogSoftMax())
-    criterion = nn.ClassNLLCriterion(weights)
+    net.output = GPU(nn.Sequential():add(nn.Linear(opt.rnn_size, 3)):add(nn.LogSoftMax()))
+    criterion = GPU(nn.ClassNLLCriterion(weights))
 else
     -- separate stanceL and stanceR classification
     -- Sigmoid() + BCECriterion() c.f. <http://qr.ae/0cUq0> (by Jack Rae, Google DeepMind)
-    net.output = nn.Sequential():add(nn.Linear(opt.rnn_size, output_size)):add(nn.Sigmoid())
-    criterion = nn.BCECriterion()
+    net.output = GPU(nn.Sequential():add(nn.Linear(opt.rnn_size, output_size)):add(nn.Sigmoid()))
+    criterion = GPU(nn.BCECriterion())
 end
 
 -- flatten parameters tensor
@@ -84,7 +84,7 @@ for name, orig in pairs(net) do
 end
 
 -- LSTM initial state/output => zero
-local initstate_c = torch.zeros(batch_size, opt.rnn_size)
+local initstate_c = GPU(torch.zeros(batch_size, opt.rnn_size))
 local initstate_h = initstate_c:clone()
 -- LSTM final state's backward message (dloss/dfinalstate) => zero
 local dfinalstate_c = initstate_c:clone()
