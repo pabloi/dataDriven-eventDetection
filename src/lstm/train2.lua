@@ -118,6 +118,11 @@ function feval(x)
         ))
     end
 
+    --[[
+    initstate_h:copy(lstm_h[opt.seq_length])
+    initstate_c:copy(lstm_c[opt.seq_length])
+    --]]
+
     -- scale by minibatch size, then clamp
     grad_params:div(opt.batch_size):clamp(-opt.clamp, opt.clamp)
 

@@ -81,7 +81,7 @@ function BatchLoader.create(data_file, batch_size, seq_length)
 	self.input_size = input_size
     self.output_size = output_size
 
-    -- self.current_batch = 0 -- deprecated: randomly pick
+    self.current_batch = 0 -- deprecated: randomly pick
     self.evaluated_batches = 0 -- number of times next_batch() called
 
     print('data loaded')
@@ -92,7 +92,9 @@ end
 
 function BatchLoader:next_batch()
     local nb = self.batch_size
-    local i = math.random(1, self.ns - nb + 1)
+    --local i = math.random(1, self.ns - nb + 1)
+    local i = (self.current_batch % (self.ns - nb + 1)) + 1
+    self.current_batch = i
     self.evaluated_batches = self.evaluated_batches + 1
     --print('next batch starting from :', i)
     return self.xs:narrow(2, i, nb),

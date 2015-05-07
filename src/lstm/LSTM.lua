@@ -25,9 +25,9 @@ function LSTM.lstm(opt)
         end
     end
 
-    local in_gate          = nn.Sigmoid()(new_gate())
-    local forget_gate      = nn.Sigmoid()(new_gate())
-    local out_gate         = nn.Sigmoid()(new_gate())
+    local in_gate          = nn.Sigmoid()(new_gate(true))
+    local forget_gate      = nn.Sigmoid()(new_gate(true))
+    local out_gate         = nn.Sigmoid()(new_gate(true))
     local in_transform     = nn.Tanh()(new_gate(true))
 
     -- c = forget_gate.*c + in_gate .* in_transform
