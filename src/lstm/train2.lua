@@ -127,19 +127,19 @@ end
 -- optimization
 torch.save(string.format(opt.savefile .. '_Params.t7', epoch) , opt)
 local optim_state = {learningRate = opt.lr, learningRateDecay = opt.lrd/loader.ns} -- For no decay set learningRateDecay=0, decay is implemented as inversely proportional to number of epoch evals in this way.
-local iterations = opt.max_epochs * loader.ns --loader.ns is the size of each epoch in iterations
+local iterations = opt.max_epochs * loader.ns/opt.batch_size --loader.ns is the size of each epoch in iterations
 local losses = torch.zeros(iterations)
 for i = 1, iterations do -- one iteration is going through just 1 chunk of sequence, of length seq_length. If we have 30 sequences of 25secs each, with seq_length=100 (1s) it takes 25*30 =750 iterations to go through all the data once 
-	local epoch = i/loader.ns -- not an integer usually
+	local epoch = i*opt.batch_size/loader.ns -- not an integer usually
     local _, loss = optim.adagrad(feval, params, optim_state)
     loss = loss[1]/opt.seq_length
     losses[i] = loss
 
-    if i % (opt.save_every*loader.ns) == 0 then 
+    if (i*opt.batch_size) % (opt.save_every*loader.ns) == 0 then 
         torch.save(string.format( opt.savefile .. '_Epoch%4d.t7', epoch), net)
 		torch.save(string.format( opt.savefile .. '_Loss.t7', epoch), opt)
     end
-    if i % (opt.print_every*loader.ns) == 0 then
+    if (i*opt.batch_size) % (opt.print_every*loader.ns) == 0 then
         print(string.format("epoch %4d, loss = %6.8f, gradnorm = %6.4e", epoch, loss, grad_params:norm()))
     end
 	if i == 1 then -- forcing initial print & save
