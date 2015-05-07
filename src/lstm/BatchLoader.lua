@@ -71,6 +71,10 @@ function BatchLoader.create(data_file, batch_size, seq_length)
         end
     end
 
+    if opt.label_output then
+        ys = ys:select(3, 1) + ys:select(3, 2)*2
+    end
+
     self.xs = xs
     self.ys = ys
     self.ns = ns
@@ -88,8 +92,6 @@ end
 
 function BatchLoader:next_batch()
     local nb = self.batch_size
-    local xb = torch.Tensor(nb, self.input_size)
-    local yb = torch.Tensor(nb, self.output_size)
     local i = math.random(1, self.ns - nb + 1)
     self.evaluated_batches = self.evaluated_batches + 1
     --print('next batch starting from :', i)

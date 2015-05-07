@@ -11,19 +11,24 @@ function LSTM.lstm(opt)
     local prev_c = nn.Identity()()
     local prev_h = nn.Identity()()
 
-    -- create one {input/output/forget} gate
-    function new_gate()
-        -- linear transformation of the input : i2h=Mi*x+bi
-        local i2h = nn.Linear(input_size, rnn_size)(x)
-        -- linear transformation of output from previous timestep : h2h = Mh*prev_h + bh
-        local h2h = nn.Linear(rnn_size, rnn_size)(prev_h)
-        return nn.CAddTable()({i2h, h2h}) -- new_gate = i2h + h2h
+    -- create one {input/output/forget} gate with optional cell feedback
+    function new_gate(with_cell = true)
+        -- linear transformation of the input : i2g=Mi*x+bi
+        local i2g = nn.Linear(input_size, rnn_size)(x)
+        -- linear transformation of output from previous timestep : h2g = Mh*prev_h + bh
+        local h2g = nn.Linear(rnn_size, rnn_size)(prev_h)
+        if with_cell then
+            local c2g = nn.CMul(rnn_size)(prev_c)
+            nn.CAddTable()({i2g, h2g, c2g}) -- new_gate = i2g + h2g + c2g
+        else
+            nn.CAddTable()({i2g, h2g}) -- new_gate = i2g + h2g
+        end
     end
 
     local in_gate          = nn.Sigmoid()(new_gate())
     local forget_gate      = nn.Sigmoid()(new_gate())
     local out_gate         = nn.Sigmoid()(new_gate())
-    local in_transform     = nn.Tanh()(new_gate()) 
+    local in_transform     = nn.Tanh()(new_gate(false)) 
 
     -- c = forget_gate.*c + in_gate .* in_transform
     local next_c = nn.CAddTable()({
