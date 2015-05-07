@@ -137,7 +137,7 @@ local losses = torch.zeros(iterations)
 for i = 1, iterations do -- one iteration is going through just 1 chunk of sequence, of length seq_length. If we have 30 sequences of 25secs each, with seq_length=100 (1s) it takes 25*30 =750 iterations to go through all the data once 
 	local epoch = i*opt.batch_size/loader.ns -- not an integer usually
     local _, loss = optim.adagrad(feval, params, optim_state)
-    loss = loss[1]/opt.seq_length
+    loss = loss[1]/opt.seq_length/opt.batch_size
     losses[i] = loss
 
     if (i*opt.batch_size) % (opt.save_every*loader.ns) == 0 then 
