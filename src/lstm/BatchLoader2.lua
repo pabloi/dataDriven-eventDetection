@@ -69,7 +69,7 @@ function BatchLoader.create(data_file, batch_size, seq_length)
         end
     end
 
-    if opt.label_output then
+    if not opt.no_label_output then
         ys = ys:select(3, 1) + ys:select(3, 2)*2
     end
 
