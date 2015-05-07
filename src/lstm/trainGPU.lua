@@ -1,22 +1,5 @@
-require 'torch'
-require 'cutorch'
-print(  cutorch.getDeviceProperties(cutorch.getDevice()) )
-require 'cunn'
-    deviceParams = cutorch.getDeviceProperties(1)
-    cudaComputeCapability = deviceParams.major + deviceParams.minor/10
-    if cudaComputeCapability >= 3.5 then
-        LookupTable = nn.LookupTableGPU
-    else
-        LookupTable = nn.LookupTable
-    end
-require 'nngraph'
-require 'optim'
-require 'hdf5'
-require 'mattorch'
--- function to transfer data to gpu
-function transfer_data(x)
-  return x:cuda()
-end
+require 'init_CPU'
+--require 'init_GPU'
 
 -- local BatchLoader = require 'data.BatchLoader'
 local BatchLoader = require 'BatchLoader'
@@ -50,7 +33,6 @@ opt = cmd:parse(arg)
 -- preparation stuff:
 torch.manualSeed(opt.seed)
 --opt.savefile = cmd:string(opt.savefile, opt, {save_every=true, print_every=true, savefile=true, vocabfile=true, datafile=true})
-    
 
 local loader = BatchLoader.create('../../data/' .. opt.datafile .. '.h5', opt.batch_size, opt.seq_length)
 -- local vocab_size = loader.vocab_size  -- the number of distinct classes
@@ -110,12 +92,9 @@ function feval(x)
     -- print('x:size()=(' ..x:size(1) ..',' ..x:size(2) ..')')
     -- print('y:size()=(' ..y:size(1) ..',' ..y:size(2) ..')')
 
-
     -- assigning labels
-	aux = torch.zeros(opt.seq_length);
-for t=1,opt.seq_length do
-	aux[t]= y[1][t] + 2*y[2][t];
-end -- Assuming the y variable loaded is a 2xT tensor, with its first row being stanceL and second stanceR. Assigns label=1 to stanceL, label=2 to stanceR, label=3 to double stance, label=0 to both feet off the air (impossible!).
+    -- Assuming the y variable loaded is a 2xT tensor, with its first row being stanceL and second stanceR. Assigns label=1 to stanceL, label=2 to stanceR, label=3 to double stance, label=0 to both feet off the air (impossible!).
+    aux = transfer_data(torch.add(y:select(1, 1), y:select(1, 2)*2))
 
     ------------------- forward pass -------------------
     local embeddings = {}            -- input embeddings
@@ -127,7 +106,7 @@ end -- Assuming the y variable loaded is a 2xT tensor, with its first row being 
 
     for t=1,opt.seq_length do
         -- embeddings[t] = clones.embed[t]:forward(x[{{}, t}])
-        embeddings[t] = x[{{}, t}]
+        embeddings[t] = x:select(2, t)
 
         -- we're feeding the *correct* things in here, alternatively
         -- we could sample from the previous timestep and embed that, but that's
