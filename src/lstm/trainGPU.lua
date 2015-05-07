@@ -164,8 +164,7 @@ end -- Assuming the y variable loaded is a 2xT tensor, with its first row being 
         dlstm_h[t] = clones.softmax[t]:backward(lstm_h[t], doutput_t)
 
         -- backprop through LSTM timestep
-        dembeddings[t], dlstm_c[t-1], dlstm_h[t-1] = unpack(clones.lstm[t]:backward(
-            {embeddings[t], lstm_c[t-1], lstm_h[t-1]},
+        dembeddings[t], dlstm_c[t-1], dlstm_h[t-1] = unpack(clones.lstm[t]:backward({embeddings[t], lstm_c[t-1], lstm_h[t-1]},
             {dlstm_c[t], dlstm_h[t]}
         ))
 
