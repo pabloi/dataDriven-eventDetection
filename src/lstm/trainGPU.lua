@@ -1,21 +1,5 @@
-require 'torch'
-require 'cutorch'
-print(  cutorch.getDeviceProperties(cutorch.getDevice()) )
-require 'cunn'
-    deviceParams = cutorch.getDeviceProperties(1)
-    cudaComputeCapability = deviceParams.major + deviceParams.minor/10
-    if cudaComputeCapability >= 3.5 then
-        LookupTable = nn.LookupTableGPU
-    else
-        LookupTable = nn.LookupTable
-    end
-require 'nngraph'
-require 'optim'
-require 'hdf5'
--- function to transfer data to gpu
-function transfer_data(x)
-  return x:cuda()
-end
+require 'init_CPU'
+--require 'init_GPU'
 
 -- local BatchLoader = require 'data.BatchLoader'
 local BatchLoader = require 'BatchLoader'
@@ -48,9 +32,9 @@ opt = cmd:parse(arg)
 torch.manualSeed(opt.seed)
 opt.savefile = cmd:string(opt.datafile, opt,
     {save_every=true, print_every=true, savefile=true, vocabfile=true, datafile=true})
-    
 
-local loader = BatchLoader.create('../../data/' .. opt.datafile .. '.h5', opt.batch_size, opt.seq_length)
+
+local loader = BatchLoader.create(opt.datafile, opt.batch_size, opt.seq_length)
 -- local vocab_size = loader.vocab_size  -- the number of distinct classes
 opt.input_size=loader.input_size;
 --print('input_size '.. opt.input_size)
@@ -100,18 +84,16 @@ function feval(x)
 
     ------------------ get minibatch -------------------
     local x, y = loader:next_batch()
+
 	x = transfer_data(x)
     --print('Load batch #' .. current_batch)
     current_batch = current_batch + 1
     -- print('x:size()=(' ..x:size(1) ..',' ..x:size(2) ..')')
     -- print('y:size()=(' ..y:size(1) ..',' ..y:size(2) ..')')
 
-
     -- assigning labels
-	aux = torch.zeros(opt.seq_length);
-for t=1,opt.seq_length do
-	aux[t]= y[1][t] + 2*y[2][t];
-end -- Assuming the y variable loaded is a 2xT tensor, with its first row being stanceL and second stanceR. Assigns label=1 to stanceL, label=2 to stanceR, label=3 to double stance, label=0 to both feet off the air (impossible!).
+    -- Assuming the y variable loaded is a 2xT tensor, with its first row being stanceL and second stanceR. Assigns label=1 to stanceL, label=2 to stanceR, label=3 to double stance, label=0 to both feet off the air (impossible!).
+    aux = transfer_data(torch.add(y:select(1, 1), y:select(1, 2)*2))
 
     ------------------- forward pass -------------------
     local embeddings = {}            -- input embeddings
@@ -123,7 +105,7 @@ end -- Assuming the y variable loaded is a 2xT tensor, with its first row being 
 
     for t=1,opt.seq_length do
         -- embeddings[t] = clones.embed[t]:forward(x[{{}, t}])
-        embeddings[t] = x[{{}, t}]
+        embeddings[t] = x:select(2, t)
 
         -- we're feeding the *correct* things in here, alternatively
         -- we could sample from the previous timestep and embed that, but that's
@@ -184,7 +166,7 @@ end
 losses = {} -- TODO: local
 local optim_state = {learningRate = 1e-2, learningRateDecay = 1e-4} -- For no decay set learningRateDecay=0, decay is implemented as inversely proportional to number of function evals.
 local iterations = opt.max_epochs * loader.nbatches
-for i = 1, iterations do -- one iteration is going through just 1 chunk of sequence, of length seq_length. If we have 30 sequences of 25secs each, with seq_length=100 it takes 25*30 =~7500 iterations to go through all the data once 
+for i = 1, iterations do -- one iteration is going through just 1 chunk of sequence, of length seq_length. If we have 30 sequences of 25secs each, with seq_length=100 it takes 25*30 =~7500 iterations to go through all the data once
     local _, loss = optim.adagrad(feval, params, optim_state)
     losses[#losses + 1] = loss[1]
 
