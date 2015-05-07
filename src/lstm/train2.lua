@@ -1,14 +1,3 @@
-require 'init_CPU'
---require 'init_GPU'
-
--- local BatchLoader = require 'data.BatchLoader'
-local BatchLoader = require 'BatchLoader2'
-local LSTM = require 'LSTM'             -- LSTM timestep and utilities
-local model_utils=require 'model_utils'
-require 'BinaryCriterion'
-
-function isnan(x) return x ~= x end 
-
 cmd = torch.CmdLine()
 cmd:text()
 cmd:text('Training a simple character-level LSTM language model')
@@ -26,8 +15,23 @@ cmd:option('-seed',20150507,'torch manual random number generator seed')
 cmd:option('-lr',1e-2,'learning rate')
 cmd:option('-lrd',1e-3,'learning rate decay for adagrad, in epochs: e.g .1 means it takes 10 epochs for the learning rate to decay to half its initial value, 20 epochs MORE to reach 1/4, 40 epochs MORE to 1/8 and so on')
 cmd:option('-clamp',20,'gradient clamp')
+cmd:option('-gpu',false,'use GPU or not')
+cmd:option('-label_output',true,'transform output (stanceL, stanceR) to single class label')
 cmd:text()
 opt = cmd:parse(arg)
+
+if opt.gpu then
+    require 'init_GPU'
+else
+    require 'init_CPU'
+end
+
+local BatchLoader = require 'BatchLoader2'
+local LSTM = require 'LSTM'
+local model_utils=require 'model_utils'
+-- require 'BinaryCriterion'
+
+function isnan(x) return x ~= x end 
 
 -- random seed
 torch.manualSeed(opt.seed)
@@ -41,11 +45,19 @@ opt.input_size = input_size
 opt.output_size = output_size
 
 -- build network
--- Sigmoid() + BCECriterion() c.f. <http://qr.ae/0cUq0> (by Jack Rae, Google DeepMind)
 local net = {}
 net.lstm = LSTM.lstm(opt)
-net.output = nn.Sequential():add(nn.Linear(opt.rnn_size, output_size)):add(nn.Sigmoid())
-net.criterion = nn.BCECriterion()
+if opt.label_output then
+    -- merged {stanceL, stanceR, stanceLR} label classification
+    local weights = torch.Tensor{0.34, 0.34, 0.32}
+    net.output = nn.Sequential():add(nn.Linear(opt.rnn_size, 3)):add(nn.LogSoftMax())
+    net.criterion = nn.ClassNLLCriterion(weights)
+else
+    -- separate stanceL and stanceR classification
+    -- Sigmoid() + BCECriterion() c.f. <http://qr.ae/0cUq0> (by Jack Rae, Google DeepMind)
+    net.output = nn.Sequential():add(nn.Linear(opt.rnn_size, output_size)):add(nn.Sigmoid())
+    net.criterion = nn.BCECriterion()
+end
 
 -- flatten parameters tensor
 local params, grad_params = model_utils.combine_all_parameters(net.lstm, net.output)
@@ -68,6 +80,7 @@ function feval(x)
 
     ------------------ get minibatch -------------------
     -- dims: {time, batch, input/output_size}
+    -- if label_output: 3rd dim of y is collapsed
     local x, y = loader:next_batch()
     current_batch = current_batch + 1
 
@@ -105,6 +118,11 @@ function feval(x)
         ))
     end
 
+    --[[
+    initstate_h:copy(lstm_h[opt.seq_length])
+    initstate_c:copy(lstm_c[opt.seq_length])
+    --]]
+
     -- scale by minibatch size, then clamp
     grad_params:div(opt.batch_size):clamp(-opt.clamp, opt.clamp)
 
@@ -114,19 +132,19 @@ end
 -- optimization
 torch.save(string.format(opt.savefile .. '_Params.t7', epoch) , opt)
 local optim_state = {learningRate = opt.lr, learningRateDecay = opt.lrd/loader.ns} -- For no decay set learningRateDecay=0, decay is implemented as inversely proportional to number of epoch evals in this way.
-local iterations = opt.max_epochs * loader.ns --loader.ns is the size of each epoch in iterations
+local iterations = opt.max_epochs * loader.ns/opt.batch_size --loader.ns is the size of each epoch in iterations
 local losses = torch.zeros(iterations)
 for i = 1, iterations do -- one iteration is going through just 1 chunk of sequence, of length seq_length. If we have 30 sequences of 25secs each, with seq_length=100 (1s) it takes 25*30 =750 iterations to go through all the data once 
-	local epoch = i/loader.ns -- not an integer usually
+	local epoch = i*opt.batch_size/loader.ns -- not an integer usually
     local _, loss = optim.adagrad(feval, params, optim_state)
-    loss = loss[1]/opt.seq_length
+    loss = loss[1]/opt.seq_length/opt.batch_size
     losses[i] = loss
 
-    if i % (opt.save_every*loader.ns) == 0 then 
+    if (i*opt.batch_size) % (opt.save_every*loader.ns) == 0 then 
         torch.save(string.format( opt.savefile .. '_Epoch%4d.t7', epoch), net)
 		torch.save(string.format( opt.savefile .. '_Loss.t7', epoch), opt)
     end
-    if i % (opt.print_every*loader.ns) == 0 then
+    if (i*opt.batch_size) % (opt.print_every*loader.ns) == 0 then
         print(string.format("epoch %4d, loss = %6.8f, gradnorm = %6.4e", epoch, loss, grad_params:norm()))
     end
 	if i == 1 then -- forcing initial print & save

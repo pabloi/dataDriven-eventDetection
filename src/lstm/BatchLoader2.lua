@@ -13,7 +13,7 @@ function BatchLoader.create(data_file, batch_size, seq_length)
     self.seq_length = seq_length
 
     print(string.format(
-        'loading subjects file "%s" into batches of %d seqs * %d timesteps',
+        'loading data file "%s" into batches of %d seqs * %d timesteps',
         data_file, batch_size, seq_length))
 
     local myFile = hdf5.open(data_file, 'r')
