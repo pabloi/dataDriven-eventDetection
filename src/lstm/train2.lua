@@ -51,7 +51,7 @@ if opt.label_output then
     -- merged {stanceL, stanceR, stanceLR} label classification
     local weights = torch.Tensor{0.34, 0.34, 0.32}
     net.output = nn.Sequential():add(nn.Linear(opt.rnn_size, 3)):add(nn.LogSoftMax())
-    net.criterion = nn.BCECriterion(weights)
+    net.criterion = nn.ClassNLLCriterion(weights)
 else
     -- separate stanceL and stanceR classification
     -- Sigmoid() + BCECriterion() c.f. <http://qr.ae/0cUq0> (by Jack Rae, Google DeepMind)
