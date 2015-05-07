@@ -2,7 +2,7 @@ require 'init_CPU'
 --require 'init_GPU'
 
 -- local BatchLoader = require 'data.BatchLoader'
-local BatchLoader = require 'BatchLoader'
+local BatchLoader = require 'BatchLoader2'
 local LSTM = require 'LSTM'             -- LSTM timestep and utilities
 local model_utils=require 'model_utils'
 require 'BinaryCriterion'

@@ -12,89 +12,62 @@ function BatchLoader.create(data_file, batch_size, seq_length)
     local self = {}
     setmetatable(self, BatchLoader)
 
+    -- construct a tensor with the data for the subject and trial
+    print('loading data files...')
+    local myFile = hdf5.open(data_file)
+    local data = myFile:all()
+
+    -- self.batches is a table of tensors
     self.batch_size = batch_size
     self.seq_length = seq_length
 
-    print(string.format(
-        'loading subjects file "%s" into batches of %d seqs * %d timesteps',
-        data_file, batch_size, seq_length))
+    self.x_batches = {}
+    self.y_batches = {}
+    self.nbatches = 0
 
-    local myFile = hdf5.open(data_file, 'r')
-    local subjects = myFile:all()
-    myFile:close()
+    -- ipairs does not work because the indices are strings ('1') and not integers
+    for subjects, trials in pairs(data) do
+        for trial, samples in pairs(trials) do
+            local xData = samples['X']
+            local yData = samples['y']
 
-    --[[
-        subjects = {subject_id = {trial_id = {
-            X = torch.Tensor(timesteps, input_size),
-            y = torch.Tensor(timesteps, output_size)
-        }}}
-    --]]
-
-    -- chop into sequences and:
-    --  1. save in each trial
-    --  2. count total # of sequences
-    local ns = 0
-    local input_size = 0
-    local output_size = 0
-    for _, trials in pairs(subjects) do
-        for _, trial in pairs(trials) do
-            local x = trial.X ; trial.X = nil
-            local y = trial.y ; trial.y = nil
-            if ns == 0 then
-                input_size = x:size(2)
-                output_size = y:size(2)
+            -- truncate data to multiple of batch_size * seq_length
+            local len = xData:size(1)
+            if len % (batch_size * seq_length) ~= 0 then
+                xData = xData:sub(1, batch_size * seq_length
+                            * math.floor(len / (batch_size * seq_length)))
+                yData = yData:sub(1, batch_size * seq_length
+                            * math.floor(len / (batch_size * seq_length)))
             end
-            local len = x:size(1)
-            local rem = len % seq_length
-            if rem ~= 0 then
-                len = len - rem
-                x = x:narrow(1, 1, len)
-                y = y:narrow(1, 1, len)
+
+            local new_x_batches = xData:split(batch_size*seq_length, 1)
+            local new_y_batches = yData:split(batch_size*seq_length, 1)
+            local new_nbatches = #new_x_batches
+            for k, v in ipairs(new_x_batches) do
+                self.x_batches[#self.x_batches + 1] = v
             end
-            local n = len / seq_length
-            trial.x = x:view(seq_length, n, input_size)
-            trial.y = y:view(seq_length, n, output_size)
-            trial.n = n
-            ns = ns + n
+            for k, v in ipairs(new_y_batches) do
+                self.y_batches[#self.y_batches + 1] = v
+            end
+            self.nbatches = self.nbatches + new_nbatches
         end
     end
-    -- collect into single tensor of all sequences
-    xs = torch.Tensor(seq_length, ns, input_size)
-    ys = torch.Tensor(seq_length, ns, output_size)
-    local i = 1
-    for _, trials in pairs(subjects) do
-        for _, trial in pairs(trials) do
-            local n = trial.n
-            xs:narrow(2, i, n):copy(trial.x)
-            ys:narrow(2, i, n):copy(trial.y)
-            i = i + n
-        end
-    end
+    assert(#self.x_batches == #self.y_batches)
 
-    self.xs = xs
-    self.ys = ys
-    self.ns = ns
-	self.input_size = input_size
-    self.output_size = output_size
-
-    -- self.current_batch = 0 -- deprecated: randomly pick
-    self.evaluated_batches = 0 -- number of times next_batch() called
-
-    print('data loaded')
-    subjects = nil
+    self.current_batch = 0
+    self.evaluated_batches = 0  -- number of times next_batch() called
+	self.input_size = self.x_batches[1]:size(2); 
+    print('data load done.')
     collectgarbage()
     return self
 end
 
 function BatchLoader:next_batch()
-    local nb = self.batch_size
-    local xb = torch.Tensor(nb, self.input_size)
-    local yb = torch.Tensor(nb, self.output_size)
-    local i = math.random(1, self.ns - nb + 1)
+    self.current_batch = (self.current_batch % self.nbatches) + 1
     self.evaluated_batches = self.evaluated_batches + 1
-    --print('next batch starting from :', i)
-    return self.xs:narrow(2, i, nb),
-           self.ys:narrow(2, i, nb)
+    -- TODO transpose?
+    return self.x_batches[self.current_batch]:t(),
+        self.y_batches[self.current_batch]:t()
 end
 
 return BatchLoader
