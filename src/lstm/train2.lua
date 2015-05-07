@@ -84,12 +84,6 @@ function feval(x)
         output[t] = net.output:forward(lstm_h[t])
         newloss = net.criterion:forward(output[t], yt)
         loss = loss + newloss
-        if isnan(loss) == true then
-            print(t, lstm_c[t-1]:size(), lstm_h[t-1]:size())
-            print(yt)
-            print(newloss)
-            error()
-        end
     end
 
     ------------------ backward pass -------------------
