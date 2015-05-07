@@ -13,7 +13,7 @@ function BatchLoader.create(data_file, batch_size, seq_length)
     self.seq_length = seq_length
 
     print(string.format(
-        'loading data file "%s" into batches of %d seqs * %d timesteps',
+        'loading subjects file "%s" into batches of %d seqs * %d timesteps',
         data_file, batch_size, seq_length))
 
     local myFile = hdf5.open(data_file, 'r')
@@ -68,13 +68,16 @@ function BatchLoader.create(data_file, batch_size, seq_length)
         end
     end
 
+    if opt.label_output then
+        ys = ys:select(3, 1) + ys:select(3, 2)*2
+    end
+
     self.xs = xs
     self.ys = ys
     self.ns = ns
 	self.input_size = input_size
     self.output_size = output_size
 
-    -- self.current_batch = 0 -- deprecated: randomly pick
     self.evaluated_batches = 0 -- number of times next_batch() called
 
     print('data loaded')
@@ -85,10 +88,7 @@ end
 
 function BatchLoader:next_batch()
     local nb = self.batch_size
-    local xb = torch.Tensor(nb, self.input_size)
-    local yb = torch.Tensor(nb, self.output_size)
     local i = math.random(1, self.ns - nb + 1)
-    self.evaluated_batches = self.evaluated_batches + 1
     --print('next batch starting from :', i)
     return self.xs:narrow(2, i, nb),
            self.ys:narrow(2, i, nb)

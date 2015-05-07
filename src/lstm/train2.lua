@@ -46,22 +46,31 @@ opt.output_size = output_size
 
 -- build network
 local net = {}
+local criterion = nil
+
 net.lstm = LSTM.lstm(opt)
 if opt.label_output then
     -- merged {stanceL, stanceR, stanceLR} label classification
     local weights = torch.Tensor{0.34, 0.34, 0.32}
     net.output = nn.Sequential():add(nn.Linear(opt.rnn_size, 3)):add(nn.LogSoftMax())
-    net.criterion = nn.ClassNLLCriterion(weights)
+    criterion = nn.ClassNLLCriterion(weights)
 else
     -- separate stanceL and stanceR classification
     -- Sigmoid() + BCECriterion() c.f. <http://qr.ae/0cUq0> (by Jack Rae, Google DeepMind)
     net.output = nn.Sequential():add(nn.Linear(opt.rnn_size, output_size)):add(nn.Sigmoid())
-    net.criterion = nn.BCECriterion()
+    criterion = nn.BCECriterion()
 end
 
 -- flatten parameters tensor
 local params, grad_params = model_utils.combine_all_parameters(net.lstm, net.output)
 params:uniform(-0.08, 0.08)
+
+-- clone (expand in time)
+local net_clones = {}
+for name, orig in pairs(net) do
+    print('cloning '..name)
+    net_clones[name] = model_utils.clone_many_times(orig, opt.seq_length)
+end
 
 -- LSTM initial state/output => zero
 local initstate_c = torch.zeros(opt.batch_size, opt.rnn_size)
@@ -93,9 +102,9 @@ function feval(x)
     for t=1,opt.seq_length do
         xt = x:select(1, t)
         yt = y:select(1, t)
-        lstm_c[t], lstm_h[t] = unpack(net.lstm:forward{xt, lstm_c[t-1], lstm_h[t-1]})
-        output[t] = net.output:forward(lstm_h[t])
-        newloss = net.criterion:forward(output[t], yt)
+        lstm_c[t], lstm_h[t] = unpack(net_clones.lstm[t]:forward{xt, lstm_c[t-1], lstm_h[t-1]})
+        output[t] = net_clones.output[t]:forward(lstm_h[t])
+        newloss = criterion:forward(output[t], yt)
         loss = loss + newloss
     end
 
@@ -108,11 +117,11 @@ function feval(x)
         yt = y:select(1, t)
 
         -- backprop through criterion, output
-        local doutput_t = net.criterion:backward(output[t], yt)
-        local dlstm_h_t = dlstm_h_last + net.output:backward(lstm_h[t], doutput_t)
+        local doutput_t = criterion:backward(output[t], yt)
+        local dlstm_h_t = dlstm_h_last + net_clones.output[t]:backward(lstm_h[t], doutput_t)
 
         -- backprop through LSTM
-        _, dlstm_c_last, dlstm_h_last = unpack(net.lstm:backward(
+        _, dlstm_c_last, dlstm_h_last = unpack(net_clones.lstm[t]:backward(
             {xt, lstm_c[t-1], lstm_h[t-1]},
             {dlstm_c_last, dlstm_h_t}
         ))
@@ -124,7 +133,7 @@ function feval(x)
     --]]
 
     -- scale by minibatch size, then clamp
-    grad_params:div(opt.batch_size):clamp(-opt.clamp, opt.clamp)
+    grad_params:div(opt.batch_size*opt.seq_length):clamp(-opt.clamp, opt.clamp)
 
     return loss, grad_params
 end
