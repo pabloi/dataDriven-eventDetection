@@ -4,31 +4,43 @@ local LSTM = {}
 
 -- Creates one timestep of one LSTM
 function LSTM.lstm(opt)
+    local input_size = opt.input_size
+    local rnn_size = opt.rnn_size
+    local lstm_cell_feedback = opt.lstm_cell_feedback
+
     local x = nn.Identity()()
     local prev_c = nn.Identity()()
     local prev_h = nn.Identity()()
 
-    function new_input_sum()--
-        -- transforms input
-        local i2h            = nn.Linear(opt.input_size,opt.rnn_size)(x) --Linear transformation of the input (i2h=Mi*x+bi). Weights are stored internally (?) 
-        -- transforms previous timestep's output
-        local h2h            = nn.Linear(opt.rnn_size, opt.rnn_size)(prev_h) --Linear transform, h2h=Mh*prev_h + bh
-        return nn.CAddTable()({i2h, h2h}) -- new_input = i2h + h2h;
+    -- create one {input/output/forget} gate with optional cell feedback
+    function new_gate(fb)
+        -- linear transformation of the input : i2g=Mi*x+bi
+        local i2g = nn.Linear(input_size, rnn_size)(x)
+        -- linear transformation of output from previous timestep : h2g = Mh*prev_h + bh
+        local h2g = nn.Linear(rnn_size, rnn_size)(prev_h)
+        if fb then
+            local c2g = nn.CMul(rnn_size)(prev_c)
+            return nn.CAddTable()({i2g, h2g, c2g}) -- new_gate = i2g + h2g + c2g
+        else
+            return nn.CAddTable()({i2g, h2g}) -- new_gate = i2g + h2g
+        end
     end
 
-    local in_gate          = nn.Sigmoid()(new_input_sum())
-    local forget_gate      = nn.Sigmoid()(new_input_sum())
-    local out_gate         = nn.Sigmoid()(new_input_sum())
-    local in_transform     = nn.Tanh()(new_input_sum()) 
+    local in_gate          = nn.Sigmoid()(new_gate(lstm_cell_feedback))
+    local forget_gate      = nn.Sigmoid()(new_gate(lstm_cell_feedback))
+    local out_gate         = nn.Sigmoid()(new_gate(lstm_cell_feedback))
+    local in_transform     = nn.Tanh()(new_gate(false))
 
-    local next_c           = nn.CAddTable()({ -- c = forget_gate.*c + in_gate .* in_transform
+    -- c = forget_gate.*c + in_gate .* in_transform
+    local next_c = nn.CAddTable()({
         nn.CMulTable()({forget_gate, prev_c}),
         nn.CMulTable()({in_gate,     in_transform})
     })
-    local next_h           = nn.CMulTable()({out_gate, nn.Tanh()(next_c)}) -- CMultTable is element-wise multiplication (?). functionally this is h=tanh(c) .* out_gate
+
+    -- h=tanh(c) .* out_gate
+    local next_h           = nn.CMulTable()({nn.Tanh()(next_c), out_gate})
 
     return nn.gModule({x, prev_c, prev_h}, {next_c, next_h}) -- this defines a module with three inuputs: x,c,h and two outputs: c,h
 end
 
 return LSTM
-

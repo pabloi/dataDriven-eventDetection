@@ -1,6 +1,6 @@
 require 'torch'
 require 'cutorch'
-print(  cutorch.getDeviceProperties(cutorch.getDevice()) )
+print(cutorch.getDeviceProperties(cutorch.getDevice()))
 require 'cunn'
     deviceParams = cutorch.getDeviceProperties(1)
     cudaComputeCapability = deviceParams.major + deviceParams.minor/10
@@ -12,7 +12,6 @@ require 'cunn'
 require 'nngraph'
 require 'optim'
 require 'hdf5'
--- function to transfer data to gpu
-function transfer_data(x)
+function GPU(x)
   return x:cuda()
 end
