@@ -4,8 +4,8 @@ require 'init_CPU'
 -- local BatchLoader = require 'data.BatchLoader'
 local BatchLoader = require 'BatchLoader'
 local LSTM = require 'LSTM'             -- LSTM timestep and utilities
-require 'Embedding'                     -- class name is Embedding (not namespaced)
 local model_utils=require 'model_utils'
+require 'BinaryCriterion'
 
 function isnan(x) return x ~= x end 
 
