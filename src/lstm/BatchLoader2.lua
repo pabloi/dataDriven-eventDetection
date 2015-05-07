@@ -21,7 +21,8 @@ function BatchLoader.create(data_file, batch_size, seq_length)
     myFile:close()
 
     --[[
-        subjects = {subject_id = {trial_id = {
+        format of subjects:
+        {subject_id = {trial_id = {
             X = torch.Tensor(timesteps, input_size),
             y = torch.Tensor(timesteps, output_size)
         }}}
