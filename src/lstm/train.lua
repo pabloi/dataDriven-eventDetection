@@ -20,8 +20,8 @@ cmd:text('Options')
 -- cmd:option('-vocabfile','vocabfile.t7','filename of the string->int table')
 cmd:option('-datafile','set1_1','filename of hdf5 data file')
 cmd:option('-batch_size',1,'number of sequences to train on in parallel')
-cmd:option('-seq_length',100,'number of timesteps to unroll to')
-cmd:option('-rnn_size',50,'size of LSTM internal state')
+cmd:option('-seq_length',500,'number of timesteps to unroll to')
+cmd:option('-rnn_size',100,'size of LSTM internal state')
 cmd:option('-max_epochs',1000,'number of full passes through the training data')
 --cmd:option('-savefile','model_autosave','filename to autosave the model (protos) to, appended with the,param,string.t7') - savefile can no longer be provided, using same names as datafile appending at end
 cmd:option('-save_every',1000,'save every 500 steps, overwriting the existing file') -- This needs to be at least larger than max_epochs * nBatches so that it saves at least once.

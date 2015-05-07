@@ -4,6 +4,8 @@ require 'nn'
 require 'nngraph'
 require 'optim'
 require 'mattorch'
+require 'cutorch'
+require 'cunn'
 
 local LSTM = require 'LSTM'             -- LSTM timestep and utilities
 require 'Embedding'                     -- class name is Embedding (not namespaced)
@@ -63,8 +65,8 @@ for i=1,xData:size(3) do
     for t=1,partialData:size(1) do
         -- embeddings[t] = clones.embed[t]:forward(x[{{}, t}])
         embeddings[t] = partialData:transpose(1,2):select(2,t); --transpose does the obvious, select slices along dimension 2, keeping index t only
-        --print('embeddings[t]:dim()=' ..embeddings[t]:dim())
-        --print('embeddings[t]:size(1)=' ..embeddings[t]:size(1))
+        print('embeddings[t]:dim()=' ..embeddings[t]:dim())
+        print('embeddings[t]:size(1)=' ..embeddings[t]:size(1))
 
         -- we're feeding the *correct* things in here, alternatively
         -- we could sample from the previous timestep and embed that, but that's
