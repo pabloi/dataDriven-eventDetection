@@ -18,6 +18,7 @@ cmd:option('-lrd',1e-2,'learning rate decay for adagrad, in epochs: e.g .1 means
 cmd:option('-clamp',20,'gradient clamp')
 cmd:option('-gpu',false,'use GPU or not')
 cmd:option('-label_output',true,'transform output (stanceL, stanceR) to single class label')
+cmd:option('-lstm_cell_feedback',false,'whether cell->gate feedback connections exist in LSTM cells')
 cmd:text()
 opt = cmd:parse(arg)
 
