@@ -17,7 +17,7 @@ cmd:option('-lr',5e-2,'learning rate')
 cmd:option('-lrd',1e-2,'learning rate decay for adagrad, in epochs: e.g .1 means it takes 10 epochs for the learning rate to decay to half its initial value, 20 epochs MORE to reach 1/4, 40 epochs MORE to 1/8 and so on')
 cmd:option('-clamp',20,'gradient clamp')
 cmd:option('-gpu',false,'use GPU or not')
-cmd:option('-label_output',true,'transform output (stanceL, stanceR) to single class label')
+cmd:option('-no_label_output',false,'do NOT transform output (stanceL, stanceR) to single class label')
 cmd:option('-lstm_cell_feedback',false,'whether cell->gate feedback connections exist in LSTM cells')
 cmd:text()
 opt = cmd:parse(arg)
@@ -60,7 +60,7 @@ local net = {}
 local criterion = nil
 
 net.lstm = LSTM.lstm(opt)
-if opt.label_output then
+if not opt.no_label_output then
     -- merged {stanceL, stanceR, stanceLR} label classification
     local weights = torch.Tensor{0.34, 0.34, 0.32}
     net.output = nn.Sequential():add(nn.Linear(opt.rnn_size, 3)):add(nn.LogSoftMax())
