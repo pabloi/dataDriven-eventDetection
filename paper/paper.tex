@@ -12,6 +12,7 @@
 \newcommand{\ra}[1]{\renewcommand{\arraystretch}{#1}}
 \usepackage{float}
 \usepackage{enumitem}
+\usepackage{lipsum}
 
 % references
 \usepackage[autostyle]{csquotes}
@@ -28,8 +29,13 @@
 
 \title
 {
-	Sequence Labeling for Gait Analysis using LSTM
+	Sequence Labeling for Gait Analysis using LSTM%
+    \titlenote
+    {
+        TODO give credit to Lab etc.
+    }
 }
+
 
 \numberofauthors{3}
 \author{
@@ -59,7 +65,20 @@
 \maketitle
 
 \begin{abstract}
+    \lipsum[1-2]
 \end{abstract}
+
+\category{H.4}
+{Information Systems Applications}
+{Miscellaneous}
+% \category{D.2.8}
+% {Software Engineering}
+% {Metrics}
+% [complexity measures, performance measures]
+
+\terms{Theory}
+
+\keywords{ACM proceedings, \LaTeX, text tagging}
 
 \section{Introduction}
 \label{sec:Introduction}
@@ -69,12 +88,43 @@ it is necessary to divide the gait cycle into swing phase and stance phase.
 The transition between the phases is marked by two events:
 the subject's heel hitting the ground (heel strike) and the subject's toe
 lifting off the ground (toe off).
-It is paramount to accurately identify these events because otherwise no
+It is paramount to accurately identify these events because otherwise, no
 meaningful comparison of different stride cycles is possible.
 
-The current gold standard for event identification is the use of dedicated
-hardware such as force plates that measure ground reaction forces or foot
+The current gold standard for gait event identification is the use of dedicated
+hardware such as force plates that measure ground reaction forces and foot
 switches that are pressed when the foot is in contact with the ground.
+However, many laboratories lack the necessary equipment and therefore have to
+resort to alternative ways of event detection.
+Furthermore, there is a risk that the devices affect gait because they require 
+the modification of normal footware.
+
+Given the drawbacks of the hardware-based solution, the existence of a reliable
+method based solely on data is highly desirable.
+In particular, the method should take motion capture data as its input because
+this kind of data is prevalent in human gait analysis and widely available at 
+most laboratories.
+
+Several data-based methods have been proposed in the literature.
+However, we believe that the existing methods either rely too heavily on
+questionable heuristics or require an excessive amount of data preprocessing.
+For this reason, we propose a new approach to gait event detection based on a 
+Long Short-Term Memory (LSTM) recurrent neural network (RNN).
+
+The rest of this paper is organized as follows:
+Section~\ref{sec:Previous Work}
+discusses some of the existing data-based methods for event detection;
+Section~\ref{sec:LSTM}
+gives a short overview over LSTM networks in general;
+Section~\ref{sec:Data}
+contains a description the dataset;
+In
+Sections~\ref{sec:Network Architecture} and \ref{sec:Network Training}
+describe the architecture and training of our network;
+Section~\ref{sec:Results}
+presents the experimental results and compares them to existing baselines;
+Section~\ref{sec:Conclusion and Future Work}
+concludes and shows possible paths for future work.
 
 \section{Previous Work}
 \label{sec:Previous Work}
