@@ -32,7 +32,7 @@
 
 \title
 {
-	Gait Analysis using LSTM%
+	Gait Event Detection Using LSTM%
     \titlenote
     {
         We would like to thank the University of Pittsburgh's Human Movement
@@ -198,45 +198,52 @@ such as neural network and LSTM
 
 % TODO problem with pathological gaits
 
-\subsection{Neural Network}
-\label{sub:Neural Network}
+\subsection{Feed-Forward Neural Network}
+\label{sub:Feed-Forward Neural Network}
 
 \citet{Miller2009}
-treats event detection as a classification problem and uses a classical 
+treats event detection as a classification problem and uses a classical
 (feed-forward) neural network to perform the classification.
 Each sample is classified individually based on a input window centered around
 the desired sample.
-At every time step, the window center is advanced by one sample which creates
-the impression of a sliding window.
-The window is necessary to allow the network to take into account the
-dependencies that exists between neighboring samples.
+At every time step, the window center is advanced by one sample
+(so-called sliding window technique).
+The use of a window is necessary to take into account the temporal dependencies
+that exists between neighboring samples.
+It should be noted that the window size is not fixed but varies as a function of
+the forward motion of the foot. 
+The reason for this is that a fixed size window could not guarantee that every
+window contained a sufficient amount of context because of the varying foot
+speed.
 
-The input window does not contain the actual motion capture data, but rather 
-position, instantaneous velocity and instantaneous acceleration features that 
+The input window does not contain the actual motion capture data, but rather
+position, instantaneous velocity and instantaneous acceleration features that
 are calculated from the data.
-Furthermore, PCA is used to reduce the dimensionality of the input 
-(the total input size grows linearly with the window size and the number 
-of markers).
+Furthermore, PCA is used to reduce the number of input variables to 50.
+This dimensionality reduction is necessary because the total input size grows
+linearly with the window size and the number of markers.
 
-In our implementation of this algorithm, we used the same parameters given in
-the original paper: 33 hidden units and the first 50 principal components of
-the data are fed into the network.
+The network architecture itself is quite minimalistic: between an input layer
+consisting of 50 input units and an output layer consisting of 2 units (one
+for each leg) there is only one hidden layer with 33 sigmoid units.
 
-output
+The feed-forward neural network approach has several disadvantages.
+In addition to heavy preprocessing consisting of feature extraction and PCA, the 
+data has to be split up into windows of variable length. 
+This in turn requires that the foot displacement can be measure accurately from 
+the data which is not trivial.
+Finally, the network architecture seems to be oversimplistic to effectively
+capture the long-range dependencies that exist between the data samples.
 
-[classification]
-classify each sample.
-
-preprocessing (dimensionality reduction)
-
-problems: preprocessing, variable window size based on foot velocity
-
-baseline2
+% In our implementation of this algorithm, we used the same parameters given in
+% the original paper: 33 hidden units and the first 50 principal components of
+% the data are fed into the network.
 
 \section{LSTM}
 \label{sec:LSTM}
 
 % TODO treat event detection as sequence labeling problem
+% TODO real-time event detection (no window necessary)
 
 \section{Data}
 \label{sec:Data}
