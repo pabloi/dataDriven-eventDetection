@@ -121,7 +121,7 @@ If succesful, this approach is superior to the other two because it scales
 easily, does not require additional equipment and does not pose a risk of
 affecting the gait.
 
-Given these apparent advantages, it is not surprising that several data-based
+Given their apparent advantages, it is not surprising that several data-based
 methods have been proposed in the literature.
 Although some of those methods achieve results that are accurate enough to be
 useful in practice, they all have drawbacks such as relying heavily on
@@ -162,7 +162,7 @@ belongs to a category of algorithms that use heuristics such as the velocity
 and acceleration of heel and toe markers to detect motion events.
 There are other examples of such algorithms, notably the one developped by
 \citet{Hreljac2000}.
-These algorithms are quite similar, we will therefore restrict the discussion
+As these algorithms are quite similar, we will restrict the discussion
 to the FVA.
 
 The FVA takes as its input the location of the heel and toe markers as a
@@ -177,12 +177,14 @@ maximum and the heel strike by a local minimum.
 This makes it possible to first detect the toe off event for each cycle and
 then, in a second step, go through all the possible candidates for the heel
 strike.
-By using a constraint on the heel strike time, one of the candidates is selected
+Using a constraint on the heel strike time, one of the candidates is selected
 as the heel strike event.
 
-The FVA is easy to implement as it does not require preprocessing beyond simple
-signal processing and because it does not require any training.
-This makes it a popular choice in practice.
+% This makes it a popular choice in practice.
+The FVA is widely used in practice.
+This fact can be explained by the ease of implemention it offers:
+it does not require any data preprocessing beyond simple signal processing and
+the algorithm does not have to be trained.
 That said, the FVA has several problems.
 First, it makes questionable assumptions about the relationship between the
 marker location and the gait cycle.
@@ -190,13 +192,11 @@ For instance, it is not clear that the marker velocity peaks exactly coincide
 with the events to be identified.
 Secondly, the algorithm is very sensitive to a threshold that has to be applied
 in order to restrict the search for heel strike candidates.
-The value of this threshold has to be manually tuned for each subject and, if
-not chosen correctly, the algorithm fails catastrophically.
+The value of this threshold has to be manually tuned for each subject.
+If not chosen carefully, the algorithm fails catastrophically.
 Finally, the accuracy of FVA is bad when compared to more sophisticated methods
 such as neural network and LSTM
 (cf. Section~\ref{sec:Results}).
-
-% TODO problem with pathological gaits
 
 \subsection{Feed-Forward Neural Network}
 \label{sub:Feed-Forward Neural Network}
@@ -210,34 +210,33 @@ At every time step, the window center is advanced by one sample
 (so-called sliding window technique).
 The use of a window is necessary to take into account the temporal dependencies
 that exists between neighboring samples.
-It should be noted that the window size is not fixed but varies as a function of
-the forward motion of the foot. 
+It should be noted that
+the window size is not fixed but varies as a function of
+the forward motion of the foot.
 The reason for this is that a fixed size window could not guarantee that every
 window contained a sufficient amount of context because of the varying foot
 speed.
 
-The input window does not contain the actual motion capture data, but rather
-position, instantaneous velocity and instantaneous acceleration features that
-are calculated from the data.
-Furthermore, PCA is used to reduce the number of input variables to 50.
+The input is not the actual motion capture data, but rather position,
+instantaneous velocity and instantaneous acceleration features extracted from
+that data.
+Furthermore, PCA is used to reduce the number of input variables from several
+hundred to 50.
 This dimensionality reduction is necessary because the total input size grows
 linearly with the window size and the number of markers.
 
-The network architecture itself is quite minimalistic: between an input layer
+The network architecture itself is minimalistic: between an input layer
 consisting of 50 input units and an output layer consisting of 2 units (one
 for each leg) there is only one hidden layer with 33 sigmoid units.
 
-The feed-forward neural network approach has several disadvantages.
-In addition to heavy preprocessing consisting of feature extraction and PCA, the 
-data has to be split up into windows of variable length. 
-This in turn requires that the foot displacement can be measure accurately from 
-the data which is not trivial.
-Finally, the network architecture seems to be oversimplistic to effectively
+In our opinion, the feed-forward neural network approach has several
+disadvantages.
+In addition to heavy preprocessing consisting of feature extraction and PCA, the
+data has to be split up into windows of variable length.
+This in turn requires that the foot displacement can be measure accurately from
+the data which is non-trivial.
+Moreover, the network architecture seems to be oversimplistic to effectively
 capture the long-range dependencies that exist between the data samples.
-
-% In our implementation of this algorithm, we used the same parameters given in
-% the original paper: 33 hidden units and the first 50 principal components of
-% the data are fed into the network.
 
 \section{LSTM}
 \label{sec:LSTM}
@@ -250,10 +249,11 @@ capture the long-range dependencies that exist between the data samples.
 Our training and testing was conducted on data from 10 healthy subjects walking at three different speeds for 50 seconds. Each sequence of 50 seconds will be called a trial from now on. This totals 1500 seconds of recorded data, which roughly correspond to 1000 gait cycles.  For each subject the motion-capture data (input) is 3D marker position of 18 different markers placed in the same anatomical positions for each subject, sampled at 100Hz. The event labels (target) were computed from ground force reaction data sampled at 1kHz.
 
 The markers were placed at the toe, ankle, heel, knee, greater trochanter (hip), tibia, femur, and anterior and posterior superior illiac spine (pelvis) on each leg.
-All data was collected in the Human Movement Research Laboratory of the University of Pittsburgh, with approval of its IRB. All subjects consented to allow their data be used for research purposes. We are using the data with permission from the laboratory's PI, Dr. Gelsy Torres-Oviedo.
+% All data was collected in the Human Movement Research Laboratory of the University of Pittsburgh, with approval of its IRB. All subjects consented to allow their data be used for research purposes. We are using the data with permission from the laboratory's PI, Dr. Gelsy Torres-Oviedo.
 
 The available data was separated into a training and a testing set in two different ways. Dataset 1 takes the first 25 seconds of data from each trial as the training sample, and the following 25 seconds as the testing sample. Dataset 2 includes the same data, but splits it along trials: all 50 seconds of 15 trials were used for training, and the remaining 15 trials were used for testing. It is worth noticing that this second dataset necessarily has different subjects in its training and testing sets, so it allows us to assess how the algorithm generalizes to new users without being trained on them.
 
+% TODO explain motion capture data either here or in introduction
 
 \section{Network Architecture}
 \label{sec:Network Architecture}
