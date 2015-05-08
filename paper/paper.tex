@@ -121,16 +121,18 @@ If succesful, this approach is superior to the other two because it scales
 easily, does not require additional equipment and does not pose a risk of
 affecting the gait.
 
-Given these apparent advatages, it is not surprising that several data-based
+Given these apparent advantages, it is not surprising that several data-based
 methods have been proposed in the literature.
 Although some of those methods achieve results that are accurate enough to be
-useful in practice, they also have drawbacks such as relying heavily on
+useful in practice, they all have drawbacks such as relying heavily on
 questionable heuristics or requiring an undue amount of data preprocessing.
 For this reason, we present a new approach to gait event detection using a
 Long Short-Term Memory (LSTM) recurrent neural network (RNN).
 We believe that our method is superior to existing approaches both in terms of
 accuracy and in terms of only requirying a small amount of training data and
 preprocessing.
+
+% TODO treat event detection as sequence labeling problem
 
 This paper is organized as follows:
 Section~\ref{sec:Previous Work}
@@ -182,11 +184,11 @@ The FVA is easy to implement as it does not require preprocessing beyond simple
 signal processing and because it does not require any training.
 This makes it a popular choice in practice.
 That said, the FVA has several problems.
-First, it makes questionable assumptions about the relationship between the 
+First, it makes questionable assumptions about the relationship between the
 marker location and the gait cycle.
 For instance, it is not clear that the marker velocity peaks exactly coincide
 with the events to be identified.
-Secondly, the algorithm is very sensitive to a threshold that has to be applied 
+Secondly, the algorithm is very sensitive to a threshold that has to be applied
 in order to restrict the search for heel strike candidates.
 The value of this threshold has to be manually tuned for each subject and, if
 not chosen correctly, the algorithm fails catastrophically.
@@ -198,16 +200,43 @@ such as neural network and LSTM
 
 \subsection{Neural Network}
 \label{sub:Neural Network}
-\citet{miller_gait_2009} is one of the few data-driven efforts for event estimation from motion-capture data. It uses a classical (feed-forward) NN to classify each sample. The inputs are computed from the position, instantaneous velocity and instantaneous acceleration of each available motion-capture marker in a time-window (200ms) centered around the desired time sample. Because the inputs are too many (the total input size grows linearly with the window size and the number of markers), a dimensionality reduction technique (PCA) is used before training the NN. On our implementation of this algorithm, we used the same parameters given in the original paper: 33 hidden units and the first 50 principal components of the data are fed into the network.
 
-description
+\citet{Miller2009}
+treats event detection as a classification problem and uses a classical 
+(feed-forward) neural network to perform the classification.
+Each sample is classified individually based on a input window centered around
+the desired sample.
+At every time step, the window center is advanced by one sample which creates
+the impression of a sliding window.
+The window is necessary to allow the network to take into account the
+dependencies that exists between neighboring samples.
+
+The input window does not contain the actual motion capture data, but rather 
+position, instantaneous velocity and instantaneous acceleration features that 
+are calculated from the data.
+Furthermore, PCA is used to reduce the dimensionality of the input 
+(the total input size grows linearly with the window size and the number 
+of markers).
+
+In our implementation of this algorithm, we used the same parameters given in
+the original paper: 33 hidden units and the first 50 principal components of
+the data are fed into the network.
+
+output
+
+[classification]
+classify each sample.
 
 preprocessing (dimensionality reduction)
+
+problems: preprocessing, variable window size based on foot velocity
 
 baseline2
 
 \section{LSTM}
 \label{sec:LSTM}
+
+% TODO treat event detection as sequence labeling problem
 
 \section{Data}
 \label{sec:Data}
@@ -230,16 +259,7 @@ baseline2
 % %The problem is then to classify each sample in time as one of four different classes: both feet in contact with the ground, both feet off the ground, left feet only on the ground and right feet only on the ground.
 % \section{Algorithms}
 %
-% In order to compare our results, we implemented two algorithms presented in the literature: a heuristic-based method \cite{oconnor_automatic_2007}, and a neural-network approach \cite{miller_gait_2009}.
-%
-% \subsection{O'Connor's Heuristic}
-% \citet{oconnor_automatic_2007} describe a heuristic to compute gait events by just considering vertical and horizontal speed of heel and toe markers respectively, and using a peak detection algorithm.
-%
-% \subsection{Miller's Neural Network}
-% \citet{miller_gait_2009} is one of the few data-driven efforts of event estimation. It uses a classical NN to classify each sample. The inputs are computed from the position, instantaneous velocity and instantaneous acceleration of each available motion-capture marker in a time-window centered around the desired time sample. Because the inputs are too many (the total input size grows linearly with the window size and the number of markers), a dimensionality reduction technique (PCA) is used before training the NN.
-%
 % \subsection{Our approach: Long Short Term Memory Neural Network}
-% %\vspace{-1cm}
 %
 % Gait event detection is a form of \textit{sequence labeling}, i.e., assigning a sequence of labels to a sequence of data.
 % One approach to sequence labeling is the use of recurrent neural networks (RNN). However, due to the vanishing gradient problem RNNs cannot store information for a long time which means that their usefulness for sequence labeling is limited.
