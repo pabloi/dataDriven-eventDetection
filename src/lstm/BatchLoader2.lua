@@ -73,7 +73,7 @@ function BatchLoader.create(data_file, batch_size, seq_length)
         ys = ys:select(3, 1) + ys:select(3, 2)*2
     end
 
-    if opt.gpu then
+    if opt.gpu and not opt.gpu_ondemand then
         xs = xs:cuda()
         ys = ys:cuda()
     end

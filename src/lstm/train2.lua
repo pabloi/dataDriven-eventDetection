@@ -17,6 +17,7 @@ cmd:option('-lr',5e-2,'learning rate')
 cmd:option('-lrd',1e-2,'learning rate decay for adagrad, in epochs: e.g .1 means it takes 10 epochs for the learning rate to decay to half its initial value, 20 epochs MORE to reach 1/4, 40 epochs MORE to 1/8 and so on')
 cmd:option('-clamp',20,'gradient clamp')
 cmd:option('-gpu',false,'use GPU or not')
+cmd:option('-gpu_ondemand',false,'only load one mini-batch at a time to GPU')
 cmd:option('-no_label_output',false,'do NOT transform output (stanceL, stanceR) to single class label')
 cmd:option('-lstm_cell_feedback',false,'whether cell->gate feedback connections exist in LSTM cells')
 cmd:text()
@@ -102,6 +103,10 @@ function feval(x)
     -- dims: {time, batch, input/output_size}
     -- if label_output: 3rd dim of y is collapsed
     local x, y = loader:next_batch()
+    if opt.gpu_ondemand then
+        x = GPU(x)
+        y = GPU(y)
+    end
     current_batch = current_batch + 1
 
     ------------------- forward pass -------------------
