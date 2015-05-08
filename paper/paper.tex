@@ -39,7 +39,7 @@
         Research Laboratory and its PI, Dr.~Gelsy Torres-Oviedo, for providing
         us with the motion capture data used for the experiments in this paper.
         The collection of these data was approved by the university's
-        Institutional Review Board and all participating subjects gave prior 
+        Institutional Review Board and all participating subjects gave prior
         consent to the use of their data for research purposes.
     }
 }
@@ -160,32 +160,41 @@ belongs to a category of algorithms that use heuristics such as the velocity
 and acceleration of heel and toe markers to detect motion events.
 There are other examples of such algorithms, notably the one developped by
 \citet{Hreljac2000}.
-As these algorithms are quite similar, we restrict the discussion to FVA.
+These algorithms are quite similar, we will therefore restrict the discussion
+to the FVA.
 
-FVA takes as its input the location of the heel and toe markers as a function of
-time.
+The FVA takes as its input the location of the heel and toe markers as a
+function of time.
 After passing the data through a simple low pass filter,
 a new virtual marker representing the foot center is created by taking the mean
 of the heel and toe markers.
 Finally, the velocity of this virtual marker is calculated.
-Due to the quasi-periodic nature of walking, the graph of the velocity signal 
+Due to the quasi-periodic nature of walking, the graph of the velocity signal
 exhibits a repeating pattern in which the toe off event is marked by a global
 maximum and the heel strike by a local minimum.
 This makes it possible to first detect the toe off event for each cycle and
-then, in a second step, go through all the possible candidates for the heel 
+then, in a second step, go through all the possible candidates for the heel
 strike.
-By using a constraint on the heel strike time, one of the heel strike candidates
-is selected as the heel strike event.
+By using a constraint on the heel strike time, one of the candidates is selected
+as the heel strike event.
 
-seem to be popular in practice
+The FVA is easy to implement as it does not require preprocessing beyond simple
+signal processing and because it does not require any training.
+This makes it a popular choice in practice.
+That said, the FVA has several problems.
+First, it makes questionable assumptions about the relationship between the 
+marker location and the gait cycle.
+For instance, it is not clear that the marker velocity peaks exactly coincide
+with the events to be identified.
+Secondly, the algorithm is very sensitive to a threshold that has to be applied 
+in order to restrict the search for heel strike candidates.
+The value of this threshold has to be manually tuned for each subject and, if
+not chosen correctly, the algorithm fails catastrophically.
+Finally, the accuracy of FVA is bad when compared to more sophisticated methods
+such as neural network and LSTM
+(cf. Section~\ref{sec:Results}).
 
-easy to implement, no training, no learning
-
-problem: sensitive to cut-off
-questionable assumptions
-doesn't work well with pathological gaits
-
-baseline1
+% TODO problem with pathological gaits
 
 \subsection{Neural Network}
 \label{sub:Neural Network}
