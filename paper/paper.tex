@@ -32,7 +32,7 @@
 	Sequence Labeling for Gait Analysis using LSTM%
     \titlenote
     {
-        TODO give credit to Lab etc.
+        TODO give credit to lab and PI etc.
     }
 }
 
@@ -64,21 +64,19 @@
 
 \maketitle
 
+\thispagestyle{empty}
+
 \begin{abstract}
     \lipsum[1-2]
 \end{abstract}
 
-\category{H.4}
-{Information Systems Applications}
-{Miscellaneous}
-% \category{D.2.8}
-% {Software Engineering}
-% {Metrics}
-% [complexity measures, performance measures]
+% \category{J.3}
+% {Life and Medical Sciences}
+% {Biology and genetics}
+% \terms{ACM proceedings, \LaTeX, text tagging}
+% \keywords{Gait event, Heel strike, Toe off, LSTM}
 
-\terms{Theory}
-
-\keywords{ACM proceedings, \LaTeX, text tagging}
+\vskip 12em
 
 \section{Introduction}
 \label{sec:Introduction}
@@ -91,34 +89,48 @@ lifting off the ground (toe off).
 It is paramount to accurately identify these events because otherwise, no
 meaningful comparison of different stride cycles is possible.
 
-The current gold standard for gait event identification is the use of dedicated
-hardware such as force plates that measure ground reaction forces and foot
-switches that are pressed when the foot is in contact with the ground.
-However, many laboratories lack the necessary equipment and therefore have to
-resort to alternative ways of event detection.
-Furthermore, there is a risk that the devices affect gait because they require 
-the modification of normal footware.
+% TODO introduce motion capture data
 
-Given the drawbacks of the hardware-based solution, the existence of a reliable
-method based solely on data is highly desirable.
-In particular, the method should take motion capture data as its input because
-this kind of data is prevalent in human gait analysis and widely available at 
-most laboratories.
+There are three basic approaches to event detection.
+The first approach uses visual inspection to manually label the events.
+Although quite accurate, the cost associated with this method is prohibitive for
+all but the smallest amounts of data.
+For this reason, it is not usually used as a stand-alone method but rather as a 
+postprocessing step for automated event detection systems or as a means to 
+generate small sets of hand-labeled test data.
+The second approach uses dedicated hardware such as force plates that measure
+ground reaction forces and foot switches that are pressed when the foot is in
+contact with the ground.
+Due to its high accuracy, hardware-based methods are considered to be
+state of the art for gait event identification.
+However, their usefulness is limited by the fact that many laboratories do not
+have access to the necessary equipment.
+Furthermore, there is a risk of affecting the gait because some of the devices
+require the modification of normal footware.
+The third approach consists in automatated event detection based on solely on
+the data.
+If succesful, this approach is superior to the other two because it scales 
+easily, does not require additional equipment and does not pose a risk of 
+affecting the gait.
 
-Several data-based methods have been proposed in the literature.
-However, we believe that the existing methods either rely too heavily on
-questionable heuristics or require an excessive amount of data preprocessing.
-For this reason, we propose a new approach to gait event detection based on a 
+Given these apparent advatages, it is not surprising that several data-based 
+methods have been proposed in the literature.
+Although some of those methods achieve results that are accurate enough to be 
+useful in practice, they also have drawbacks such as relying heavily on 
+questionable heuristics or requiring an undue amount of data preprocessing.
+For this reason, we present a new approach to gait event detection using a
 Long Short-Term Memory (LSTM) recurrent neural network (RNN).
+We believe that our method is superior to existing approaches both in terms of 
+accuracy and in terms of only requirying a small amount of training data and 
+preprocessing.
 
-The rest of this paper is organized as follows:
+This paper is organized as follows:
 Section~\ref{sec:Previous Work}
 discusses some of the existing data-based methods for event detection;
 Section~\ref{sec:LSTM}
 gives a short overview over LSTM networks in general;
 Section~\ref{sec:Data}
 contains a description the dataset;
-In
 Sections~\ref{sec:Network Architecture} and \ref{sec:Network Training}
 describe the architecture and training of our network;
 Section~\ref{sec:Results}
@@ -128,6 +140,15 @@ concludes and shows possible paths for future work.
 
 \section{Previous Work}
 \label{sec:Previous Work}
+
+[Overview; justify why we discuss oconnor and miller in detail]
+
+\subsection{Heuristic Approach}
+\label{sub:Heuristic Approach}
+
+\subsection{Neural Network}
+\label{sub:Neural Network}
+
 
 \section{LSTM}
 \label{sec:LSTM}
