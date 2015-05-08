@@ -32,7 +32,13 @@
 	Sequence Labeling for Gait Analysis using LSTM%
     \titlenote
     {
-        TODO give credit to lab and PI etc.
+        We would like to thank the University of Pittsburgh's Human Movement
+        Research Laboratory and its PI, Dr.~Gelsy Torres-Oviedo, for granting
+        us the permission to use their experimental data in this paper.
+        The collection of this data was approved by the university's
+        Institutional Review Board.
+        All participants gave prior consent to the use of their data for
+        research purposes.
     }
 }
 
@@ -95,8 +101,8 @@ There are three basic approaches to event detection.
 The first approach uses visual inspection to manually label the events.
 Although quite accurate, the cost associated with this method is prohibitive for
 all but the smallest amounts of data.
-For this reason, it is not usually used as a stand-alone method but rather as a 
-postprocessing step for automated event detection systems or as a means to 
+For this reason, it is not usually used as a stand-alone method but rather as a
+postprocessing step for automated event detection systems or as a means to
 generate small sets of hand-labeled test data.
 The second approach uses dedicated hardware such as force plates that measure
 ground reaction forces and foot switches that are pressed when the foot is in
@@ -109,19 +115,19 @@ Furthermore, there is a risk of affecting the gait because some of the devices
 require the modification of normal footware.
 The third approach consists in automatated event detection based on solely on
 the data.
-If succesful, this approach is superior to the other two because it scales 
-easily, does not require additional equipment and does not pose a risk of 
+If succesful, this approach is superior to the other two because it scales
+easily, does not require additional equipment and does not pose a risk of
 affecting the gait.
 
-Given these apparent advatages, it is not surprising that several data-based 
+Given these apparent advatages, it is not surprising that several data-based
 methods have been proposed in the literature.
-Although some of those methods achieve results that are accurate enough to be 
-useful in practice, they also have drawbacks such as relying heavily on 
+Although some of those methods achieve results that are accurate enough to be
+useful in practice, they also have drawbacks such as relying heavily on
 questionable heuristics or requiring an undue amount of data preprocessing.
 For this reason, we present a new approach to gait event detection using a
 Long Short-Term Memory (LSTM) recurrent neural network (RNN).
-We believe that our method is superior to existing approaches both in terms of 
-accuracy and in terms of only requirying a small amount of training data and 
+We believe that our method is superior to existing approaches both in terms of
+accuracy and in terms of only requirying a small amount of training data and
 preprocessing.
 
 This paper is organized as follows:
@@ -141,14 +147,35 @@ concludes and shows possible paths for future work.
 \section{Previous Work}
 \label{sec:Previous Work}
 
-[Overview; justify why we discuss oconnor and miller in detail]
-
 \subsection{Heuristic Approach}
 \label{sub:Heuristic Approach}
+
+We use the term ``heuristic approach'' to describe algorithms that detect motion
+events based on heuristics such as
+
+Notably, Hreljac and
+OConnor
+
+description of algorithms
+
+seem to be popular in practice
+
+seemingly simple, no training, no learning
+
+problem: sensitive to cut-off
+questionable assumptions
+doesn't work well with pathological gaits
+
+baseline1
 
 \subsection{Neural Network}
 \label{sub:Neural Network}
 
+description
+
+preprocessing (dimensionality reduction)
+
+baseline2
 
 \section{LSTM}
 \label{sec:LSTM}
