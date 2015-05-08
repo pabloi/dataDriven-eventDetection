@@ -240,7 +240,13 @@ baseline2
 
 \section{Data}
 \label{sec:Data}
-Our training and testing was conducted on data from 10 healthy subjects walking at three different speeds, for 50 seconds. This totals 1500 seconds of recorded data.  For each subject the motion-capture data (input) is 3D marker position of 18 different markers placed in the same anatomical positions for each subject, sampled at 100Hz. The event labels (target) were computed from ground force reaction data sampled at 1kHz.
+Our training and testing was conducted on data from 10 healthy subjects walking at three different speeds for 50 seconds. Each sequence of 50 seconds will be called a trial from now on. This totals 1500 seconds of recorded data, which roughly correspond to 1000 gait cycles.  For each subject the motion-capture data (input) is 3D marker position of 18 different markers placed in the same anatomical positions for each subject, sampled at 100Hz. The event labels (target) were computed from ground force reaction data sampled at 1kHz.
+
+The markers were placed at the toe, ankle, heel, knee, greater trochanter (hip), tibia, femur, and anterior and posterior superior illiac spine (pelvis) on each leg.
+All data was collected in the Human Movement Research Laboratory of the University of Pittsburgh, with approval of its IRB. All subjects consented to allow their data be used for research purposes. We are using the data with permission from the laboratory's PI, Dr. Gelsy Torres-Oviedo.
+
+The available data was separated into a training and a testing set in two different ways. Dataset 1 takes the first 25 seconds of data from each trial as the training sample, and the following 25 seconds as the testing sample. Dataset 2 includes the same data, but splits it along trials: all 50 seconds of 15 trials were used for training, and the remaining 15 trials were used for testing. It is worth noticing that this second dataset necessarily has different subjects in its training and testing sets, so it allows us to assess how the algorithm generalizes to new users without being trained on them.
+
 
 \section{Network Architecture}
 \label{sec:Network Architecture}
@@ -251,9 +257,25 @@ Our training and testing was conducted on data from 10 healthy subjects walking 
 \section{Results}
 \label{sec:Results}
 
+\subsection{Parameter search}
+Initially we wanted to determine what values to use for the training of our network to achieve the best possible performance. In order to do this, we trained our network for a few epochs (10) with a  number of different parameters to see its performance. For each parameter set, we run the training three times, in order to average among the realizations and obtain results less suceptible to the initial conditions.
+
+\begin{figure}
+ \centering
+ \includegraphics[scale=.5]{./figures/parameterSearch.png}
+ % parameterSearch.png: 0x0 pixel, 300dpi, 0.00x0.00 cm, bb=
+ \caption{Convergence of the network in the first 10 epochs as a function of different parameters.}
+ \label{fig:paramSearch}
+\end{figure}
+
+
+\subsection{Dataset 1}
+
 \section{Conclusion and Future Work}
 \label{sec:Conclusion and Future Work}
 
+\subsection{Future work}
+Although the current results are promising, and seem to improve the current state-of-the-art 
 
 % \section{Data}
 % For the initial training purposes, we selected data from 8 healthy subjects walking in a treadmill at three different speeds for 100 seconds each. Additionally, we took data from 13 stroke subjects, walking at a single speed for 100 seconds. For each subject, the input data is 3D marker position of 18 different markers placed in the same anatomical positions for each subject, sampled at 100Hz. The event labels (target) were computed from ground force reaction data samples at 1kHz for healthy subjects, and 2kHz for stroke subjects. This is currently considered the gold standard \cite{miller_gait_2009,miller_gait_2009,Hreljac2000}. \\
