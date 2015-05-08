@@ -18,7 +18,8 @@ load(['/Datos/Documentos/PhD/asig/MachineLearning/project/data/millerResults/mil
 load(['/Datos/Documentos/PhD/asig/MachineLearning/project/data/oconnorResults/oconnor_Testset' test '.mat'])
 load(['../set' test '.mat'])
 names={'LSTM 10 epochs','Miller 33','Miller 100','O''Connor','LSTM 30 epochs','LSTM 50 epochs'};
-compareResults(y,names,predictedY10,predictedYtest,predictedYtest100,y_out,predictedY30,predictedY50)
+%compareResults(y,names,predictedY10,predictedYtest,predictedYtest100,y_out,predictedY30,predictedY50)
+compareResults(y,names([2,5:end]),predictedYtest,predictedY30,predictedY50)
 set(gcf,'Units','Normalized','OuterPosition',[0,0,1,1])
 saveFig(gcf,'../',['Test' test 'Train' train 'Compare'])
 
@@ -37,7 +38,8 @@ load(['/Datos/Documentos/PhD/asig/MachineLearning/project/data/millerResults/mil
 load(['/Datos/Documentos/PhD/asig/MachineLearning/project/data/oconnorResults/oconnor_Testset' test '.mat'])
 load(['../set' test '.mat'])
 names={'LSTM 10 epochs','Miller 33','O''Connor','LSTM 30 epochs','LSTM 50 epochs'};
-compareResults(y,names,predictedY10,predictedYtest,y_out,predictedY30,predictedY50)
+%compareResults(y,names,predictedY10,predictedYtest,y_out,predictedY30,predictedY50)
+compareResults(y,names([2,4:end]),predictedYtest,predictedY30,predictedY50)
 set(gcf,'Units','Normalized','OuterPosition',[0,0,1,1])
 saveFig(gcf,'../',['Test' test 'Train' train 'Compare'])
 
@@ -55,8 +57,11 @@ end
 load(['/Datos/Documentos/PhD/asig/MachineLearning/project/data/millerResults/miller_Testset' test '_Trainset' train '_33.mat'])
 load(['/Datos/Documentos/PhD/asig/MachineLearning/project/data/oconnorResults/oconnor_Testset' test '.mat'])
 load(['../set' test '.mat'])
-names={'LSTM 10 epochs','Miller 33','O''Connor','LSTM 30 epochs','LSTM 50 epochs'};
-compareResults(y,names,predictedY10,predictedYtest,y_out,predictedY30,predictedY50)
+load('cross_LSTM100.mat')
+interpretLSTMoutput('cross_LSTM100.mat')
+names={'LSTM 10 epochs','Miller 33','O''Connor','LSTM 30 epochs','LSTM 50 epochs','LSTM 1250 100 epochs'};
+%compareResults(y,names,predictedY10,predictedYtest,y_out,predictedY30,predictedY50,predictedY)
+compareResults(y,names([2,4:end]),predictedYtest,predictedY30,predictedY50,predictedY)
 set(gcf,'Units','Normalized','OuterPosition',[0,0,1,1])
 saveFig(gcf,'../',['Test' test 'Train' train 'Compare'])
 
@@ -75,6 +80,7 @@ load(['/Datos/Documentos/PhD/asig/MachineLearning/project/data/millerResults/mil
 load(['/Datos/Documentos/PhD/asig/MachineLearning/project/data/oconnorResults/oconnor_Testset' test '.mat'])
 load(['../set' test '.mat'])
 names={'LSTM 10 epochs','Miller 33','O''Connor','LSTM 30 epochs','LSTM 50 epochs'};
-compareResults(y,names,predictedY10,predictedYtest,y_out,predictedY30,predictedY50)
+%compareResults(y,names,predictedY10,predictedYtest,y_out,predictedY30,predictedY50)
+compareResults(y,names([2,4:end]),predictedYtest,predictedY30,predictedY50)
 set(gcf,'Units','Normalized','OuterPosition',[0,0,1,1])
 saveFig(gcf,'../',['Test' test 'Train' train 'Compare'])
