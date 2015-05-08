@@ -15,30 +15,32 @@
 \usepackage{lipsum}
 
 % references
-\usepackage[autostyle]{csquotes}
+% \usepackage[autostyle]{csquotes}
 \usepackage[
   backend=biber,
-  style=numeric-comp,
+  % style=alphabetic,
+  citestyle=numeric-comp,
+  % citestyle=authoryear,
   natbib=true,
   url=false,
   doi=true,
 ]{biblatex}
+% \bibliography{ref}
 \addbibresource{ref.bib}
 
 \begin{document}
 
 \title
 {
-	Sequence Labeling for Gait Analysis using LSTM%
+	Gait Analysis using LSTM%
     \titlenote
     {
         We would like to thank the University of Pittsburgh's Human Movement
-        Research Laboratory and its PI, Dr.~Gelsy Torres-Oviedo, for granting
-        us the permission to use their experimental data in this paper.
-        The collection of this data was approved by the university's
-        Institutional Review Board.
-        All participants gave prior consent to the use of their data for
-        research purposes.
+        Research Laboratory and its PI, Dr.~Gelsy Torres-Oviedo, for providing
+        us with the motion capture data used for the experiments in this paper.
+        The collection of these data was approved by the university's
+        Institutional Review Board and all participating subjects gave prior 
+        consent to the use of their data for research purposes.
     }
 }
 
@@ -147,20 +149,37 @@ concludes and shows possible paths for future work.
 \section{Previous Work}
 \label{sec:Previous Work}
 
-\subsection{Heuristic Approach}
-\label{sub:Heuristic Approach}
+% \subsection{Heuristic Approach}
+% \label{sub:Heuristic Approach}
+\subsection{Foot Velocity Algorithm}
+\label{sub:Foot Velocity Algorithm}
 
-We use the term ``heuristic approach'' to describe algorithms that detect motion
-events based on heuristics such as
+The Foot Velocity Algorithm (FVA) proposed by
+\citet{Oconnor2007}
+belongs to a category of algorithms that use heuristics such as the velocity
+and acceleration of heel and toe markers to detect motion events.
+There are other examples of such algorithms, notably the one developped by
+\citet{Hreljac2000}.
+As these algorithms are quite similar, we restrict the discussion to FVA.
 
-Notably, Hreljac and
-OConnor
-
-description of algorithms
+FVA takes as its input the location of the heel and toe markers as a function of
+time.
+After passing the data through a simple low pass filter,
+a new virtual marker representing the foot center is created by taking the mean
+of the heel and toe markers.
+Finally, the velocity of this virtual marker is calculated.
+Due to the quasi-periodic nature of walking, the graph of the velocity signal 
+shows a repeating pattern in which the toe off event is marked by a global
+maximum and the heel strike by a local minimum.
+This makes it possible to first detect the toe off event for each cycle and
+then, in a second step, go through all the possible candidates for the heel 
+strike.
+By using a constraint on the heel strike time, 
+select the one that satisfies the constraint
 
 seem to be popular in practice
 
-seemingly simple, no training, no learning
+easy to implement, no training, no learning
 
 problem: sensitive to cut-off
 questionable assumptions
@@ -241,7 +260,6 @@ baseline2
 %
 % Other future work includes feature engineering to determine the most relevant input variables, from all the available marker position data and its derivatives, in order to reduce the size of the network that has to be trained. We would also like to extend the capabilities of the method to data that was acquired in natural walking (as opposed to treadmill walking). We believe adequate feature engineering may be enough to achieve this objective too.\\
 
-\nocite{*}
 \printbibliography
 
 % \begin{figure*}
@@ -273,5 +291,10 @@ baseline2
 % }
 % \label{fig:miller}
 % \end{figure*}
+
+% \bibliographystyle{abbrv}
+% \bibliographystyle{plain}
+
+% \appendix
 
 \end{document}
