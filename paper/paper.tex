@@ -169,13 +169,13 @@ a new virtual marker representing the foot center is created by taking the mean
 of the heel and toe markers.
 Finally, the velocity of this virtual marker is calculated.
 Due to the quasi-periodic nature of walking, the graph of the velocity signal 
-shows a repeating pattern in which the toe off event is marked by a global
+exhibits a repeating pattern in which the toe off event is marked by a global
 maximum and the heel strike by a local minimum.
 This makes it possible to first detect the toe off event for each cycle and
 then, in a second step, go through all the possible candidates for the heel 
 strike.
-By using a constraint on the heel strike time, 
-select the one that satisfies the constraint
+By using a constraint on the heel strike time, one of the heel strike candidates
+is selected as the heel strike event.
 
 seem to be popular in practice
 
