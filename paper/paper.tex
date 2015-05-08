@@ -198,6 +198,7 @@ such as neural network and LSTM
 
 \subsection{Neural Network}
 \label{sub:Neural Network}
+\citet{miller_gait_2009} is one of the few data-driven efforts for event estimation from motion-capture data. It uses a classical (feed-forward) NN to classify each sample. The inputs are computed from the position, instantaneous velocity and instantaneous acceleration of each available motion-capture marker in a time-window (200ms) centered around the desired time sample. Because the inputs are too many (the total input size grows linearly with the window size and the number of markers), a dimensionality reduction technique (PCA) is used before training the NN. On our implementation of this algorithm, we used the same parameters given in the original paper: 33 hidden units and the first 50 principal components of the data are fed into the network.
 
 description
 
