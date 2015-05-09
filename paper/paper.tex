@@ -210,14 +210,16 @@ The use of a window is necessary to take into account the temporal dependencies
 that exists between neighboring samples.%
 \footnote
 {
-    Ideally, the window size is not fixed but varies as a function of
-    the forward motion of the foot.
+    Ideally, the window size should not fixed vary as a function of the forward 
+    motion of the foot.
     The reason for this is that a fixed size window cannot guarantee that every
     window contained a sufficient amount of context because of the varying foot
     speed.
-    However, we decided to use a fixed window size in our implementation because
-    we found it difficult to reliably calculate the foot displacement from our
-    data.
+    For simplicity, we decided to use a large fixed window size in our
+    implementation.
+    % in our implementation because
+    % we found it difficult to reliably calculate the foot displacement from our
+    % data.
 }
 
 The input is not the actual motion capture data, but rather position,
