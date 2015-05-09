@@ -32,7 +32,7 @@
 
 \title
 {
-	Gait Analysis using LSTM%
+	Gait Event Detection Using LSTM%
     \titlenote
     {
         We would like to thank the University of Pittsburgh's Human Movement
@@ -121,7 +121,7 @@ If succesful, this approach is superior to the other two because it scales
 easily, does not require additional equipment and does not pose a risk of
 affecting the gait.
 
-Given these apparent advantages, it is not surprising that several data-based
+Given their apparent advantages, it is not surprising that several data-based
 methods have been proposed in the literature.
 Although some of those methods achieve results that are accurate enough to be
 useful in practice, they all have drawbacks such as relying heavily on
@@ -154,7 +154,7 @@ concludes and shows possible paths for future work.
 % \subsection{Heuristic Approach}
 % \label{sub:Heuristic Approach}
 \subsection{Foot Velocity Algorithm}
-\label{sec:oconnor}
+\label{sub:Foot Velocity Algorithm}
 
 The Foot Velocity Algorithm (FVA) proposed by
 \citet{Oconnor2007}
@@ -162,7 +162,7 @@ belongs to a category of algorithms that use heuristics such as the velocity
 and acceleration of heel and toe markers to detect motion events.
 There are other examples of such algorithms, notably the one developped by
 \citet{Hreljac2000}.
-These algorithms are quite similar, we will therefore restrict the discussion
+As these algorithms are quite similar, we will restrict the discussion
 to the FVA.
 
 The FVA takes as its input the location of the heel and toe markers as a
@@ -177,12 +177,14 @@ maximum and the heel strike by a local minimum.
 This makes it possible to first detect the toe off event for each cycle and
 then, in a second step, go through all the possible candidates for the heel
 strike.
-By using a constraint on the heel strike time, one of the candidates is selected
+Using a constraint on the heel strike time, one of the candidates is selected
 as the heel strike event.
 
-The FVA is easy to implement as it does not require preprocessing beyond simple
-signal processing and because it does not require any training.
-This makes it a popular choice in practice.
+% This makes it a popular choice in practice.
+The FVA is widely used in practice.
+This fact can be explained by the ease of implemention it offers:
+it does not require any data preprocessing beyond simple signal processing and
+the algorithm does not have to be trained.
 That said, the FVA has several problems.
 First, it makes questionable assumptions about the relationship between the
 marker location and the gait cycle.
@@ -190,59 +192,79 @@ For instance, it is not clear that the marker velocity peaks exactly coincide
 with the events to be identified.
 Secondly, the algorithm is very sensitive to a threshold that has to be applied
 in order to restrict the search for heel strike candidates.
-The value of this threshold has to be manually tuned for each subject and, if
-not chosen correctly, the algorithm fails catastrophically.
+The value of this threshold has to be manually tuned for each subject.
+If not chosen carefully, the algorithm fails catastrophically.
 Finally, the accuracy of FVA is bad when compared to more sophisticated methods
 such as neural network and LSTM
 (cf. Section~\ref{sec:Results}).
 
-% TODO problem with pathological gaits
-
 \subsection{Feed-Forward Neural Network}
-\label{sec:miller}
+\label{sub:Feed-Forward Neural Network}
 
 \citet{Miller2009}
-treats event detection as a classification problem and uses a classical 
+treats event detection as a classification problem and uses a classical
 (feed-forward) neural network to perform the classification.
 Each sample is classified individually based on a input window centered around
 the desired sample.
-At every time step, the window center is advanced by one sample which creates
-the impression of a sliding window.
-The window is necessary to allow the network to take into account the
-dependencies that exists between neighboring samples.
+At every time step, the window center is advanced by one sample
+(so-called sliding window technique).
+The use of a window is necessary to take into account the temporal dependencies
+that exists between neighboring samples.
+It should be noted that
+the window size is not fixed but varies as a function of
+the forward motion of the foot.
+The reason for this is that a fixed size window could not guarantee that every
+window contained a sufficient amount of context because of the varying foot
+speed.
 
-The input window does not contain the actual motion capture data, but rather 
-position, instantaneous velocity and instantaneous acceleration features that 
-are calculated from the data.
-Furthermore, PCA is used to reduce the dimensionality of the input 
-(the total input size grows linearly with the window size and the number 
-of markers).
+The input is not the actual motion capture data, but rather position,
+instantaneous velocity and instantaneous acceleration features extracted from
+that data.
+Furthermore, PCA is used to reduce the number of input variables from several
+hundred to 50.
+This dimensionality reduction is necessary because the total input size grows
+linearly with the window size and the number of markers.
 
-In our implementation of this algorithm, we used the same parameters given in
-the original paper: 33 hidden units and the first 50 principal components of
-the data are fed into the network.
+The network architecture itself is minimalistic: between an input layer
+consisting of 50 input units and an output layer consisting of 2 units (one
+for each leg) there is only one hidden layer with 33 sigmoid units.
 
-output
-
-[classification]
-classify each sample.
-
-preprocessing (dimensionality reduction)
-
-problems: preprocessing, variable window size based on foot velocity
-
-baseline2
+In our opinion, the feed-forward neural network approach has several
+disadvantages.
+In addition to heavy preprocessing consisting of feature extraction and PCA, the
+data has to be split up into windows of variable length.
+This in turn requires that the foot displacement can be measure accurately from
+the data which is non-trivial.
+Moreover, the network architecture seems to be oversimplistic to effectively
+capture the long-range dependencies that exist between the data samples.
 
 \section{LSTM}
 \label{sec:LSTM}
 
 % TODO treat event detection as sequence labeling problem
+% TODO real-time event detection (no window necessary)
 
 \section{Data}
 \label{sec:Data}
+Our training and testing was conducted on data from 10 healthy subjects walking at three different speeds for 50 seconds. Each sequence of 50 seconds will be called a trial from now on. This totals 1500 seconds of recorded data, which roughly correspond to 1000 gait cycles.  For each subject the motion-capture data (input) is 3D marker position of 18 different markers placed in the same anatomical positions for each subject, sampled at 100Hz. The event labels (target) were computed from ground force reaction data sampled at 1kHz.
+
+The markers were placed at the toe, ankle, heel, knee, greater trochanter (hip), tibia, femur, and anterior and posterior superior illiac spine (pelvis) on each leg.
+% All data was collected in the Human Movement Research Laboratory of the University of Pittsburgh, with approval of its IRB. All subjects consented to allow their data be used for research purposes. We are using the data with permission from the laboratory's PI, Dr. Gelsy Torres-Oviedo.
+
+The available data was separated into a training and a testing set in two different ways. Dataset 1 takes the first 25 seconds of data from each trial as the training sample, and the following 25 seconds as the testing sample. Dataset 2 includes the same data, but splits it along trials: all 50 seconds of 15 trials were used for training, and the remaining 15 trials were used for testing. It is worth noticing that this second dataset necessarily has different subjects in its training and testing sets, so it allows us to assess how the algorithm generalizes to new users without being trained on them.
+
+Before using it in our network we pre-processed the data as follows:
+\begin{enumerate}
+ \item Data was translated so that the mid-hip position (average position of the left and right hip markers) is located at $(0,0,0)$ at all times. 
+ \item Data was rotated so that gravity is aligned with the $z$ axis (was already the case) and the $x$ axis is aligned with the vector going from the left hip marker to the right hip marker, projected onto a plane orthogonal to $z$. The $y$ axis is defined as the direction orthogonal to $x$ and $y$. This allows the data to be independent of walking direction and the absolute reference frame in which the data was captured.
+ \item Data for each marker was standardized.
+\end{enumerate}
+
+% TODO explain motion capture data either here or in introduction
+
 
 \section{Network Architecture}
-\label{sec:arch}
+\label{sec:Network Architecture}
 
 We took an iterative approach to build our neural network. Initially we implemented a low-complexity LSTM network, evaluated its performance by cross-validation, then attempted to improve its performance and robustness by adding additional components one at a time while evaluating performance.
 
@@ -255,15 +277,41 @@ While this is a very simple architecture, it allows rapid training, and already 
 
 \subsection{title}
 
-
 \section{Network Training}
 \label{sec:Network Training}
 
 \section{Results}
 \label{sec:Results}
 
+\subsection{Parameter search}
+Initially we wanted to determine what values to use for the training of our network to achieve the best possible performance. In order to do this, we trained our network for a few epochs (10) with a  number of different parameters to see its performance. For each parameter set, we run the training three times, in order to average among the realizations and obtain results less suceptible to the initial conditions.
+
+\begin{figure}
+ \centering
+ \includegraphics[scale=.5]{./figures/parameterSearch.png}
+ % parameterSearch.png: 0x0 pixel, 300dpi, 0.00x0.00 cm, bb=
+ \caption{Convergence of the network in the first 10 epochs as a function of different parameters.}
+ \label{fig:paramSearch}
+\end{figure}
+
+
+\subsection{Dataset 1}
+
 \section{Conclusion and Future Work}
 \label{sec:Conclusion and Future Work}
+
+\subsection{Future work}
+Although the current results are promising, and seem to improve the current state-of-the-art, there a few things that still can be done to assess the performance of the proposed network:
+\begin{enumerate}
+ \item Run a true grid search to find the best training parameters.
+ \item Run the training for a longer time and use cross-validation to determine reasonable stopping criteria.
+ \item Use the network with a delay in the output, so we effectively use information of a window of time around the desired time sample to infer events. This would make this method more comparable to the exisiting algorithms, which usually work with the smoothing problem, and not with the real-time filtering problem. Arguably this could only improve the performance of the method, as more information would be available to make the classification of each sample.
+ \item Assess generalization to pathological gait subjects.
+ \item Assess generalization to over-ground walking data (no ground truth in our dataset).
+ \item Investigate possible pre-processing to guarantee that method is invariant to walking speed, and subject height and weight.
+ \item Study possible modifications to make the network truly invariant to the left/right symmetry. Currently the network is trained to output events for both legs with marker data from both sides of the body, but we know that the symmetry of the problem could be exploited further. However, this could prove to be an issue on subjects with highly asymmetrical gait.
+ \item Incorporate prior information from the transitions that occurr during gait. In normal walking the events happen in a pre-established order (left heel-strike - right toe-off - right heel-strike - left toe-off) which gives us some information on the possible upcoming transitions based on the current state. While we can speculate that a recursive NN learns this with training, we could incorporate this information for better accuracy during normal walking conditions.
+\end{enumerate}
 
 
 % \section{Data}
