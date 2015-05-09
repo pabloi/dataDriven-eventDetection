@@ -303,9 +303,6 @@ While this is a very simple architecture, it allows rapid training, and already 
 
 \subsection{title}
 
-\section{Network Training}
-\label{sec:Network Training}
-
 \section{Computational Resources}
 \label{sec:Computational Resources}
 
@@ -322,8 +319,8 @@ The network was run on an Amazon EC2 instance of type g2.2xlarge.
 This instance type comes with an 8 core 2.6 GHz Intel Xeon E5-2670 processor and 
 an Nvidia GRID K520 GPU that is composed of two 4 GB GK104 GPUs.
 
-\section{Results}
-\label{sec:Results}
+\section{Network Training}
+\label{sec:Network Training}
 
 \subsection{Parameter search}
 Initially we wanted to determine what values to use for the training of our network to achieve the best possible performance. In order to do this, we trained our network for a few epochs (10) with a  number of different parameters to see its performance.
@@ -351,6 +348,8 @@ Once we settled on parameters for our network, we trained it for 100 epochs and 
  \label{fig:halfAndHalfTrials}
 \end{figure}
 
+\section{Results}
+\label{sec:Results}
 
 \section{Conclusion and Future Work}
 \label{sec:Conclusion and Future Work}
