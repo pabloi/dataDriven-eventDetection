@@ -13,6 +13,7 @@
 \usepackage{float}
 \usepackage{enumitem}
 \usepackage{lipsum}
+\usepackage{url}
 
 \setlist[enumerate]
 {nolistsep}
@@ -268,6 +269,15 @@ The issue here is the vanishing gradient problem that causes the influence of a
 given input to either decay rapidly or to blow up exponentially
 \cite{Hochreiter1991}.
 
+One approach that solves both of these problems is LSTM.
+An LSTM network is an RNN where the summation units in the hidden layer are 
+replaced with so-called memory blocks.
+These blocks consist of a memory cell as well as three multiplicative units 
+called input gate, output gate and forget gate.
+The gates allow information to be stored in the memory cell for long periods 
+of time
+\cite{Graves2012}.
+
 % TODO real-time event detection (no window necessary)
 
 \section{Data}
@@ -288,6 +298,21 @@ Before using it in our network we pre-processed the data as follows:
 
 % TODO explain motion capture data either here or in introduction
 
+\section{Computational Resources}
+\label{sec:Computational Resources}
+
+Our LSTM implementation is written in Torch, a scientific computing framework 
+for LuaJIT.%
+\footnote
+{
+    \url
+    {
+        torch.ch.
+    }
+}
+The network was run on an Amazon EC2 instance of type g2.2xlarge.
+This instance type comes with an 8 core 2.6 GHz Intel Xeon E5-2670 processor and 
+an Nvidia GRID K520 GPU that is composed of two 4 GB GK104 GPUs.
 
 \section{Network Architecture}
 \label{sec:Network Architecture}
@@ -305,9 +330,6 @@ While this is a very simple architecture, it allows rapid training, and already 
 
 \section{Network Training}
 \label{sec:Network Training}
-
-\section{Results}
-\label{sec:Results}
 
 \subsection{Parameter search}
 Initially we wanted to determine what values to use for the training of our network to achieve the best possible performance. In order to do this, we trained our network for a few epochs (10) with a  number of different parameters to see its performance.
@@ -335,6 +357,8 @@ Once we settled on parameters for our network, we trained it for 100 epochs and 
  \label{fig:halfAndHalfTrials}
 \end{figure}
 
+\section{Results}
+\label{sec:Results}
 
 \section{Conclusion and Future Work}
 \label{sec:Conclusion and Future Work}
@@ -358,21 +382,6 @@ Although our results are promising and seem to improve the current state-of-the-
 % For the initial training purposes, we selected data from 8 healthy subjects walking in a treadmill at three different speeds for 100 seconds each. Additionally, we took data from 13 stroke subjects, walking at a single speed for 100 seconds. For each subject, the input data is 3D marker position of 18 different markers placed in the same anatomical positions for each subject, sampled at 100Hz. The event labels (target) were computed from ground force reaction data samples at 1kHz for healthy subjects, and 2kHz for stroke subjects. This is currently considered the gold standard \cite{miller_gait_2009,miller_gait_2009,Hreljac2000}. \\
 % %The problem is then to classify each sample in time as one of four different classes: both feet in contact with the ground, both feet off the ground, left feet only on the ground and right feet only on the ground.
 % \section{Algorithms}
-%
-% \subsection{Our approach: Long Short Term Memory Neural Network}
-%
-% Gait event detection is a form of \textit{sequence labeling}, i.e., assigning a sequence of labels to a sequence of data.
-% One approach to sequence labeling is the use of recurrent neural networks (RNN). However, due to the vanishing gradient problem RNNs cannot store information for a long time which means that their usefulness for sequence labeling is limited.
-% One solution to this problem is the use of a Long Short-Term Memory (LSTM) architecture instead of conventional RNNs \cite{graves_supervised_2012}.
-% In LSTM, the summation units in the hidden layer are replaced with so-called memory blocks.
-% These blocks consist of a memory cell as well as three multiplicative units called input gate, output gate and forget gate.
-% The gates allow information to be stored in the memory cell for long periods of time.
-% While we haven't decided on the overall design of our LSTM network yet, it will probably have specifications along the lines of:
-% \begin{itemize}[noitemsep,nolistsep]
-% \item Up to 54 input units that each take the sequence corresponding to one marker as input; the reason we might not need all 54 marker sequences is that some of the markers (e.g., for the hip) presumably carry little useful information.
-% \item A hidden layer of LSTM memory blocks; the exact number will depend on the number of input units.
-% \item 2 output units (one for each leg); the output will be thresholded with '0' corresponding to stance phase and '1' corresponding to swing phase.
-% \end{itemize}
 %
 % \section{Computational Resources}
 %
