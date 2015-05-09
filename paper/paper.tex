@@ -247,8 +247,7 @@ The network architecture itself is minimalistic: between an input layer
 consisting of 50 input units and an output layer consisting of 2 units (one
 for each leg) there is only one hidden layer with 33 sigmoid units.
 
-In our opinion, the feed-forward neural network approach has several
-disadvantages.
+The feed-forward neural network approach has several disadvantages.
 In addition to heavy preprocessing consisting of feature extraction and PCA, the
 data has to be split up into windows of variable length.
 This in turn requires that the foot displacement be measured accurately from
@@ -261,9 +260,8 @@ capture the long-range dependencies that exist between the data samples.
 
 Gait event detection can be seen as a form of sequence labeling (sometimes also
 called segment classification), i.e., the task of assigning a sequence of labels
-(swing phase vs. stance phase) to a sequence of input data (the motion capture
-signals).
-The success of a sequence labeling system depends crucially on its ability to
+(swing phase vs. stance phase) to a sequence of input (motion) data.
+The success of a sequence labeling system hinges on its ability to
 incorporate context information from both sides of the segment in question.
 %
 One way to incorporate this context information is to use feed-forward or
@@ -302,7 +300,12 @@ system.
 
 \section{Data}
 \label{sec:Data}
+<<<<<<< HEAD
 Our training and testing was conducted on data from 10 healthy subjects walking at three different speeds for 50 seconds. Each sequence of 50 seconds will be called a trial from now on. This totals 1500 seconds of recorded data, which roughly correspond to 1000 gait cycles.  For each subject the motion-capture data (input) is 3D marker position of 18 different markers placed in the same anatomical positions for each subject, sampled at 100Hz. The event labels (target) were computed from ground force reaction data sampled at 1kHz, which is considered the gold standard in the field. In order to compute events the ground reaction forces in gravity's axis are thresholded ($20 N$) and whenever they exceed this threshold, the foot is considered to be on the ground (stance). By searching for the transitions between stance and no-stance, the events are found.
+=======
+Our training and testing was conducted on data from 10 healthy subjects walking 
+on a treadmill at three different speeds for 50 seconds. Each sequence of 50 seconds will be called a trial from now on. This totals 1500 seconds of recorded data, which roughly correspond to 1000 gait cycles.  For each subject, 3D motion capture data was collected using 18 reflective markers placed in the same anatomical positions for each subject, sampled at 100Hz. The event labels (target) were computed from ground force reaction data sampled at 1kHz.
+>>>>>>> 52b813815d8b021596f560a2fed01de284561095
 
 The markers were placed at the toe, ankle, heel, knee, greater trochanter (hip), tibia, femur, and anterior and posterior superior illiac spine (pelvis) on each leg.
 % All data was collected in the Human Movement Research Laboratory of the University of Pittsburgh, with approval of its IRB. All subjects consented to allow their data be used for research purposes. We are using the data with permission from the laboratory's PI, Dr. Gelsy Torres-Oviedo.
@@ -394,7 +397,6 @@ Once we settled on parameters for our network, we trained it for 100 epochs and 
 
 \subsection{Dataset 2}
 The second dataset was designed to assess how well the methods generalize to new users. We performed the same treatment as for the previous dataset, and results are shown on \ref{fig:halfAndHalfUsers}. From these results we can see that the LSTM network achieves better accuracy than Miller, with less false positives and false negatives. However, the false positive rate is somewhat high for the LSTM network too. 
-
 
 \begin{figure}[H]
  \centering
