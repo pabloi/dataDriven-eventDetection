@@ -306,7 +306,9 @@ on a treadmill at three different speeds for 50 seconds. Each sequence of 50 sec
 {
     The locations used were toe, ankle, heel, knee, greater trochanter (hip), tibia, femur, and anterior and posterior superior illiac spine (pelvis) on each leg.
 }
-The sampling frequency of this data is 100Hz. The event labels (target) were computed from ground force reaction data from force sensors embedded in the treadmill.
+The sampling frequency of this data is 100Hz. The event labels (target) were computed from ground force reaction data from force sensors embedded in the treadmill 
+which is considered the gold standard in the field. 
+In order to compute events the ground reaction forces in gravity's axis are thresholded ($20 N$) and whenever they exceed this threshold, the foot is considered to be on the ground (stance). By searching for the transitions between stance and no-stance, the events are found.
 The sampling frequency of this data is 1kHz.
 
 The data was separated into a training and a testing set in two different ways. Dataset 1 takes the first 25 seconds of data from each trial as the training sample, and the following 25 seconds as the testing sample. This dataset was meant to test how well a trained network can generalize to new gait cycles, given that it was trained on data including the same subject and walking speed. As such, it is the most basic test of performance that can be done. Dataset 2 includes the same data, but splits it along trials: all 50 seconds of 15 trials were used for training, and the remaining 15 trials were used for testing. It is worth noticing that this second dataset necessarily has different subjects in its training and testing sets, so it allows us to assess how the algorithm generalizes to new users without being trained on them.
@@ -409,9 +411,11 @@ The second dataset was designed to assess how well the methods generalize to new
 \section{Conclusion and Future Work}
 \label{sec:Conclusion and Future Work}
 \subsection{Conclusions}
-The results from our initial implementation of the LSTM network are very encouraging. Compared to the baseline methods we used for comparison, we achieved less confusion (false positive and false negative rate) and similar or better accuracy, measured through bias and quadratic error. According to \cite{Miller2009},  is true that Miller's method was implemented in a slightly modified way (fixed window size), so that his resu
+The results from our initial implementation of the LSTM network are very encouraging. Compared to the baseline methods, we achieved less confusion (false positive and false negative rate) and similar or better accuracy, measured through bias and quadratic error. O'Connor's heuristic performed very poorly, with biases and standard deviations tens of milliseconds larger than what Miller and the LSTM network achieved. This is not too surprising since O'Connor is a fixed heuristic method with no way to adapt to the data (requires no training).
 
-Overall, the results we obtained are satisfying and we expect to polish them a little further before submitting them for publication in a gait research journal.
+Miller performed much better than O'Connor but we still found that LSTM performed slightly better. In \cite{Miller2009} the reported results for the method are similar (although slightly worse) than what we found here for the same algorithm. However, \cite{Miller2009} only uses 72 gait cycles (total) for his training, which is a lot smaller than our dataset. Miller also fails to discuss his cross-validation method and false detection rates, so it is not clear whether the high false positive rate was an issue for him or whether it is an artifact of our implementation and the larger dataset we tried to train on. Miller did achieve his performance including subjects with pathological gait, but given the small dataset, it is hard to say how many of his samples were really pathological and how much that affected performance.
+
+It is worth noticing that our implementation can do event detection in real time, both in the sense that it is computationally tractable and that our prediction is causal, relying only in past marker data. This makes our method unique, as we couldn't find anything on the literature that offered similar guarantees. Overall, the results we obtained are satisfying and we expect to polish them a little further before submitting them for publication in a gait research journal.
 
 \subsection{Future work}
 Although our results are promising and seem to improve the current state-of-the-art, there a few things that still can be done to assess and improve performance:
