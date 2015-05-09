@@ -373,14 +373,14 @@ Once we settled on parameters for our network, we trained it for 100 epochs and 
 
 \begin{figure}[H]
  \centering
- \includegraphics[scale=.3]{./figures/Test1_1Train1_2Compare.png}
+ \includegraphics[scale=.31]{./figures/Test1_1Train1_2Compare.png}
  % Test1_1Train1_2Compare.png: 0x0 pixel, 300dpi, 0.00x0.00 cm, bb=
  \caption{Comparison of Miller vs. LSTM network for various training intervals, for dataset 1.}
  \label{fig:halfAndHalfTrials}
 \end{figure}
 
 \subsection{Dataset 2}
-The second dataset was designed to assess how well the methods generalize to new users. We performed the same treatment as for the previous dataset, and results are shown on \ref{fig:halfAndHalfUsers}.
+The second dataset was designed to assess how well the methods generalize to new users. We performed the same treatment as for the previous dataset, and results are shown on \ref{fig:halfAndHalfUsers}. From these results we can see that the LSTM network achieves better accuracy than Miller, with less false positives and false negatives. However, the false positive rate is somewhat high for the LSTM network too. 
 
 
 \begin{figure}[H]
@@ -393,6 +393,8 @@ The second dataset was designed to assess how well the methods generalize to new
 
 \section{Conclusion and Future Work}
 \label{sec:Conclusion and Future Work}
+\subsection{Conclusions}
+The results from our initial implementation of the LSTM network are promising. Compared to the baseline methods we used for comparison, we achieved less confusion (false positive and false negative rate) and similar or better accuracy, measured through bias and quadratic error. This is
 
 \subsection{Future work}
 Although our results are promising and seem to improve the current state-of-the-art, there a few things that still can be done to assess and improve performance:
