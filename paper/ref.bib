@@ -1,31 +1,17 @@
 @article{Sak2014,
-archivePrefix = {arXiv},
-arxivId = {arXiv:1402.1128v1},
-author = {Sak, Ha\c{c}sim and Senior, Andrew and Beaufays, Fran\c{c}oise},
-eprint = {arXiv:1402.1128v1},
-journal = {arXiv preprint arXiv:1402.1128},
-number = {Cd},
-title = {{Long Short-Term Memory Based Recurrent Neural Network Architectures for Large Vocabulary Speech Recognition}},
-year = {2014}
-}
-@article{Graves,
-author = {Graves, Alex},
-title = {{Generating Sequences with Recurrent Neural Networks Why Generate Sequences ?}}
+    author = {Sak, Ha\c{c}sim and Senior, Andrew and Beaufays, Fran\c{c}oise},
+    journal = {arXiv preprint arXiv:1402.1128},
+    number = {Cd},
+    title = {{Long Short-Term Memory Based Recurrent Neural Network Architectures for Large Vocabulary Speech Recognition}},
+    year = {2014}
 }
 @article{Gers2002,
-abstract = {The temporal distance between events conveys information essential for numerous sequential tasks such as motor control and rhythm detection. While Hidden Markov Models tend to ignore this information, recurrent neural networks (RNNs) can in principle learn to make use of it. We focus on Long Short-Term Memory (LSTM) because it has been shown to outperform other RNNs on tasks involving long time lags. We find that LSTM augmented by "peephole connections" from its internal cells to its multiplicative gates can learn the fine distinction between sequences of spikes spaced either 50 or 49 time steps apart without the help of any short training exemplars. Without external resets or teacher forcing, our LSTM variant also learns to generate stable streams of precisely timed spikes and other highly nonlinear periodic patterns. This makes LSTM a promising approach for tasks that require the accurate measurement or generation of time intervals.},
-author = {Gers, Felix a and Schraudolph, Nicol N and Schmidhuber, Jurgen},
-doi = {10.1162/153244303768966139},
-issn = {15324435},
-journal = {Journal of Machine Learning Research},
-keywords = {long short term memory,recurrent neural networks,timing},
-number = {1},
-pages = {115--143},
-pmid = {17272722},
-title = {{Learning Precise Timing with LSTM Recurrent Networks}},
-url = {http://www.crossref.org/jmlr\_DOI.html},
-volume = {3},
-year = {2002}
+    author = {Gers, Felix a and Schraudolph, Nicol N and Schmidhuber, Jurgen},
+    journal = {Journal of Machine Learning Research},
+    pages = {115--143},
+    title = {{Learning Precise Timing with LSTM Recurrent Networks}},
+    volume = {3},
+    year = {2002}
 }
 @article{Hochreiter1997,
 abstract = {Learning to store information over extended time intervals by recurrent backpropagation takes a very long time, mostly because of insufficient, decaying error backflow. We briefly review Hochreiter's (1991) analysis of this problem, then address it by introducing a novel, efficient, gradient based method called long short-term memory (LSTM). Truncating the gradient where this does not do harm, LSTM can learn to bridge minimal time lags in excess of 1000 discrete-time steps by enforcing constant error flow through constant error carousels within special units. Multiplicative gate units learn to open and close access to the constant error flow. LSTM is local in space and time; its computational complexity per time step and weight is O. 1. Our experiments with artificial data involve local, distributed, real-valued, and noisy pattern representations. In comparisons with real-time recurrent learning, back propagation through time, recurrent cascade correlation, Elman nets, and neural sequence chunking, LSTM leads to many more successful runs, and learns much faster. LSTM also solves complex, artificial long-time-lag tasks that have never been solved by previous recurrent network algorithms.},
@@ -120,18 +106,12 @@ url = {http://arxiv.org/abs/1308.0850},
 year = {2013}
 }
 @article{Hreljac2000,
-abstract = {Algorithms to predict heelstrike and toeoff times during normal walking using only kinematic data are presented. The accuracy of these methods was compared with the results obtained using synchronized force platform recordings of two subjects walking at a variety of speeds for a total of 12 trials. Using a 60Hz data collection system, the absolute value errors (AVE) in predicting heelstrike averaged 4.7ms, while the AVE in predicting toeoff times averaged 5.6ms. True average errors (negative for an early prediction) were +1.2ms for both heelstrike and toeoff, indicating that no systematic errors occurred. It was concluded that the proposed algorithms provide an easy and reliable method of determining event times during walking when kinematic data are collected, with a considerable improvement in resolution over visual inspection of video records, and could be utilized in conjunction with any 2-D or 3-D kinematic data collection system. Copyright (C) 2000 Elsevier Science Ltd.},
-author = {Hreljac, Alan and Marshall, Robert N.},
-doi = {10.1016/S0021-9290(00)00014-2},
-isbn = {0021-9290 (Print)$\backslash$r0021-9290 (Linking)},
-issn = {00219290},
-journal = {Journal of Biomechanics},
-keywords = {Contact time,Heelstrike,Toeoff,Walking},
-pages = {783--786},
-pmid = {10808002},
-title = {{Algorithms to determine event timing during normal walking using kinematic data}},
-volume = {33},
-year = {2000}
+    author = {Hreljac, Alan and Marshall, Robert N.},
+    journal = {Journal of Biomechanics},
+    pages = {783--786},
+    title = {{Algorithms to determine event timing during normal walking using kinematic data}},
+    volume = {33},
+    year = {2000}
 }
 @article{JurgenSchmidhuberDaanWierstra,
 author = {{J\"{u}rgen Schmidhuber, Daan Wierstra}, Faustino Gomez},
@@ -139,98 +119,71 @@ title = {{Evolino: Hybrid neuroevolution / optimal linear search for sequence pr
 url = {http://citeseerx.ist.psu.edu/viewdoc/summary?doi=10.1.1.121.837}
 }
 @article{OConnor2007,
-abstract = {The timing of heel strike (HS) and toe off (TO), the events that mark the transitions between stance and swing phase of gait, is essential when analysing gait. Force plate recordings are routinely used to identify these events. Additional instrumentation, such as force sensitive resistors, can also been used. These approaches, however, include restrictions on the number of steps that can be analyzed and further encumbrance of the subject. We developed an algorithm which automatically determines these times from kinematic data recorded by a motion capture system, which is routinely used in gait analysis laboratories. The foot velocity algorithm (FVA) uses data from the heel and toe markers and identifies features in the vertical velocity of the foot which correspond to the gait events. We verified the performance of the FVA using a large data set of 54 normal children that contained both force plate recordings and kinematic data and found errors of (mean ?? standard deviation) 16 ?? 15 ms for HS and 9 ?? 15 ms for TO. The algorithm also worked well when tested on a small number of children with spastic diplegia. We compared the performance of the FVA with another kinematic method previously described. Our foot velocity algorithm offered more accurate results and was easier to implement than the previously described one, and should be applicable in a variety of gait analysis settings. ?? 2006 Elsevier B.V. All rights reserved.},
-author = {O'Connor, Ciara M. and Thorpe, Susannah K. and O'Malley, Mark J. and Vaughan, Christopher L.},
-doi = {10.1016/j.gaitpost.2006.05.016},
-isbn = {0966-6362},
-issn = {09666362},
-journal = {Gait and Posture},
-keywords = {Algorithm,Gait events,Heel strike,Toe off,Walking},
-pages = {469--474},
-pmid = {16876414},
-title = {{Automatic detection of gait events using kinematic data}},
-volume = {25},
-year = {2007}
+    author = {O'Connor, Ciara M. and Thorpe, Susannah K. and O'Malley, Mark J. and Vaughan, Christopher L.},
+    journal = {Gait and Posture},
+    pages = {469--474},
+    title = {{Automatic detection of gait events using kinematic data}},
+    volume = {25},
+    year = {2007}
 }
 @article{Ghoussayni2004,
-abstract = {A simple and rapid automatic method for detection of gait events at the foot could speed up and possibly increase the repeatability of gait analysis and evaluations of treatments for pathological gaits. The aim of this study was to compare and validate a kinematic-based algorithm used in the detection of four gait events, heel contact, heel rise, toe contact and toe off. Force platform data is often used to obtain start and end of contact phases, but not usually heel rise and toe contact events. For this purpose synchronised kinematic, kinetic and video data were captured from 12 healthy adult subjects walking both barefoot and shod at slow and normal self-selected speeds. The data were used to determine the gait events using three methods: force, visual inspection and algorithm methods. Ninety percent of all timings given by the algorithm were within one frame (16.7ms) when compared to visual inspection. There were no statistically significant differences between the visual and algorithm timings. For both heel and toe contact the differences between the three methods were within 1.5 frames, whereas for heel rise and toe off the differences between the force on one side and the visual and algorithm on the other were higher and more varied (up to 175ms). In addition, the algorithm method provided the duration of three intervals, heel contact to toe contact, toe contact to heel rise and heel rise to toe off, which are not readily available from force platform data. The ability to automatically and reliably detect the timings of these four gait events and three intervals using kinematic data alone is an asset to clinical gait analysis. ?? 2003 Elsevier B.V. All rights reserved.},
-author = {Ghoussayni, Salim and Stevens, Christopher and Durham, Sally and Ewins, David},
-doi = {10.1016/j.gaitpost.2003.10.001},
-isbn = {0966-6362},
-issn = {09666362},
-journal = {Gait and Posture},
-keywords = {Heel contact,Heel toe intervals,Kinematic gait event detection,Temporal gait parameters,Toe off},
-pages = {266--272},
-pmid = {15531173},
-title = {{Assessment and validation of a simple automated method for the detection of gait events and intervals}},
-volume = {20},
-year = {2004}
+    journal = {Gait and Posture},
+    pages = {266--272},
+    title = {{Assessment and validation of a simple automated method for the detection of gait events and intervals}},
+    volume = {20},
+    year = {2004}
 }
 @article{Jasiewicz2006,
-abstract = {We report on three different methods of gait event detection (toe-off and heel strike) using miniature linear accelerometers and angular velocity transducers in comparison to using standard pressure-sensitive foot switches. Detection was performed with normal and spinal-cord injured subjects. The detection of end contact (EC), normally toe-off, and initial contact (IC) normally, heel strike was based on either foot linear accelerations or foot sagittal angular velocity or shank sagittal angular velocity. The results showed that all three methods were as accurate as foot switches in estimating times of IC and EC for normal gait patterns. In spinal-cord injured subjects, shank angular velocity was significantly less accurate (p < 0.02). We conclude that detection based on foot linear accelerations or foot angular velocity can correctly identify the timing of IC and EC events in both normal and spinal-cord injured subjects. ?? 2006 Elsevier B.V. All rights reserved.},
-author = {Jasiewicz, Jan M. and Allum, J. H J and Middleton, James W. and Barriskill, Andrew and Condie, Peter and Purcell, Brendan and Li, R. C T},
-doi = {10.1016/j.gaitpost.2005.12.017},
-isbn = {0966-6362},
-issn = {09666362},
-journal = {Gait and Posture},
-keywords = {Foot contact detection,Gait analysis,Inertial sensors},
-pages = {502--509},
-pmid = {16500102},
-title = {{Gait event detection using linear accelerometers or angular velocity transducers in able-bodied and spinal-cord injured individuals}},
-volume = {24},
-year = {2006}
+    author = {Jasiewicz, Jan M. and Allum, J. H J and Middleton, James W. and Barriskill, Andrew and Condie, Peter and Purcell, Brendan and Li, R. C T},
+    journal = {Gait and Posture},
+    pages = {502--509},
+    title = {{Gait event detection using linear accelerometers or angular velocity transducers in able-bodied and spinal-cord injured individuals}},
+    volume = {24},
+    year = {2006}
 }
 @article{Miller2009,
-abstract = {Manual detection of gait events via visual inspection of motion capture data is a laborious process. There are currently no robust techniques available to automate the process for pathologic gait. However, the detection of gait events is essentially a classification problem; an application for which artificial neural networks are well suited. In this paper, a multilayer artificial neural network is presented for the purpose of classifying foot-contact and foot-off events using the sagittal plane coordinates of heel and toe markers. The timing of events detected using this method was compared to the timing of events detected by measuring the ground reaction force using a force plate for a total of 40 pathologic subjects divided into two groups: barefoot and shod/braced. On average, the neural network detected foot-contact events 7.1 ms and 0.8 ms earlier than the force plate for the barefoot and shod/braced groups respectively. The average difference for foot-off events was 8.8 ms and 3.3 ms. Given that motion capture data were collected at 120 Hz, this implies that the force plate method and neural network method generally agreed within 1-2 frames of data. Consequently, the neural network was shown to be an accurate, autonomous method for detecting gait events in pathologic gait. ?? 2008 Elsevier B.V. All rights reserved.},
-author = {Miller, Adam},
-doi = {10.1016/j.gaitpost.2008.12.003},
-isbn = {0966-6362},
-issn = {09666362},
-journal = {Gait and Posture},
-keywords = {Gait event,Heel contact,Machine learning,Neural network,Toe-off},
-pages = {542--545},
-pmid = {19135372},
-title = {{Gait event detection using a multilayer neural network}},
-volume = {29},
-year = {2009}
+    author = {Miller, Adam},
+    journal = {Gait and Posture},
+    pages = {542--545},
+    title = {{Gait event detection using a multilayer neural network}},
+    volume = {29},
+    year = {2009}
 }
 @article{Hinton2012,
-abstract = {When a large feedforward neural network is trained on a small training set, it typically performs poorly on held-out test data. This "overfitting" is greatly reduced by randomly omitting half of the feature detectors on each training case. This prevents complex co-adaptations in which a feature detector is only helpful in the context of several other specific feature detectors. Instead, each neuron learns to detect a feature that is generally helpful for producing the correct answer given the combinatorially large variety of internal contexts in which it must operate. Random "dropout" gives big improvements on many benchmark tasks and sets new records for speech and object recognition.},
-archivePrefix = {arXiv},
-arxivId = {1207.0580},
-author = {Hinton, Geoffrey E. and Srivastava, Nitish and Krizhevsky, Alex and Sutskever, Ilya and Salakhutdinov, Ruslan R.},
-doi = {arXiv:1207.0580},
-eprint = {1207.0580},
-journal = {arXiv: 1207.0580},
-pages = {1--18},
-title = {{Improving neural networks by preventing co-adaptation of feature detectors}},
-url = {http://arxiv.org/abs/1207.0580},
-year = {2012}
+    author = {Hinton, Geoffrey E. and Srivastava, Nitish and Krizhevsky, Alex and Sutskever, Ilya and Salakhutdinov, Ruslan R.},
+    journal = {arXiv: 1207.0580},
+    pages = {1--18},
+    title = {{Improving neural networks by preventing co-adaptation of feature detectors}},
+    year = {2012}
 }
 @article{Pham2013,
-abstract = {Recurrent neural networks (RNNs) with Long Short-Term memory cells currently hold the best known results in unconstrained handwriting recognition. We show that their performance can be greatly improved using dropout - a recently proposed regularization method for deep architectures. While previous works showed that dropout gave superior performance in the context of convolutional networks, it had never been applied to RNNs. In our approach, dropout is carefully used in the network so that it does not affect the recurrent connections, hence the power of RNNs in modeling sequence is preserved. Extensive experiments on a broad range of handwritten databases confirm the effectiveness of dropout on deep architectures even when the network mainly consists of recurrent and shared connections.},
-archivePrefix = {arXiv},
-arxivId = {1312.4569},
-author = {Pham, Vu and Bluche, Th\'{e}odore and Kermorvant, Christopher and Louradour, J\'{e}r\^{o}me},
-doi = {10.1109/ICFHR.2014.55},
-eprint = {1312.4569},
-journal = {arXiv preprint arXiv:1312.4569},
-keywords = {dropout,handwriting,recurrent neural networks},
-title = {{Dropout improves Recurrent Neural Networks for Handwriting Recognition}},
-url = {http://arxiv.org/abs/1312.4569},
-year = {2013}
+    author = {Pham, Vu and Bluche, Th\'{e}odore and Kermorvant, Christopher and Louradour, J\'{e}r\^{o}me},
+    journal = {arXiv preprint arXiv:1312.4569},
+    title = {{Dropout improves Recurrent Neural Networks for Handwriting Recognition}},
+    year = {2013}
 }
 @article{Dahl2013,
-abstract = {Recently, pre-trained deep neural networks (DNNs) have outperformed traditional acoustic models based on Gaussian mixture models (GMMs) on a variety of large vocabulary speech recognition benchmarks. Deep neural nets have also achieved excellent results on various computer vision tasks using a random “dropout” procedure that drastically improves generalization error by randomly omitting a fraction of the hidden units in all layers. Since dropout helps avoid overﬁtting, it has also been successful on a small-scale phone recognition task using larger neural nets. However, training deep neural net acoustic models for large vocabulary speech recognition takes a very long time and dropout is likely to only increase training time. Neural networks with rectiﬁed linear unit (ReLU) non-linearities have been highly successful for computer vision tasks and proved faster to train than standard sigmoid units, sometimes also improving discriminative performance. In this work, we show on a 50-hour English Broadcast News task that modiﬁed deep neural networks using ReLUs trained with dropout during frame level training provide an 4.2\% relative improvement over a DNN trained with sigmoid units, and a 14.4\% relative improvement over a strong GMM/HMM system. We were able to obtain our results with minimal human hyper-parameter tuning using publicly available Bayesian optimization code},
-author = {Dahl, George E. and Sainath, Tara N. and Hinton, Geoffrey E.},
-doi = {10.1109/ICASSP.2013.6639346},
-isbn = {9781479903566},
-issn = {15206149},
-journal = {ICASSP, IEEE International Conference on Acoustics, Speech and Signal Processing - Proceedings},
-keywords = {Bayesian optimization,LVCSR,acoustic modeling,broadcast news,deep learning,dropout,neural networks,rectified linear units},
-pages = {8609--8613},
-title = {{Improving deep neural networks for LVCSR using rectified linear units and dropout}},
-year = {2013}
+    author = {Dahl, George E. and Sainath, Tara N. and Hinton, Geoffrey E.},
+    journal = {ICASSP, IEEE International Conference on Acoustics, Speech and Signal Processing - Proceedings},
+    pages = {8609--8613},
+    title = {{Improving deep neural networks for LVCSR using rectified linear units and dropout}},
+    year = {2013}
+}
+@book{Graves2012,
+	title = {Supervised Sequence Labelling with Recurrent Neural Networks},
+	author = {Graves, Alex},
+	year = {2012}
+}
+@book{Schuster1999,
+    author = {Schuster, Michael},
+    title = {{On Supervised Learning from Sequential Data With Applications for
+    Speech Recognition}},
+    year = {1999}
+}
+@book{Hochreiter1991,
+    author = {Hochreiter, Sepp},
+    title = {{Untersuchungen zu Dynamischen Neuronalen Netzen}},
+    year = {1999}
 }
 @book{Graves2012,
 address = {Berlin, Heidelberg},
