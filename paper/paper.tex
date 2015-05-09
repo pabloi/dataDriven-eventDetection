@@ -80,7 +80,7 @@
 
 \begin{abstract}
     In this paper, we propose a new data-based approach to gait event detection 
-    based on a Long Short-Term Memory Recurrent Neural Network.
+    using a Long Short-Term Memory Recurrent Neural Network.
     Our approach decisively outperforms existing methods such as the Foot 
     Velocity Algorithm and feed-forward Neural Networks with sliding window 
     in terms of the number of misclassified events and has a comparable 
@@ -89,7 +89,7 @@
     questionable heuristics and that it does not require heavy preprocessing 
     of the data.
     Given the promising initial results, we believe that it should be possible 
-    to further improve the current state of the art for data-based event 
+    to even further improve the current state of the art for data-based event 
     detection using a Long Short-Term Memory network.
 \end{abstract}
 
@@ -114,23 +114,23 @@ Although quite accurate, the cost associated with this method is prohibitive for
 all but the smallest amounts of data.
 For this reason, it is not usually used as a stand-alone method but rather as a
 postprocessing step for automated event detection systems or as a means to
-generate small sets of hand-labeled test data.
+generate small amounts of hand-labeled test data.
 The second approach uses dedicated hardware such as force plates that measure
 ground reaction forces and foot switches that are pressed when the foot is in
 contact with the ground.
-Due to its high accuracy, hardware-based methods are considered to be
+Due to their high accuracy, hardware-based methods are considered to be
 state of the art for gait event identification.
 However, their usefulness is limited by the fact that many laboratories do not
 have access to the necessary equipment.
 Furthermore, there is a risk of affecting the gait because some of the devices
 require the modification of normal footware.
-The third approach consists in automatated event detection based on solely on
+The third approach consists in automated event detection based solely on
 the data.
-If succesful, this approach is superior to the other two because it scales
+If successful, this approach is superior to the other two because it scales
 easily, does not require additional equipment and does not pose a risk of
 affecting the gait.
 
-Given their apparent advantages, it is not surprising that several data-based
+Given these apparent advantages, it is not surprising that several data-based
 methods have been proposed in the literature.
 Although some of those methods achieve results that are accurate enough to be
 useful in practice, they all have drawbacks such as relying heavily on
@@ -150,6 +150,8 @@ Section~\ref{sec:LSTM}
 gives a short overview over LSTM networks in general;
 Section~\ref{sec:Data}
 contains a description the dataset;
+Section~\ref{sec:Computational Resources}
+shows states what computational resources were used for this project;
 Sections~\ref{sec:Network Architecture} and \ref{sec:Network Training}
 describe the architecture and training of our network;
 Section~\ref{sec:Results}
@@ -360,14 +362,14 @@ In an attempt to further improve performance, we replaced the single LSTM layer 
 \section{Network Training}
 \label{sec:Network Training}
 
-\subsection{Parameter search}
+% \subsection{Parameter search}
 Initially we wanted to determine what values to use for the training of our network to achieve the best possible performance. In order to do this, we trained our network for a few epochs (10) with a  number of different parameters to see its performance.
 For each parameter set, we ran the training three times, in order to average among the realizations and obtain results less susceptible to the initial conditions.
 All results from this section used the training half of Dataset 1, and training was implemented as stochastic gradient descent (SGD), with each datapoint corresponding to a sequence length of 500 samples (5 seconds).
 
 \begin{figure}[H]
  \centering
- \includegraphics[scale=.5]{./figures/parameterSearch.png}
+ \includegraphics[scale=.45]{./figures/parameterSearch.png}
  % parameterSearch.png: 0x0 pixel, 300dpi, 0.00x0.00 cm, bb=
  \caption{Convergence of the network in the first 10 epochs as a function of different parameters.}
  \label{fig:paramSearch}
@@ -396,7 +398,7 @@ The second dataset was designed to assess how well the methods generalize to new
 
 \begin{figure}[H]
  \centering
- \includegraphics[scale=.4]{./figures/Test2_2Train2_1Compare.png}
+ \includegraphics[scale=.45]{./figures/Test2_2Train2_1Compare.png}
  % Test1_1Train1_2Compare.png: 0x0 pixel, 300dpi, 0.00x0.00 cm, bb=
  \caption{Comparison of Miller vs. LSTM network for various training intervals, for dataset 2.}
  \label{fig:halfAndHalfUsers}
