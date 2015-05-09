@@ -155,7 +155,7 @@ concludes and shows possible paths for future work.
 \label{sub:Foot Velocity Algorithm}
 
 The Foot Velocity Algorithm (FVA) proposed by
-\citet{Oconnor2007}
+\citet{OConnor2007}
 belongs to a category of algorithms that use heuristics such as the velocity
 and acceleration of heel and toe markers to detect motion events.
 There are other examples of such algorithms, notably the one developped by
@@ -200,7 +200,7 @@ such as neural network and LSTM
 \subsection{Feed-Forward Neural Network}
 \label{sub:Feed-Forward Neural Network}
 
-\cite{Miller2009}
+\citet{Miller2009}
 treats event detection as a classification problem and uses a classical
 (feed-forward) neural network to perform the classification.
 Each sample is classified individually based on a input window centered around
@@ -307,10 +307,12 @@ Our LSTM implementation is written in Torch, a scientific computing framework
 for LuaJIT.%
 \footnote
 {
+    See 
     \url
     {
-        torch.ch.
+        torch.ch
     }
+    for detail.
 }
 The network was run on an Amazon EC2 instance of type g2.2xlarge.
 This instance type comes with an 8 core 2.6 GHz Intel Xeon E5-2670 processor and 
@@ -332,7 +334,7 @@ While this is a very simple architecture, it allows rapid training, and already 
 
 Our initial design employs a fairly wide LSTM layer for our data volume. In order to make full use of each cell and prevent overfitting from co-adaptation between LSTM cells, we inserted a \emph{dropout} \cite{Hinton2012} layer between input and LSTM layers. While dropout was initially proposed for use in feed-forward networks, it has been used extensively in RNN featuring LSTM cells to great success \cite{Pham2013}. Its major advantage over other approaches is that only one hyper-parameter (dropout probability $p$) needs to be tuned. Its biggest drawback is slower convergence.
 
-Another commonly used approach to improve robustness and convergence rate is to replace activation functions of some sigmoid neurons with ReLU (rectified linear unit). Because the sigmoids in LSTM serve special functions (``gating''), they cannot be readily replaced. Instead, we can incorporate ReLU by inserting an additional hidden layer between dropout layer and LSTM layer, which also serves the function of learning coordinate transformations. In addition, ReLU works well with dropout in practice \cite[Pham2013, Dahl2013].
+Another commonly used approach to improve robustness and convergence rate is to replace activation functions of some sigmoid neurons with ReLU (rectified linear unit). Because the sigmoids in LSTM serve special functions (``gating''), they cannot be readily replaced. Instead, we can incorporate ReLU by inserting an additional hidden layer between dropout layer and LSTM layer, which also serves the function of learning coordinate transformations. In addition, ReLU works well with dropout in practice \cite{Pham2013, Dahl2013}.
 
 In an attempt to further improve performance, we replaced the single LSTM layer with two LSTM layers connected back-to-back. In order to avoid gradients vanishing in the input-side LSTM layer, we removed the output sigmoid from traditional LSTM cells as described in \cite{Gers2002}. However, the addition of a whole RNN layer drastically increased the difficulty of training. We are still finding a set of hyper-parameters (size of each layer, number of cells per block, etc.) that allows reasonable convergence speed.
 
