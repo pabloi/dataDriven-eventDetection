@@ -399,7 +399,7 @@ Once we settled on parameters for our network, we trained it for 100 epochs and 
 
 \begin{figure}[H]
  \centering
- \includegraphics[scale=.5]{./figures/Test1_1Train1_2Compare.png}
+ \includegraphics[scale=.45]{./figures/Test1_2Train1_1Compare.png}
  % \includesvg[scale=.31]{./figures/Test1_1Train1_2Compare.svg}
  % Test1_1Train1_2Compare.png: 0x0 pixel, 300dpi, 0.00x0.00 cm, bb=
  \caption{Comparison of Miller vs. LSTM network for various training intervals, for dataset 1.}
@@ -407,11 +407,11 @@ Once we settled on parameters for our network, we trained it for 100 epochs and 
 \end{figure}
 
 \subsection{Dataset 2}
-The second dataset was designed to assess how well the methods generalize to new users. We performed the same treatment as for the previous dataset, and results are shown on \ref{fig:halfAndHalfUsers}. From these results we can see that the LSTM network achieves better accuracy than Miller, with less false positives and false negatives. However, the false positive rate is somewhat high for the LSTM network too. 
+The second dataset was designed to assess how well the methods generalize to new users. We performed the same treatment as for the previous dataset, and results are shown on \ref{fig:halfAndHalfUsers}. From these results we can see that the LSTM network achieves better accuracy than Miller, with less false positives and false negatives. However, the false positive rate is somewhat high for the LSTM network too. It can also be seen that for the LSTM network trained over 50 epochs r
 
 \begin{figure}[H]
  \centering
- \includegraphics[scale=.5]{./figures/Test2_1Train2_2Compare.png}
+ \includegraphics[scale=.45]{./figures/Test2_1Train2_2Compare.png}
   %\includesvg[scale=.4]{./figures/Test2_2Train2_1Compare.svg}
  % Test1_1Train1_2Compare.png: 0x0 pixel, 300dpi, 0.00x0.00 cm, bb=
  \caption{Comparison of Miller vs. LSTM network for various training intervals, for dataset 2.}
@@ -431,7 +431,7 @@ It is worth noticing that our implementation can do event detection in real time
 Although our results are promising and seem to improve the current state-of-the-art, there a few things that still can be done to assess and improve performance:
 \begin{enumerate}
  \item Run a true grid search to find the best training parameters.
- \item Run the training for a longer time and use cross-validation to determine reasonable stopping criteria.
+ \item Run the training for a longer time and use cross-validation to determine reasonable stopping criteria and avoid over-fitting.
  \item Use the network with a delay in the output, so we effectively use information of a window of time around the desired time sample to infer events. This would make this method more comparable to the exisiting algorithms, which usually work with the smoothing problem, and not with the real-time filtering problem. Arguably this could only improve the performance of the method, as more information would be available to make the classification of each sample.
  \item Assess generalization to pathological gait subjects.
  \item Assess generalization to over-ground walking data (no ground truth in our dataset).
