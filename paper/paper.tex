@@ -330,6 +330,8 @@ The first iteration of network has 3 layers: input, LSTM (hidden), and output. I
 
 While this is a very simple architecture, it allows rapid training, and already achieves similar or even better performance on our testing datasets compared to baseline algorithms. However, its performance often stops improving very early and we cannot control for overfitting, given the insufficient regularization.
 
+Because of time constraints, this architecture is the only one we managed to train and test thoroughly. All of the results presented in this report stem from the use of this architecture. However, we managed to implement some improvements for future test that are described next.
+
 \subsection{Improvements}
 
 Our initial design employs a fairly wide LSTM layer for our data volume. In order to make full use of each cell and prevent overfitting from co-adaptation between LSTM cells, we inserted a \emph{dropout} \cite{Hinton2012} layer between input and LSTM layers. While dropout was initially proposed for use in feed-forward networks, it has been used extensively in RNN featuring LSTM cells to great success \cite{Pham2013}. Its major advantage over other approaches is that only one hyper-parameter (dropout probability $p$) needs to be tuned. Its biggest drawback is slower convergence.
