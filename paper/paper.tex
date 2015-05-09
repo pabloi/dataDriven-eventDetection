@@ -308,7 +308,7 @@ on a treadmill at three different speeds for 50 seconds. Each sequence of 50 sec
 }
 The sampling frequency of this data is 100Hz. The event labels (target) were computed from ground force reaction data from force sensors embedded in the treadmill 
 which is considered the gold standard in the field. 
-In order to compute events the ground reaction forces in gravity's axis are thresholded ($20 N$) and whenever they exceed this threshold, the foot is considered to be on the ground (stance). By searching for the transitions between stance and no-stance, the events are found.
+In order to compute events the ground reaction forces in gravity's axis are thresholded at 20N; whenever the forces exceed this threshold, the foot is considered to be on the ground (stance). By searching for the transitions between stance and no-stance, the events are found.
 The sampling frequency of this data is 1kHz.
 
 The data was separated into a training and a testing set in two different ways. Dataset 1 takes the first 25 seconds of data from each trial as the training sample, and the following 25 seconds as the testing sample. This dataset was meant to test how well a trained network can generalize to new gait cycles, given that it was trained on data including the same subject and walking speed. As such, it is the most basic test of performance that can be done. Dataset 2 includes the same data, but splits it along trials: all 50 seconds of 15 trials were used for training, and the remaining 15 trials were used for testing. It is worth noticing that this second dataset necessarily has different subjects in its training and testing sets, so it allows us to assess how the algorithm generalizes to new users without being trained on them.
