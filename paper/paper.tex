@@ -300,6 +300,10 @@ system.
 
 \section{Data}
 \label{sec:Data}
+
+\subsection{Collection}
+\label{sub:Collection}
+
 Our training and testing was conducted on data from 10 healthy subjects walking 
 on a treadmill at three different speeds for 50 seconds. Each sequence of 50 seconds is called a trial. This amounts to a total of 1500 seconds of recorded data, which roughly correspond to 1000 gait cycles.  For each subject, 3D motion capture data was collected using 18 reflective markers placed at precise body locations.%
 \footnote
@@ -311,13 +315,19 @@ which is considered the gold standard in the field.
 In order to compute events the ground reaction forces in gravity's axis are thresholded at 20N; whenever the forces exceed this threshold, the foot is considered to be on the ground (stance). By searching for the transitions between stance and no-stance, the events are found.
 The sampling frequency of this data is 1kHz.
 
+\subsection{Test/Training Split}
+\label{sub:Test/Training Split}
+
 The data was separated into a training and a testing set in two different ways. Dataset 1 takes the first 25 seconds of data from each trial as the training sample, and the following 25 seconds as the testing sample. This dataset was meant to test how well a trained network can generalize to new gait cycles, given that it was trained on data including the same subject and walking speed. As such, it is the most basic test of performance that can be done. Dataset 2 includes the same data, but splits it along trials: all 50 seconds of 15 trials were used for training, and the remaining 15 trials were used for testing. It is worth noticing that this second dataset necessarily has different subjects in its training and testing sets, so it allows us to assess how the algorithm generalizes to new users without being trained on them.
 
-Before using it in our network we pre-processed the data as follows:
+\subsection{Preprocessing}
+\label{sub:Preprocessing}
+
+We used the following preprocessing steps:
 \begin{enumerate}
- \item Data was translated so that the mid-hip position (average position of the left and right hip markers) is located at $(0,0,0)$ at all times.
- \item Data was rotated so that gravity is aligned with the $z$ axis (was already the case) and the $x$ axis is aligned with the vector going from the left hip marker to the right hip marker, projected onto a plane orthogonal to $z$. The $y$ axis is defined as the direction orthogonal to $x$ and $y$. This allows the data to be independent of walking direction and the absolute reference frame in which the data was captured.
- \item Data for each marker was standardized.
+ \item The data was translated so that the mid-hip position (average position of the left and right hip markers) is located at $(0,0,0)$ at all times.
+ \item The data was rotated so that gravity is aligned with the $z$ axis (was already the case) and the $x$ axis is aligned with the vector going from the left hip marker to the right hip marker, projected onto a plane orthogonal to $z$. The $y$ axis is defined as the direction orthogonal to $x$ and $y$. This allows the data to be independent of walking direction and the absolute reference frame in which the data was captured.
+ \item The data for each marker was standardized.
 \end{enumerate}
 
 % TODO explain motion capture data either here or in introduction
