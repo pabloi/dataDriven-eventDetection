@@ -13,6 +13,7 @@
 \usepackage{float}
 \usepackage{enumitem}
 \usepackage{lipsum}
+\usepackage{url}
 
 \setlist[enumerate]
 {nolistsep}
@@ -288,7 +289,6 @@ Before using it in our network we pre-processed the data as follows:
 
 % TODO explain motion capture data either here or in introduction
 
-
 \section{Network Architecture}
 \label{sec:Network Architecture}
 
@@ -305,6 +305,22 @@ While this is a very simple architecture, it allows rapid training, and already 
 
 \section{Network Training}
 \label{sec:Network Training}
+
+\section{Computational Resources}
+\label{sec:Computational Resources}
+
+Our LSTM implementation is written in Torch, a scientific computing framework 
+for LuaJIT.%
+\footnote
+{
+    \url
+    {
+        torch.ch.
+    }
+}
+The network was run on an Amazon EC2 instance of type g2.2xlarge.
+This instance type comes with an 8 core 2.6 GHz Intel Xeon E5-2670 processor and 
+an Nvidia GRID K520 GPU that is composed of two 4 GB GK104 GPUs.
 
 \section{Results}
 \label{sec:Results}
