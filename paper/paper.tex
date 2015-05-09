@@ -168,13 +168,14 @@ concludes and shows possible paths for future work.
 \subsection{Foot Velocity Algorithm}
 \label{sub:Foot Velocity Algorithm}
 
-The Foot Velocity Algorithm (FVA) proposed by
+The Foot Velocity Algorithm (FVA)
 \cite{OConnor2007}
 belongs to a category of algorithms that use heuristics such as the velocity
 and acceleration of heel and toe markers to detect motion events.
-There are other examples of such algorithms, notably the one developped by
+There are other examples of such algorithms, notably the one by Hreljac and 
+Marshall
 \cite{Hreljac2000}.
-As these algorithms are quite similar, we will restrict the discussion
+As these algorithms are quite similar, we will restrict our discussion
 to the FVA.
 
 The FVA takes as its input the location of the heel and toe markers as a
@@ -194,10 +195,10 @@ as the heel strike event.
 
 % This makes it a popular choice in practice.
 The FVA is widely used in practice.
-The reason for algorithm's popularity lies in the ease with which it can be
+The reason for the algorithm's popularity lies in the ease with which it can be
 implemented:
-it does not require any data preprocessing beyond simple signal processing and
-it does not have to be trained.
+it does not require any data preprocessing beyond some simple signal processing 
+and it does not have to be trained.
 That said, the FVA has several problems.
 First, it makes questionable assumptions about the relationship between the
 marker location and the gait cycle.
@@ -221,28 +222,25 @@ Each sample is classified individually based on a input window centered around
 the desired sample.
 At every time step, the window center is advanced by one sample
 (so-called sliding window technique).
-The use of a window is necessary to take into account the temporal dependencies
+The use of a window allows to take into account the temporal dependencies
 that exists between neighboring samples.%
 \footnote
 {
-    Ideally, the window size should not fixed vary as a function of the forward 
-    motion of the foot.
+    Ideally, the window size should not be fixed but vary as a function of the 
+    forward motion of the foot.
     The reason for this is that a fixed size window cannot guarantee that every
-    window contained a sufficient amount of context because of the varying foot
+    window contains a sufficient amount of context because of the varying foot
     speed.
-    For simplicity, we decided to use a large fixed window size in our
-    implementation.
-    % in our implementation because
-    % we found it difficult to reliably calculate the foot displacement from our
-    % data.
+    For simplicity, we decided to use a fixed window size in our implementation
+    of this method.
 }
 
-The input is not the actual motion capture data, but rather position,
+The input is not the actual motion capture data but rather position,
 instantaneous velocity and instantaneous acceleration features extracted from
 that data.
 Furthermore, PCA is used to reduce the number of input variables from several
 hundred to 50.
-This dimensionality reduction is necessary because the total input size grows
+This dimensionality reduction is necessary because the number of inputs grows
 linearly with the window size and the number of markers.
 
 The network architecture itself is minimalistic: between an input layer
