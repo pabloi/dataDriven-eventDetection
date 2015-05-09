@@ -254,6 +254,14 @@ All data was collected in the Human Movement Research Laboratory of the Universi
 
 The available data was separated into a training and a testing set in two different ways. Dataset 1 takes the first 25 seconds of data from each trial as the training sample, and the following 25 seconds as the testing sample. Dataset 2 includes the same data, but splits it along trials: all 50 seconds of 15 trials were used for training, and the remaining 15 trials were used for testing. It is worth noticing that this second dataset necessarily has different subjects in its training and testing sets, so it allows us to assess how the algorithm generalizes to new users without being trained on them.
 
+Before using it in our network we pre-processed the data as follows:
+\begin{enumerate}
+ \item Data was translated so that the mid-hip position (average position of the left and right hip markers) is located at $(0,0,0)$ at all times. 
+ \item Data was rotated so that gravity is aligned with the $z$ axis (was already the case) and the $x$ axis is aligned with the vector going from the left hip marker to the right hip marker, projected onto a plane orthogonal to $z$. The $y$ axis is defined as the direction orthogonal to $x$ and $y$. This allows the data to be independent of walking direction and the absolute reference frame in which the data was captured.
+ \item Data for each marker was standardized.
+\end{enumerate}
+
+
 
 \section{Network Architecture}
 \label{sec:Network Architecture}
@@ -282,7 +290,18 @@ Initially we wanted to determine what values to use for the training of our netw
 \label{sec:Conclusion and Future Work}
 
 \subsection{Future work}
-Although the current results are promising, and seem to improve the current state-of-the-art 
+Although the current results are promising, and seem to improve the current state-of-the-art, there a few things that still can be done to assess the performance of the proposed network:
+\begin{enumerate}
+ \item Run a true grid search to find the best training parameters.
+ \item Run the training for a longer time and use cross-validation to determine reasonable stopping criteria.
+ \item Use the network with a delay in the output, so we effectively use information of a window of time around the desired time sample to infer events. This would make this method more comparable to the exisiting algorithms, which usually work with the smoothing problem, and not with the real-time filtering problem. Arguably this could only improve the performance of the method, as more information would be available to make the classification of each sample.
+ \item Assess generalization to pathological gait subjects.
+ \item Assess generalization to over-ground walking data (no ground truth in our dataset).
+ \item Investigate possible pre-processing to guarantee that method is invariant to walking speed, and subject height and weight.
+ \item Study possible modifications to make the network truly invariant to the left/right symmetry. Currently the network is trained to output events for both legs with marker data from both sides of the body, but we know that the symmetry of the problem could be exploited further. However, this could prove to be an issue on subjects with highly asymmetrical gait.
+ \item Incorporate prior information from the transitions that occurr during gait. In normal walking the events happen in a pre-established order (left heel-strike - right toe-off - right heel-strike - left toe-off) which gives us some information on the possible upcoming transitions based on the current state. While we can speculate that a recursive NN learns this with training, we could incorporate this information for better accuracy during normal walking conditions.
+\end{enumerate}
+
 
 % \section{Data}
 % For the initial training purposes, we selected data from 8 healthy subjects walking in a treadmill at three different speeds for 100 seconds each. Additionally, we took data from 13 stroke subjects, walking at a single speed for 100 seconds. For each subject, the input data is 3D marker position of 18 different markers placed in the same anatomical positions for each subject, sampled at 100Hz. The event labels (target) were computed from ground force reaction data samples at 1kHz for healthy subjects, and 2kHz for stroke subjects. This is currently considered the gold standard \cite{miller_gait_2009,miller_gait_2009,Hreljac2000}. \\
