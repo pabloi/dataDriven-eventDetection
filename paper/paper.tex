@@ -233,10 +233,12 @@ In our opinion, the feed-forward neural network approach has several
 disadvantages.
 In addition to heavy preprocessing consisting of feature extraction and PCA, the
 data has to be split up into windows of variable length.
-This in turn requires that the foot displacement can be measure accurately from
+This in turn requires that the foot displacement be measured accurately from
 the data which is non-trivial.
 Moreover, the network architecture seems to be oversimplistic to effectively
 capture the long-range dependencies that exist between the data samples.
+
+In our implementation of Miller's network, we used a fixed window size for simplicity.
 
 \section{LSTM}
 \label{sec:LSTM}
@@ -273,7 +275,9 @@ Before using it in our network we pre-processed the data as follows:
 \label{sec:Results}
 
 \subsection{Parameter search}
-Initially we wanted to determine what values to use for the training of our network to achieve the best possible performance. In order to do this, we trained our network for a few epochs (10) with a  number of different parameters to see its performance. For each parameter set, we run the training three times, in order to average among the realizations and obtain results less suceptible to the initial conditions.
+Initially we wanted to determine what values to use for the training of our network to achieve the best possible performance. In order to do this, we trained our network for a few epochs (10) with a  number of different parameters to see its performance. 
+For each parameter set, we run the training three times, in order to average among the realizations and obtain results less suceptible to the initial conditions. 
+All results from this section used the training half of Dataset 1, and training was implemented as stochastic gradient descent (SGD), with each datapoint corresponding to a sequence length of 500 samples (5 seconds).
 
 \begin{figure}
  \centering
@@ -283,6 +287,7 @@ Initially we wanted to determine what values to use for the training of our netw
  \label{fig:paramSearch}
 \end{figure}
 
+As can be seen from figure \ref{fig:paramSearch} a good learning rate was about $1e-1$ and an appropriate decay was about $1e-2$ (learning rate decay was automatically implemented by the \textit{adagrad} method of Torch's \textit{optim} toolbox as inversely proportional to number of iterations, here $1e-2$ means it takes 100 epochs for the learning rate to decay to half its initial value).
 
 \subsection{Dataset 1}
 
@@ -290,7 +295,7 @@ Initially we wanted to determine what values to use for the training of our netw
 \label{sec:Conclusion and Future Work}
 
 \subsection{Future work}
-Although the current results are promising, and seem to improve the current state-of-the-art, there a few things that still can be done to assess the performance of the proposed network:
+Although our results are promising and seem to improve the current state-of-the-art, there a few things that still can be done to assess and improve performance:
 \begin{enumerate}
  \item Run a true grid search to find the best training parameters.
  \item Run the training for a longer time and use cross-validation to determine reasonable stopping criteria.
