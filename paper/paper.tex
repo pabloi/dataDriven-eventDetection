@@ -14,6 +14,7 @@
 \usepackage{enumitem}
 \usepackage{lipsum}
 \usepackage{url}
+\usepackage{svg}
 
 \setlist[enumerate]
 {nolistsep}
@@ -384,7 +385,8 @@ Once we settled on parameters for our network, we trained it for 100 epochs and 
 
 \begin{figure}[H]
  \centering
- \includegraphics[scale=.31]{./figures/Test1_1Train1_2Compare.png}
+ \includegraphics[scale=.5]{./figures/Test1_1Train1_2Compare.png}
+ % \includesvg[scale=.31]{./figures/Test1_1Train1_2Compare.svg}
  % Test1_1Train1_2Compare.png: 0x0 pixel, 300dpi, 0.00x0.00 cm, bb=
  \caption{Comparison of Miller vs. LSTM network for various training intervals, for dataset 1.}
  \label{fig:halfAndHalfTrials}
@@ -396,7 +398,8 @@ The second dataset was designed to assess how well the methods generalize to new
 
 \begin{figure}[H]
  \centering
- \includegraphics[scale=.45]{./figures/Test2_2Train2_1Compare.png}
+ \includegraphics[scale=.5]{./figures/Test2_1Train2_2Compare.png}
+  %\includesvg[scale=.4]{./figures/Test2_2Train2_1Compare.svg}
  % Test1_1Train1_2Compare.png: 0x0 pixel, 300dpi, 0.00x0.00 cm, bb=
  \caption{Comparison of Miller vs. LSTM network for various training intervals, for dataset 2.}
  \label{fig:halfAndHalfUsers}
@@ -405,7 +408,7 @@ The second dataset was designed to assess how well the methods generalize to new
 \section{Conclusion and Future Work}
 \label{sec:Conclusion and Future Work}
 \subsection{Conclusions}
-The results from our initial implementation of the LSTM network are promising. Compared to the baseline methods we used for comparison, we achieved less confusion (false positive and false negative rate) and similar or better accuracy, measured through bias and quadratic error. This is
+The results from our initial implementation of the LSTM network are very encouraging. Compared to the baseline methods we used for comparison, we achieved less confusion (false positive and false negative rate) and similar or better accuracy, measured through bias and quadratic error. According to \cite{Miller2009},  is true that Miller's method was implemented in a slightly modified way (fixed window size), so that his resu
 
 \subsection{Future work}
 Although our results are promising and seem to improve the current state-of-the-art, there a few things that still can be done to assess and improve performance:

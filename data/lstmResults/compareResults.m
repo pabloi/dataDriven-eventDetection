@@ -39,7 +39,7 @@ hold on
 legStr={};
 for i=1:M
     aa(i,:,:)=squeeze(err{i,1}(:,1,:));
-    legStr{i}=[methodNames{i} ', \mu =' num2str(nanmean(aa(i,:)),2) ', \sigma=' num2str(nanstd(aa(i,:)),2)];
+    legStr{i}=[methodNames{i} ', \mu =' num2str(100*nanmean(aa(i,:)),2) ', \sigma=' num2str(100*nanstd(aa(i,:)),2)];
 end
 hist(aa(:,:)',[-.9:.1:.9])
 set(gca,'XTick',[-.9:.1:.9],'XTickLabel',[-90:10:90])
@@ -53,7 +53,7 @@ subplot(4,1,3)
 hold on
 for i=1:M
     aa(i,:,:)=squeeze(err{i,2}(:,1,:));
-    legStr{i}=[methodNames{i}  ', \mu =' num2str(nanmean(aa(i,:)),2) ', \sigma=' num2str(nanstd(aa(i,:)),2)];
+    legStr{i}=[methodNames{i} ', \mu =' num2str(100*nanmean(aa(i,:)),2) ', \sigma=' num2str(100*nanstd(aa(i,:)),2)];
 end
 hist(aa(:,:)',[-.9:.1:.9])
 set(gca,'XTick',[-.9:.1:.9],'XTickLabel',[-90:10:90])
@@ -67,7 +67,7 @@ subplot(4,1,2)
 hold on
 for i=1:M
     aa(i,:,:)=squeeze(err{i,1}(:,2,:));
-    legStr{i}=[methodNames{i}  ', \mu =' num2str(nanmean(aa(i,:)),2) ', \sigma=' num2str(nanstd(aa(i,:)),2)];
+    legStr{i}=[methodNames{i} ', \mu =' num2str(100*nanmean(aa(i,:)),2) ', \sigma=' num2str(100*nanstd(aa(i,:)),2)];
 end
 hist(aa(:,:)',[-.9:.1:.9])
 set(gca,'XTick',[-.9:.1:.9],'XTickLabel',[-90:10:90])
@@ -81,7 +81,7 @@ subplot(4,1,4)
 hold on
 for i=1:M
     aa(i,:,:)=squeeze(err{i,2}(:,2,:));
-    legStr{i}=[methodNames{i}  ', \mu =' num2str(nanmean(aa(i,:)),2) ', \sigma=' num2str(nanstd(aa(i,:)),2)];
+    legStr{i}=[methodNames{i} ', \mu =' num2str(100*nanmean(aa(i,:)),2) ', \sigma=' num2str(100*nanstd(aa(i,:)),2)];
 end
 hist(aa(:,:)',[-.9:.1:.9])
 set(gca,'XTick',[-.9:.1:.9],'XTickLabel',[-90:10:90])
