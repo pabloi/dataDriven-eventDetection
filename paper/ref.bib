@@ -1,59 +1,208 @@
-@article{Oconnor2007,
-	title = {Automatic detection of gait events using kinematic data},
-	volume = {25},
-    year = {2007},
-	pages = {469--474},
-	journal = {Gait \& Posture},
-	author = "O'Connor, Ciara M. and Thorpe, Susannah K. and O’Malley, Mark J. and Vaughan, Christopher L."
+@article{Sak2014,
+archivePrefix = {arXiv},
+arxivId = {arXiv:1402.1128v1},
+author = {Sak, Ha\c{c}sim and Senior, Andrew and Beaufays, Fran\c{c}oise},
+eprint = {arXiv:1402.1128v1},
+journal = {arXiv preprint arXiv:1402.1128},
+number = {Cd},
+title = {{Long Short-Term Memory Based Recurrent Neural Network Architectures for Large Vocabulary Speech Recognition}},
+year = {2014}
 }
-@article{Miller2009,
-	title = {Gait event detection using a multilayer neural network},
-	volume = {29},
-    year = {2009},
-	pages = {542--545},
-	journal = {Gait \& Posture},
-	author = {Miller, Adam}
+@article{Graves,
+author = {Graves, Alex},
+title = {{Generating Sequences with Recurrent Neural Networks Why Generate Sequences ?}}
 }
-@article{Hreljac2000,
-    author = {Hreljac, Alan and Marshall, Robert N.},
-    journal = {Journal of Biomechanics},
-    pages = {783--786},
-    title = {{Algorithms to determine event timing during normal walking using kinematic data}},
-    volume = {33},
-    year = {2000}
+@article{Gers2002,
+abstract = {The temporal distance between events conveys information essential for numerous sequential tasks such as motor control and rhythm detection. While Hidden Markov Models tend to ignore this information, recurrent neural networks (RNNs) can in principle learn to make use of it. We focus on Long Short-Term Memory (LSTM) because it has been shown to outperform other RNNs on tasks involving long time lags. We find that LSTM augmented by "peephole connections" from its internal cells to its multiplicative gates can learn the fine distinction between sequences of spikes spaced either 50 or 49 time steps apart without the help of any short training exemplars. Without external resets or teacher forcing, our LSTM variant also learns to generate stable streams of precisely timed spikes and other highly nonlinear periodic patterns. This makes LSTM a promising approach for tasks that require the accurate measurement or generation of time intervals.},
+author = {Gers, Felix a and Schraudolph, Nicol N and Schmidhuber, Jurgen},
+doi = {10.1162/153244303768966139},
+issn = {15324435},
+journal = {Journal of Machine Learning Research},
+keywords = {long short term memory,recurrent neural networks,timing},
+number = {1},
+pages = {115--143},
+pmid = {17272722},
+title = {{Learning Precise Timing with LSTM Recurrent Networks}},
+url = {http://www.crossref.org/jmlr\_DOI.html},
+volume = {3},
+year = {2002}
 }
-@article{Ghoussayni2004,
-abstract = {A simple and rapid automatic method for detection of gait events at the foot could speed up and possibly increase the repeatability of gait analysis and evaluations of treatments for pathological gaits. The aim of this study was to compare and validate a kinematic-based algorithm used in the detection of four gait events, heel contact, heel rise, toe contact and toe off. Force platform data is often used to obtain start and end of contact phases, but not usually heel rise and toe contact events. For this purpose synchronised kinematic, kinetic and video data were captured from 12 healthy adult subjects walking both barefoot and shod at slow and normal self-selected speeds. The data were used to determine the gait events using three methods: force, visual inspection and algorithm methods. Ninety percent of all timings given by the algorithm were within one frame (16.7ms) when compared to visual inspection. There were no statistically significant differences between the visual and algorithm timings. For both heel and toe contact the differences between the three methods were within 1.5 frames, whereas for heel rise and toe off the differences between the force on one side and the visual and algorithm on the other were higher and more varied (up to 175ms). In addition, the algorithm method provided the duration of three intervals, heel contact to toe contact, toe contact to heel rise and heel rise to toe off, which are not readily available from force platform data. The ability to automatically and reliably detect the timings of these four gait events and three intervals using kinematic data alone is an asset to clinical gait analysis. ?? 2003 Elsevier B.V. All rights reserved.},
-author = {Ghoussayni, Salim and Stevens, Christopher and Durham, Sally and Ewins, David},
-doi = {10.1016/j.gaitpost.2003.10.001},
-file = {:home/pablo/Documents/Papers/Gait and Posture/2004 - Ghoussayni et al. - Assessment and validation of a simple automated method for the detection of gait events and intervals.pdf:pdf},
-isbn = {0966-6362},
-issn = {09666362},
-journal = {Gait and Posture},
-keywords = {Heel contact,Heel toe intervals,Kinematic gait event detection,Temporal gait parameters,Toe off},
-pages = {266--272},
-pmid = {15531173},
-title = {{Assessment and validation of a simple automated method for the detection of gait events and intervals}},
-volume = {20},
+@article{Hochreiter1997,
+abstract = {Learning to store information over extended time intervals by recurrent backpropagation takes a very long time, mostly because of insufficient, decaying error backflow. We briefly review Hochreiter's (1991) analysis of this problem, then address it by introducing a novel, efficient, gradient based method called long short-term memory (LSTM). Truncating the gradient where this does not do harm, LSTM can learn to bridge minimal time lags in excess of 1000 discrete-time steps by enforcing constant error flow through constant error carousels within special units. Multiplicative gate units learn to open and close access to the constant error flow. LSTM is local in space and time; its computational complexity per time step and weight is O. 1. Our experiments with artificial data involve local, distributed, real-valued, and noisy pattern representations. In comparisons with real-time recurrent learning, back propagation through time, recurrent cascade correlation, Elman nets, and neural sequence chunking, LSTM leads to many more successful runs, and learns much faster. LSTM also solves complex, artificial long-time-lag tasks that have never been solved by previous recurrent network algorithms.},
+author = {Hochreiter, Sepp and Schmidhuber, J\"{u}rgen},
+doi = {10.1162/neco.1997.9.8.1735},
+issn = {0899-7667},
+journal = {Neural Computation},
+number = {8},
+pages = {1735--1780},
+pmid = {9377276},
+title = {{Long Short-Term Memory}},
+volume = {9},
+year = {1997}
+}
+@article{Hochreiter,
+author = {Hochreiter, Sepp and Frasconi, Paolo},
+title = {{Gradient Flow in Recurrent Nets : the Diffculty of Learning Long-Term Dependencies}}
+}
+@article{Monner2012,
+abstract = {The long short term memory (LSTM) is a second-order recurrent neural network architecture that excels at storing sequential short-term memories and retrieving them many time-steps later. LSTM's original training algorithm provides the important properties of spatial and temporal locality, which are missing from other training approaches, at the cost of limiting its applicability to a small set of network architectures. Here we introduce the generalized long short-term memory(LSTM-g) training algorithm, which provides LSTM-like locality while being applicable without modification to a much wider range of second-order network architectures. With LSTM-g, all units have an identical set of operating instructions for both activation and learning, subject only to the configuration of their local environment in the network; this is in contrast to the original LSTM training algorithm, where each type of unit has its own activation and training instructions. When applied to LSTM architectures with peephole connections, LSTM-g takes advantage of an additional source of back-propagated error which can enable better performance than the original algorithm. Enabled by the broad architectural applicability of LSTM-g, we demonstrate that training recurrent networks engineered for specific tasks can produce better results than single-layer networks. We conclude that LSTM-g has the potential to both improve the performance and broaden the applicability of spatially and temporally local gradient-based training algorithms for recurrent neural networks.},
+author = {Monner, Derek and Reggia, James A},
+doi = {10.1016/j.neunet.2011.07.003},
+issn = {1879-2782},
+journal = {Neural networks : the official journal of the International Neural Network Society},
+keywords = {Algorithms,Learning,Learning: physiology,Long-Term,Long-Term: physiology,Memory,Neural Networks (Computer),Short-Term,Short-Term: physiology,Time Factors},
+month = jan,
+number = {1},
+pages = {70--83},
+pmid = {21803542},
+title = {{A generalized LSTM-like training algorithm for second-order recurrent neural networks.}},
+url = {http://www.sciencedirect.com/science/article/pii/S0893608011002036},
+volume = {25},
+year = {2012}
+}
+@article{Sak2014a,
+author = {Sak, Haşim and Senior, Andrew and Beaufays, Fran\c{c}oise},
+month = feb,
+title = {{Long Short-Term Memory Based Recurrent Neural Network Architectures for Large Vocabulary Speech Recognition}},
+url = {http://arxiv.org/abs/1402.1128},
+year = {2014}
+}
+@article{Graves2005,
+abstract = {In this paper, we present bidirectional Long Short Term Memory (LSTM) networks, and a modified, full gradient version of the LSTM learning algorithm. We evaluate Bidirectional LSTM (BLSTM) and several other network architectures on the benchmark task of framewise phoneme classification, using the TIMIT database. Our main findings are that bidirectional networks outperform unidirectional ones, and Long Short Term Memory (LSTM) is much faster and also more accurate than both standard Recurrent Neural Nets (RNNs) and time-windowed Multilayer Perceptrons (MLPs). Our results support the view that contextual information is crucial to speech processing, and suggest that BLSTM is an effective architecture with which to exploit it. © 2005 Elsevier Ltd. All rights reserved.},
+author = {Graves, Alex and Schmidhuber, J\"{u}rgen},
+doi = {10.1109/IJCNN.2005.1556215},
+isbn = {0780390482},
+issn = {08936080},
+journal = {Proceedings of the International Joint Conference on Neural Networks},
+pages = {2047--2052},
+pmid = {16112549},
+title = {{Framewise phoneme classification with bidirectional LSTM networks}},
+volume = {4},
+year = {2005}
+}
+@article{Graves2004,
+author = {Graves, Alex},
+title = {{Framewise Phoneme Classification with Bidirectional LSTM and Other Neural Network Architectures}},
 year = {2004}
 }
-@article{Miller2009,
-abstract = {Manual detection of gait events via visual inspection of motion capture data is a laborious process. There are currently no robust techniques available to automate the process for pathologic gait. However, the detection of gait events is essentially a classification problem; an application for which artificial neural networks are well suited. In this paper, a multilayer artificial neural network is presented for the purpose of classifying foot-contact and foot-off events using the sagittal plane coordinates of heel and toe markers. The timing of events detected using this method was compared to the timing of events detected by measuring the ground reaction force using a force plate for a total of 40 pathologic subjects divided into two groups: barefoot and shod/braced. On average, the neural network detected foot-contact events 7.1 ms and 0.8 ms earlier than the force plate for the barefoot and shod/braced groups respectively. The average difference for foot-off events was 8.8 ms and 3.3 ms. Given that motion capture data were collected at 120 Hz, this implies that the force plate method and neural network method generally agreed within 1-2 frames of data. Consequently, the neural network was shown to be an accurate, autonomous method for detecting gait events in pathologic gait. ?? 2008 Elsevier B.V. All rights reserved.},
-author = {Miller, Adam},
-doi = {10.1016/j.gaitpost.2008.12.003},
-file = {:home/pablo/Documents/Papers/Gait and Posture/2009 - Miller - Gait event detection using a multilayer neural network.pdf:pdf},
-isbn = {0966-6362},
-issn = {09666362},
-journal = {Gait and Posture},
-keywords = {Gait event,Heel contact,Machine learning,Neural network,Toe-off},
-pages = {542--545},
-pmid = {19135372},
-title = {{Gait event detection using a multilayer neural network}},
-volume = {29},
-year = {2009}
+@book{Graves2008,
+archivePrefix = {arXiv},
+arxivId = {arXiv:1308.0850v1},
+author = {Graves, Alex},
+eprint = {arXiv:1308.0850v1},
+isbn = {2000201075},
+title = {{Supervised Sequence Labeling with Recurrent Neural Networks}},
+year = {2008}
 }
-@book{graves_supervised_2012,
+@article{Sutskever2008,
+abstract = {The Temporal Restricted BoltzmannMachine (TRBM) is a probabilistic model for sequences that is able to successfully model (i.e., generate nice-looking samples of) several very high dimensional sequences, such as motion capture data and the pixels of low resolution videos of balls bouncing in a box. The major disadvantage of the TRBM is that exact inference is extremely hard, since even computing a Gibbs update for a single variable of the posterior is exponentially expensive. This difficulty has necessitated the use of a heuristic inference procedure, that nonetheless was accurate enough for successful learning. In this paper we introduce the Recurrent TRBM, which is a very slight modification of the TRBM for which exact inference is very easy and exact gradient learning is almost tractable. We demonstrate that the RTRBM is better than an analogous TRBM at generating motion capture and videos of bouncing balls.},
+author = {Sutskever, Ilya and Hinton, Geoffrey and Taylor, Graham},
+doi = {10.1.1.143.4232},
+isbn = {9781605609492},
+issn = {10477047},
+journal = {Neural Information Processing Systems},
+pages = {1601--1608},
+title = {{The Recurrent Temporal Restricted Boltzmann Machine}},
+url = {http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.143.4232\&amp;rep=rep1\&amp;type=pdf},
+volume = {21},
+year = {2008}
+}
+@article{Graves2013,
+abstract = {This paper shows how Long Short-term Memory recurrent neural networks can be used to generate complex sequences with long-range structure, simply by predicting one data point at a time. The approach is demonstrated for text (where the data are discrete) and online handwriting (where the data are real-valued). It is then extended to handwriting synthesis by allowing the network to condition its predictions on a text sequence. The resulting system is able to generate highly realistic cursive handwriting in a wide variety of styles.},
+archivePrefix = {arXiv},
+arxivId = {arXiv:1308.0850v5},
+author = {Graves, Alex},
+eprint = {arXiv:1308.0850v5},
+journal = {arXiv preprint arXiv:1308.0850},
+pages = {1--43},
+title = {{Generating sequences with recurrent neural networks}},
+url = {http://arxiv.org/abs/1308.0850},
+year = {2013}
+}
+@article{Hreljac2000,
+abstract = {Algorithms to predict heelstrike and toeoff times during normal walking using only kinematic data are presented. The accuracy of these methods was compared with the results obtained using synchronized force platform recordings of two subjects walking at a variety of speeds for a total of 12 trials. Using a 60Hz data collection system, the absolute value errors (AVE) in predicting heelstrike averaged 4.7ms, while the AVE in predicting toeoff times averaged 5.6ms. True average errors (negative for an early prediction) were +1.2ms for both heelstrike and toeoff, indicating that no systematic errors occurred. It was concluded that the proposed algorithms provide an easy and reliable method of determining event times during walking when kinematic data are collected, with a considerable improvement in resolution over visual inspection of video records, and could be utilized in conjunction with any 2-D or 3-D kinematic data collection system. Copyright (C) 2000 Elsevier Science Ltd.},
+author = {Hreljac, Alan and Marshall, Robert N.},
+doi = {10.1016/S0021-9290(00)00014-2},
+isbn = {0021-9290 (Print)$\backslash$r0021-9290 (Linking)},
+issn = {00219290},
+journal = {Journal of Biomechanics},
+keywords = {Contact time,Heelstrike,Toeoff,Walking},
+pages = {783--786},
+pmid = {10808002},
+title = {{Algorithms to determine event timing during normal walking using kinematic data}},
+volume = {33},
+year = {2000}
+}
+@article{JurgenSchmidhuberDaanWierstra,
+author = {{J\"{u}rgen Schmidhuber, Daan Wierstra}, Faustino Gomez},
+title = {{Evolino: Hybrid neuroevolution / optimal linear search for sequence prediction}},
+url = {http://citeseerx.ist.psu.edu/viewdoc/summary?doi=10.1.1.121.837}
+}
+@article{OConnor2007,
+    author = {O'Connor, Ciara M. and Thorpe, Susannah K. and O'Malley, Mark J. and Vaughan, Christopher L.},
+    journal = {Gait and Posture},
+    pages = {469--474},
+    title = {{Automatic detection of gait events using kinematic data}},
+    volume = {25},
+    year = {2007}
+}
+@article{Ghoussayni2004,
+    journal = {Gait and Posture},
+    pages = {266--272},
+    title = {{Assessment and validation of a simple automated method for the detection of gait events and intervals}},
+    volume = {20},
+    year = {2004}
+}
+@article{Jasiewicz2006,
+    author = {Jasiewicz, Jan M. and Allum, J. H J and Middleton, James W. and Barriskill, Andrew and Condie, Peter and Purcell, Brendan and Li, R. C T},
+    journal = {Gait and Posture},
+    pages = {502--509},
+    title = {{Gait event detection using linear accelerometers or angular velocity transducers in able-bodied and spinal-cord injured individuals}},
+    volume = {24},
+    year = {2006}
+}
+@article{Miller2009,
+    author = {Miller, Adam},
+    journal = {Gait and Posture},
+    pages = {542--545},
+    title = {{Gait event detection using a multilayer neural network}},
+    volume = {29},
+    year = {2009}
+}
+@article{Hinton2012,
+    author = {Hinton, Geoffrey E. and Srivastava, Nitish and Krizhevsky, Alex and Sutskever, Ilya and Salakhutdinov, Ruslan R.},
+    journal = {arXiv: 1207.0580},
+    pages = {1--18},
+    title = {{Improving neural networks by preventing co-adaptation of feature detectors}},
+    year = {2012}
+}
+@article{Pham2013,
+    author = {Pham, Vu and Bluche, Th\'{e}odore and Kermorvant, Christopher and Louradour, J\'{e}r\^{o}me},
+    journal = {arXiv preprint arXiv:1312.4569},
+    title = {{Dropout improves Recurrent Neural Networks for Handwriting Recognition}},
+    url = {http://arxiv.org/abs/1312.4569},
+    year = {2013}
+}
+@article{Dahl2013,
+    author = {Dahl, George E. and Sainath, Tara N. and Hinton, Geoffrey E.},
+    journal = {ICASSP, IEEE International Conference on Acoustics, Speech and Signal Processing - Proceedings},
+    pages = {8609--8613},
+    title = {{Improving deep neural networks for LVCSR using rectified linear units and dropout}},
+    year = {2013}
+}
+@book{Graves2012,
 	title = {Supervised Sequence Labelling with Recurrent Neural Networks},
 	author = {Graves, Alex},
 	year = {2012}
+}
+@book{Schuster1999,
+    author = {Schuster, Michael},
+    title = {{On Supervised Learning from Sequential Data With Applications for
+    Speech Recognition}},
+    year = {1999}
+}
+@book{Hochreiter1991,
+    author = {Hochreiter, Sepp},
+    title = {{Untersuchungen zu Dynamischen Neuronalen Netzen}},
+    year = {1999}
 }
