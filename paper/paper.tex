@@ -268,6 +268,17 @@ Before using it in our network we pre-processed the data as follows:
 \section{Network Architecture}
 \label{sec:Network Architecture}
 
+We took an iterative approach to build our neural network. Initially we implemented a low-complexity LSTM network, evaluated its performance by cross-validation, then attempted to improve its performance and robustness by adding additional components one at a time while evaluating performance.
+
+\subsection{Initial Design}
+\label{sec:arch-simple}
+
+The first iteration of network has 3 layers: input, LSTM (hidden), and output. Input is presented to the network in the form given (transformed coordinates of markers), while output (state of legs) is presented as ``one-hot'' vectors. The LSTM layer consists of several memory blocks, each containing only one cell (i.e. gates are not shared between cells). The output layer employs standard soft-max activation function, which is matched with negative-log-likelihood loss function. In this setup, the LSTM layer learns to model features in the underlying human-treadmill dynamic system, while the output layer uses these features to emit belief of leg state at each timestep.
+
+While this is a very simple architecture, it allows rapid training, and already achieves similar or even better performance on our testing datasets compared to baseline algorithms. However, its performance often stops improving very early and overfits easily, indicating insufficient regularization.
+
+\subsection{title}
+
 \section{Network Training}
 \label{sec:Network Training}
 
