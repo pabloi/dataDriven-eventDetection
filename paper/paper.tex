@@ -269,6 +269,15 @@ The issue here is the vanishing gradient problem that causes the influence of a
 given input to either decay rapidly or to blow up exponentially
 \cite{Hochreiter1991}.
 
+The approach we chose is the use an LSTM network.
+An LSTM network is an RNN where the summation units in the hidden layer are 
+replaced with so-called memory blocks.
+These blocks consist of a memory cell as well as three multiplicative units 
+called input gate, output gate and forget gate.
+The gates allow information to be stored in the memory cell for long periods 
+of time
+\cite{Graves2012}.
+
 % TODO real-time event detection (no window necessary)
 
 \section{Data}
@@ -373,21 +382,6 @@ Although our results are promising and seem to improve the current state-of-the-
 % For the initial training purposes, we selected data from 8 healthy subjects walking in a treadmill at three different speeds for 100 seconds each. Additionally, we took data from 13 stroke subjects, walking at a single speed for 100 seconds. For each subject, the input data is 3D marker position of 18 different markers placed in the same anatomical positions for each subject, sampled at 100Hz. The event labels (target) were computed from ground force reaction data samples at 1kHz for healthy subjects, and 2kHz for stroke subjects. This is currently considered the gold standard \cite{miller_gait_2009,miller_gait_2009,Hreljac2000}. \\
 % %The problem is then to classify each sample in time as one of four different classes: both feet in contact with the ground, both feet off the ground, left feet only on the ground and right feet only on the ground.
 % \section{Algorithms}
-%
-% \subsection{Our approach: Long Short Term Memory Neural Network}
-%
-% Gait event detection is a form of \textit{sequence labeling}, i.e., assigning a sequence of labels to a sequence of data.
-% One approach to sequence labeling is the use of recurrent neural networks (RNN). However, due to the vanishing gradient problem RNNs cannot store information for a long time which means that their usefulness for sequence labeling is limited.
-% One solution to this problem is the use of a Long Short-Term Memory (LSTM) architecture instead of conventional RNNs \cite{graves_supervised_2012}.
-% In LSTM, the summation units in the hidden layer are replaced with so-called memory blocks.
-% These blocks consist of a memory cell as well as three multiplicative units called input gate, output gate and forget gate.
-% The gates allow information to be stored in the memory cell for long periods of time.
-% While we haven't decided on the overall design of our LSTM network yet, it will probably have specifications along the lines of:
-% \begin{itemize}[noitemsep,nolistsep]
-% \item Up to 54 input units that each take the sequence corresponding to one marker as input; the reason we might not need all 54 marker sequences is that some of the markers (e.g., for the hip) presumably carry little useful information.
-% \item A hidden layer of LSTM memory blocks; the exact number will depend on the number of input units.
-% \item 2 output units (one for each leg); the output will be thresholded with '0' corresponding to stance phase and '1' corresponding to swing phase.
-% \end{itemize}
 %
 % \section{Computational Resources}
 %
