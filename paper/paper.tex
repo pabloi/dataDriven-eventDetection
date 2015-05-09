@@ -298,9 +298,19 @@ All results from this section used the training half of Dataset 1, and training 
  \label{fig:paramSearch}
 \end{figure}
 
-As can be seen from figure \ref{fig:paramSearch} a good learning rate was about $1e-1$ and an appropriate decay was about $1e-2$ (learning rate decay was automatically implemented by the \textit{adagrad} method of Torch's \textit{optim} toolbox as inversely proportional to number of iterations, here $1e-2$ means it takes 100 epochs for the learning rate to decay to half its initial value).
+As can be seen from figure \ref{fig:paramSearch} a good learning rate was about $1e-1$ and an appropriate decay was about $1e-2$ (learning rate decay was automatically implemented by the \textit{adagrad} method of Torch's \textit{optim} toolbox as inversely proportional to number of iterations, here $1e-2$ means it takes 100 epochs for the learning rate to decay to half its initial value). Although an ideal network size cannot be inferred from here, we can see the decreasing returns on adding additional units to the network. We decided to use a network of 100 cells for further testing. However, the computational resources from the Amazon EC2 instance allows for training of networks of much larger sizes well above 1000 cells.
 
 \subsection{Dataset 1}
+Once we settled on parameters for our network, we trained it for 100 epochs and tested it on dataset 1. We compared results from Miller's feed-forward network, O'Connor's heuristic and our LSTM network. 
+
+\begin{figure}
+ \centering
+ \includegraphics[scale=.3]{./figures/Test1_1Train1_2Compare.png}
+ % Test1_1Train1_2Compare.png: 0x0 pixel, 300dpi, 0.00x0.00 cm, bb=
+ \caption{Comparison of Miller vs. LSTM network for various training intervals, for dataset 1.}
+ \label{fig:halfAndHalfTrials}
+\end{figure}
+
 
 \section{Conclusion and Future Work}
 \label{sec:Conclusion and Future Work}
@@ -316,6 +326,7 @@ Although our results are promising and seem to improve the current state-of-the-
  \item Investigate possible pre-processing to guarantee that method is invariant to walking speed, and subject height and weight.
  \item Study possible modifications to make the network truly invariant to the left/right symmetry. Currently the network is trained to output events for both legs with marker data from both sides of the body, but we know that the symmetry of the problem could be exploited further. However, this could prove to be an issue on subjects with highly asymmetrical gait.
  \item Incorporate prior information from the transitions that occurr during gait. In normal walking the events happen in a pre-established order (left heel-strike - right toe-off - right heel-strike - left toe-off) which gives us some information on the possible upcoming transitions based on the current state. While we can speculate that a recursive NN learns this with training, we could incorporate this information for better accuracy during normal walking conditions.
+ \item Reduce the number of markers used to achive performance. While ours is a rich dataset, not all captures of motion data will include all the markers used. Furthermore we can expect the feet markers to contain the most information about the events.
 \end{enumerate}
 
 

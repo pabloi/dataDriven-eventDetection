@@ -34,7 +34,7 @@ falsep=eventCount-tp; %Number of false positives: events detected -tp
 %% Plot results
 figure
 clear aa
-subplot(2,2,1)
+subplot(4,1,1)
 hold on
 legStr={};
 for i=1:M
@@ -49,7 +49,7 @@ hold off
 legend(legStr);
 
 clear aa
-subplot(2,2,3)
+subplot(4,1,3)
 hold on
 for i=1:M
     aa(i,:,:)=squeeze(err{i,2}(:,1,:));
@@ -63,7 +63,7 @@ hold off
 legend(legStr);
 
 clear aa
-subplot(2,2,2)
+subplot(4,1,2)
 hold on
 for i=1:M
     aa(i,:,:)=squeeze(err{i,1}(:,2,:));
@@ -77,7 +77,7 @@ hold off
 legend(legStr);
 
 clear aa
-subplot(2,2,4)
+subplot(4,1,4)
 hold on
 for i=1:M
     aa(i,:,:)=squeeze(err{i,2}(:,2,:));
