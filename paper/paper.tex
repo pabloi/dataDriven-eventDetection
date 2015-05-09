@@ -5,8 +5,8 @@
 
 \documentclass{acm_proc_article-sp}
 
-\usepackage[utf8]{inputenc}
-\usepackage[english]{babel} % English language/hyphenation
+% \usepackage[utf8]{inputenc}
+% \usepackage[english]{babel} % English language/hyphenation
 \usepackage{booktabs}
 \usepackage{multicol}
 \newcommand{\ra}[1]{\renewcommand{\arraystretch}{#1}}
@@ -260,8 +260,8 @@ recurrenct neural networks with a sliding windows (as in the case of
 However, as the range of useful context and thus the required window size is in
 general not known in practice, this approach is only of limited usefulness
 \cite{Graves2012}.
-%
-Another approach consists in using a RNN and passing the
+
+A second approach consists in using a RNN and passing the
 input sequence forwards and backwards to two separate hidden layers that are
 connected to the same output (so-called bidirectional networks
 \cite{Schuster1999}).
@@ -269,18 +269,24 @@ The issue here is the vanishing gradient problem that causes the influence of a
 given input to either decay rapidly or to blow up exponentially
 \cite{Hochreiter1991}.
 
-A third approach that is LSTM.
+A third approach is LSTM.
 An LSTM network is an RNN where the summation units in the hidden layer are 
 replaced with so-called memory blocks.
 These blocks consist of a memory cell as well as three multiplicative units 
 called input gate, output gate and forget gate.
-The gates allow information to be stored in the memory cell for long periods 
-of time
+By controlling these gates, it is possible to store information in the memory 
+cell for long periods of time
 \cite{Graves2012}.
-LSTM is superior to both the window method and the bidirectional networs as it
-does not require the use of a window and does not suffer from the vanishing
-gradient problem.
-% TODO real-time event detection (no window necessary)
+LSTM is theoretically superior to both the window method and the bidirectional 
+networks as does not require the use of a window and does not suffer 
+from the vanishing gradient problem.
+It has also successfully been used in practice for tasks that require long range 
+memory such as speech recognition 
+\cite{GravesSchmidhuber2005}
+and handwriting recognition
+\cite{Liwicki2007}.
+Given these advantages, we decided to use LSTM for our gait event detection
+system.
 
 \section{Data}
 \label{sec:Data}
