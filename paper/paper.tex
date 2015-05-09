@@ -357,11 +357,11 @@ All results from this section used the training half of Dataset 1, and training 
 As can be seen from figure \ref{fig:paramSearch} a good learning rate was about $1e-1$ and an appropriate decay was about $1e-2$ (learning rate decay was automatically implemented by the \textit{adagrad} method of Torch's \textit{optim} toolbox as inversely proportional to number of iterations, here $1e-2$ means it takes 100 epochs for the learning rate to decay to half its initial value). Although an ideal network size cannot be inferred from here, we can see the decreasing returns on adding additional units to the network. We decided to use a network of 100 cells for further testing. However, the computational resources from the Amazon EC2 instance allows for training of networks of much larger sizes well above 1000 cells.
 
 \subsection{Dataset 1}
-Once we settled on parameters for our network, we trained it for 100 epochs and tested it on dataset 1. We compared results from Miller's feed-forward network, O'Connor's heuristic and our LSTM network. 
+Once we settled on parameters for our network, we trained it for 100 epochs and tested it on dataset 1. We compared results from Miller's feed-forward network, O'Connor's heuristic and our LSTM network. We assessed the results as follows: if a detected event was less than 100ms apart from the actual event (ground truth derived from force-plates), we measured the difference in times and quantified it in a histogram. If the detected event was more than 100ms apart from the closest true event, we consider it a false positive. In the same way, if no event was detected within 100ms of an actual event, we consider it to be a false negative. All four possible events (left heel-strike, toe-off, right heel-strike and toe-off) were considered independetly.  Results are summarized on figure \ref{fig:halfAndHalfTrials}. Each plot represents the histogram of time differences between actual and detected events when they are within a 100ms window of each other. At the top of each plot appear the total number of false positives (fp) and false negatives (fn) for each of the methods compared. O'Connor's results were very poor compared to other methods (larger bias and variance), so they were excluded from the figure. 
 
 \begin{figure}
  \centering
- \includegraphics[scale=.3]{./figures/Test1_1Train1_2Compare.png}
+ \includegraphics[scale=.35]{./figures/Test1_1Train1_2Compare.png}
  % Test1_1Train1_2Compare.png: 0x0 pixel, 300dpi, 0.00x0.00 cm, bb=
  \caption{Comparison of Miller vs. LSTM network for various training intervals, for dataset 1.}
  \label{fig:halfAndHalfTrials}
