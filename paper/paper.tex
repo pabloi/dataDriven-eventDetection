@@ -269,7 +269,7 @@ The issue here is the vanishing gradient problem that causes the influence of a
 given input to either decay rapidly or to blow up exponentially
 \cite{Hochreiter1991}.
 
-The approach we chose is the use an LSTM network.
+One approach that solves both of these problems is LSTM.
 An LSTM network is an RNN where the summation units in the hidden layer are 
 replaced with so-called memory blocks.
 These blocks consist of a memory cell as well as three multiplicative units 
@@ -298,20 +298,6 @@ Before using it in our network we pre-processed the data as follows:
 
 % TODO explain motion capture data either here or in introduction
 
-\section{Network Architecture}
-\label{sec:Network Architecture}
-
-We took an iterative approach to build our neural network. Initially we implemented a low-complexity LSTM network, evaluated its performance by cross-validation, then attempted to improve its performance and robustness by adding additional components one at a time while evaluating performance.
-
-\subsection{Initial Design}
-\label{sec:arch-simple}
-
-The first iteration of network has 3 layers: input, LSTM (hidden), and output. Input is presented to the network in the form given (transformed coordinates of markers), while output (state of legs) is presented as ``one-hot'' vectors. The LSTM layer consists of several memory blocks, each containing only one cell (i.e. gates are not shared between cells). The output layer employs standard soft-max activation function, which is matched with negative-log-likelihood loss function. In this setup, the LSTM layer learns to model features in the underlying human-treadmill dynamic system, while the output layer uses these features to emit belief of leg state at each timestep.
-
-While this is a very simple architecture, it allows rapid training, and already achieves similar or even better performance on our testing datasets compared to baseline algorithms. However, its performance often stops improving very early and overfits easily, indicating insufficient regularization.
-
-\subsection{title}
-
 \section{Computational Resources}
 \label{sec:Computational Resources}
 
@@ -327,6 +313,20 @@ for LuaJIT.%
 The network was run on an Amazon EC2 instance of type g2.2xlarge.
 This instance type comes with an 8 core 2.6 GHz Intel Xeon E5-2670 processor and 
 an Nvidia GRID K520 GPU that is composed of two 4 GB GK104 GPUs.
+
+\section{Network Architecture}
+\label{sec:Network Architecture}
+
+We took an iterative approach to build our neural network. Initially we implemented a low-complexity LSTM network, evaluated its performance by cross-validation, then attempted to improve its performance and robustness by adding additional components one at a time while evaluating performance.
+
+\subsection{Initial Design}
+\label{sec:arch-simple}
+
+The first iteration of network has 3 layers: input, LSTM (hidden), and output. Input is presented to the network in the form given (transformed coordinates of markers), while output (state of legs) is presented as ``one-hot'' vectors. The LSTM layer consists of several memory blocks, each containing only one cell (i.e. gates are not shared between cells). The output layer employs standard soft-max activation function, which is matched with negative-log-likelihood loss function. In this setup, the LSTM layer learns to model features in the underlying human-treadmill dynamic system, while the output layer uses these features to emit belief of leg state at each timestep.
+
+While this is a very simple architecture, it allows rapid training, and already achieves similar or even better performance on our testing datasets compared to baseline algorithms. However, its performance often stops improving very early and overfits easily, indicating insufficient regularization.
+
+\subsection{title}
 
 \section{Network Training}
 \label{sec:Network Training}
