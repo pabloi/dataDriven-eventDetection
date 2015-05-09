@@ -397,7 +397,7 @@ Once we settled on parameters for our network, we trained it for 100 epochs and 
 \end{figure}
 
 \subsection{Dataset 2}
-The second dataset was designed to assess how well the methods generalize to new users. We performed the same treatment as for the previous dataset, and results are shown on \ref{fig:halfAndHalfUsers}. From these results we can see that the LSTM network achieves better accuracy than Miller, with less false positives and false negatives. However, the false positive rate is somewhat high for the LSTM network too. It can also be seen that for the LSTM network trained over 50 epochs r
+The second dataset was designed to assess how well the methods generalize to new users. We performed the same treatment as for the previous dataset, and results are shown on \ref{fig:halfAndHalfUsers}. From these results we can see that the LSTM network achieves better accuracy than Miller, with less false positives and false negatives. However, the false positive rate is somewhat high for the LSTM network too. It can also be seen that for the LSTM network trained over 50 epochs that some overfitting is happening, as the number of false positives increases noticeably, and accuracy is also slightly reduced. We didn't implement any way to prevent over-fitting, so this is not too surprising. Perhaps it is good news that 30 epochs of training suffice to achieve the network's optimal performance.
 
 \begin{figure}[H]
  \centering
